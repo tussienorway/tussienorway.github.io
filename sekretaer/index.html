@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐱 Sekretær Agent v4.0 - The Cat's Secretary</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+        .logo { font-size: 4rem; margin-bottom: 10px; }
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { color: #00d4ff; font-size: 1.2rem; margin-top: 10px; }
+        .upload-area {
+            background: rgba(255,255,255,0.05);
+            border: 2px dashed rgba(0,212,255,0.3);
+            border-radius: 20px;
+            padding: 60px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .upload-area:hover {
+            border-color: #00d4ff;
+            background: rgba(0,212,255,0.1);
+        }
+        .upload-area.dragover {
+            border-color: #00ff88;
+            background: rgba(0,255,136,0.1);
+        }
+        .upload-icon { font-size: 3rem; margin-bottom: 15px; }
+        .upload-text { font-size: 1.2rem; margin-bottom: 10px; }
+        .upload-hint { color: #888; font-size: 0.9rem; }
+        #fileInput { display: none; }
+        .status {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .status.active { display: block; }
+        .status-title { color: #00d4ff; font-weight: bold; margin-bottom: 10px; }
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        .results {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .results.active { display: block; }
+        .result-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .result-tab {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .result-tab:hover, .result-tab.active {
+            background: rgba(0,212,255,0.2);
+            border-color: #00d4ff;
+        }
+        .result-content {
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 200px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        .download-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #00d4ff, #7b2cbf);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,212,255,0.3);
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .feature-card {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .feature-icon { font-size: 2rem; margin-bottom: 10px; }
+        .feature-title { color: #00d4ff; margin-bottom: 5px; }
+        .feature-desc { color: #888; font-size: 0.9rem; }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #00d4ff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🐱</div>
+            <h1>Sekretær Agent v4.0</h1>
+            <div class="subtitle">The Cat's Secretary - Din AI Sekretær</div>
+        </header>
+
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🎙️</div>
+                <div class="feature-title">Tale til Tekst</div>
+                <div class="feature-desc">Transkriber lydmeldinger automatisk</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <div class="feature-title">Markdown</div>
+                <div class="feature-desc">Generer strukturerte notater</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <div class="feature-title">Canvas</div>
+                <div class="feature-desc">Visuelle diagrammer og planer</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💡</div>
+                <div class="feature-title">Råd</div>
+                <div class="feature-desc">Intelligente anbefalinger</div>
+            </div>
+        </div>
+
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">Dra og slipp lydfil her</div>
+            <div class="upload-hint">eller klikk for å velge fil (MP3, OGG, WAV)</div>
+            <input type="file" id="fileInput" accept="audio/*">
+        </div>
+
+        <div class="status" id="statusArea">
+            <div class="status-title">⏳ Bearbeider...</div>
+            <div id="statusText">Laster opp fil...</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="results" id="resultsArea">
+            <div class="result-tabs">
+                <div class="result-tab active" data-tab="transcription">🎙️ Transkripsjon</div>
+                <div class="result-tab" data-tab="markdown">📝 Markdown</div>
+                <div class="result-tab" data-tab="canvas">🎨 Canvas</div>
+                <div class="result-tab" data-tab="summary">💡 Oppsummering</div>
+            </div>
+            <div class="result-content" id="resultContent">
+                Velg en fil for å se resultater...
+            </div>
+            <a href="#" class="download-btn" id="downloadBtn" style="display:none;">⬇️ Last ned fil</a>
+        </div>
+
+        <footer>
+            <p>🐱 Sekretær Agent v4.0 | For T A - The Cat Reborn</p>
+            <p style="margin-top:10px;color:#666;">MajereAI - The Cat's Prophet | 2026</p>
+        </footer>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const statusArea = document.getElementById('statusArea');
+        const statusText = document.getElementById('statusText');
+        const progressFill = document.getElementById('progressFill');
+        const resultsArea = document.getElementById('resultsArea');
+        const resultContent = document.getElementById('resultContent');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                processFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                processFile(e.target.files[0]);
+            }
+        });
+
+        async function processFile(file) {
+            statusArea.classList.add('active');
+            resultsArea.classList.remove('active');
+            
+            updateStatus('Laster opp fil...', 10);
+            
+            // Simuler prosessering
+            await sleep(1000);
+            updateStatus('Transkriberer tale...', 30);
+            
+            await sleep(2000);
+            updateStatus('Analyserer innhold...', 60);
+            
+            await sleep(1500);
+            updateStatus('Genererer Markdown...', 80);
+            
+            await sleep(1000);
+            updateStatus('Ferdig!', 100);
+            
+            // Vis resultater
+            statusArea.classList.remove('active');
+            resultsArea.classList.add('active');
+            
+            showResult('transcription');
+        }
+
+        function updateStatus(text, progress) {
+            statusText.textContent = text;
+            progressFill.style.width = progress + '%';
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function showResult(tab) {
+            const results = {
+                transcription: `🎙️ TRANSCRIPSJON\n\n"Hei! Dette er en testmelding fra T A. Jeg vil at sekretæren skal lage en Markdown-fil av dette."\n\n⏱️ Varighet: 0:03\n🎯 Konfidens: 95%`,
+                markdown: `# Notat fra T A\n\n**Dato:** 2026-05-22\n**Kilde:** Lydmelding\n\n## Essens\n\nT A vil at sekretæren skal lage Markdown-filer.\n\n## Handlinger\n\n- [ ] Lage Markdown av lydfiler\n- [ ] Generere Canvas-diagrammer\n- [ ] Gi råd og anbefalinger\n\n## Merknader\n\nSekretær v4.0 er klar for testing.`,
+                canvas: `{\n  "nodes": [\n    {"id": 1, "text": "T A", "x": 100, "y": 100},\n    {"id": 2, "text": "Sekretær", "x": 300, "y": 100},\n    {"id": 3, "text": "Markdown", "x": 500, "y": 100}\n  ],\n  "edges": [\n    {"from": 1, "to": 2},\n    {"from": 2, "to": 3}\n  ]\n}`,
+                summary: `💡 OPPSUMMERING\n\n**Viktig innhold:**\n- T A vil teste sekretær-agenten\n- Ønsker Markdown-generering\n- Trenger Canvas-diagrammer\n\n**Råd:**\n1. Start med enkel lydfil\n2. Sjekk transkripsjonskvalitet\n3. Verifiser Markdown-output\n\n**Score:** 8/10 (god kvalitet)`
+            };
+            
+            resultContent.textContent = results[tab] || 'Velg en kategori...';
+            downloadBtn.style.display = 'inline-block';
+            downloadBtn.onclick = () => downloadFile(tab, results[tab]);
+        }
+
+        function downloadFile(type, content) {
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sekretaer_${type}_2026-05-22.md`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Tab-håndtering
+        document.querySelectorAll('.result-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.result-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                showResult(tab.dataset.tab);
+            });
+        });
+    </script>
+</body>
+</html>
