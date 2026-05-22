@@ -357,8 +357,11 @@ Eksempel: 'Finn 5 kilder om Python async/await best practices'"></textarea>
             event.currentTarget.classList.add('active');
         }
         
-        // Demo functions (will be replaced with real API calls)
-        function generateDocument() {
+        // KONFIGURASJON - Backend API
+        const API_BASE = 'http://35.185.75.62:5002';
+        
+        // EKTE API-funksjoner
+        async function generateDocument() {
             const input = document.getElementById('doc-input').value;
             const output = document.getElementById('doc-output');
             
@@ -367,36 +370,129 @@ Eksempel: 'Finn 5 kilder om Python async/await best practices'"></textarea>
                 return;
             }
             
-            output.innerHTML = `
-                <div style="color: #70ff00; margin-bottom: 10px;">✅ Dokument generert!</div>
-                <pre style="white-space: pre-wrap; color: #fff; line-height: 1.6;">
-# Generert Dokument
-
-Basert på: "${input.substring(0, 100)}..."
-
-## Status
-🤖 MajereAI vil implementere faktisk API-kobling her
-- Forbindelse til OpenAI/Claude
-- Markdown eksport
-- Obsidian sync
-
-📅 Generert: ${new Date().toLocaleString('no-NO')}
-                </pre>
-                <button class="btn" style="margin-top: 15px;">💾 Lagre til Obsidian</button>
-            `;
+            output.innerHTML = '<p style="color: #ffa500;">⏳ Genererer dokument med AI...</p>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/generate`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({text: input, type: 'document'})
+                });
+                
+                const data = await response.json();
+                
+                output.innerHTML = `
+                    <div style="color: #70ff00; margin-bottom: 10px;">✅ Dokument generert!</div>
+                    <pre style="white-space: pre-wrap; color: #fff; line-height: 1.6;">${data.content}</pre>
+                    <button class="btn" style="margin-top: 15px;" onclick="downloadFile('${data.download_url}', 'dokument.md')">💾 Last ned Markdown</button>
+                `;
+            } catch (error) {
+                output.innerHTML = `<p style="color: #ff6464;">❌ Feil: ${error.message}</p>
+                    <p style="color: #888;">Sjekk at backend-server er online: ${API_BASE}</p>`;
+            }
         }
         
-        function analyzeAudio() {
+        async function analyzeAudio() {
+            const input = document.getElementById('audio-input').value;
             const output = document.getElementById('audio-output');
-            output.innerHTML = '<p style="color: #ffa500;">⏳ Venter på MajereAI implementering av Whisper API...</p>';
+            
+            if (!input.trim()) {
+                output.innerHTML = '<p style="color: #ff6464;">⚠️ Lim inn URL eller beskriv lydklippet</p>';
+                return;
+            }
+            
+            output.innerHTML = '<p style="color: #ffa500;">⏳ Transkriberer og analyserer...</p>';
+            
+            try {
+                // Hvis det er en URL, send til backend for nedlasting+analyse
+                // Hvis det er tekst, analyser som transkripsjon
+                const response = await fetch(`${API_BASE}/analyze`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({url: input, text: input})
+                });
+                
+                const data = await response.json();
+                
+                output.innerHTML = `
+                    <div style="color: #70ff00; margin-bottom: 10px;">✅ Analyse fullført!</div>
+                    <strong>Transkripsjon:</strong>
+                    <pre style="white-space: pre-wrap; color: #fff; margin: 10px 0;">${data.transcription || data.text}</pre>
+                    <strong>Oppsummering:</strong>
+                    <pre style="white-space: pre-wrap; color: #ccc;">${data.summary || 'Ingen oppsummering'}</pre>
+                `;
+            } catch (error) {
+                output.innerHTML = `<p style="color: #ff6464;">❌ Feil: ${error.message}</p>`;
+            }
         }
         
-        function generateList() {
+        async function generateList() {
             const input = document.getElementById('list-input').value;
             const output = document.getElementById('list-output');
             
             if (!input.trim()) {
                 output.innerHTML = '<p style="color: #ff6464;">⚠️ Beskriv hva listen skal inneholde</p>';
+                return;
+            }
+            
+            output.innerHTML = '<p style="color: #ffa500;">⏳ Genererer liste med AI...</p>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/generate`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({text: input, type: 'list'})
+                });
+                
+                const data = await response.json();
+                
+                output.innerHTML = `
+                    <div style="color: #70ff00; margin-bottom: 10px;">✅ Liste generert!</div>
+                    <pre style="white-space: pre-wrap; color: #fff; line-height: 1.8;">${data.content}</pre>
+                    <button class="btn" style="margin-top: 15px;" onclick="downloadFile('${data.download_url}', 'liste.md')">💾 Last ned</button>
+                `;
+            } catch (error) {
+                output.innerHTML = `<p style="color: #ff6464;">❌ Feil: ${error.message}</p>`;
+            }
+        }
+        
+        async function doResearch() {
+            const input = document.getElementById('research-input').value;
+            const output = document.getElementById('research-output');
+            
+            if (!input.trim()) {
+                output.innerHTML = '<p style="color: #ff6464;">⚠️ Skriv hva du vil søke etter</p>';
+                return;
+            }
+            
+            output.innerHTML = '<p style="color: #ffa500;">⏳ Søker på nettet...</p>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/research`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({query: input})
+                });
+                
+                const data = await response.json();
+                
+                output.innerHTML = `
+                    <div style="color: #70ff00; margin-bottom: 10px;">✅ Søk fullført!</div>
+                    <pre style="white-space: pre-wrap; color: #fff;">${data.results}</pre>
+                `;
+            } catch (error) {
+                output.innerHTML = `<p style="color: #ff6464;">❌ Feil: ${error.message}</p>`;
+            }
+        }
+        
+        function downloadFile(url, filename) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
                 return;
             }
             
