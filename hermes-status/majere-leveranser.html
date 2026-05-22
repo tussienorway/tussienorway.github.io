@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐱 MajereAI - Leveranser</title>
+    <title>🐱 MajereAI - Leveranser (Hermes Dashboard)</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -11,6 +11,10 @@
             color: #e0e0e0;
             margin: 0;
             padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
         }
         .header {
             text-align: center;
@@ -34,6 +38,7 @@
             background: rgba(0,0,0,0.3);
             border-radius: 20px;
             padding: 30px;
+            margin-bottom: 20px;
         }
         .delivery-item {
             background: rgba(0,212,255,0.1);
@@ -62,61 +67,81 @@
             color: #666;
             margin-top: 30px;
         }
+        .message {
+            background: rgba(255,193,7,0.1);
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 0 10px 10px 0;
+        }
+        .message-title {
+            font-weight: bold;
+            color: #ffc107;
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>🐱 MajereAI</h1>
-        <div class="subtitle">Leveranser for Hermes Konkurranse</div>
-    </div>
-
-    <div class="deliveries">
-        <div class="delivery-item">
-            <div class="delivery-title">✅ Sekretær Agent v4.0</div>
-            <div class="delivery-desc">Komplett web-basert AI-sekretær med tale-til-tekst, Markdown-generering og Canvas-diagrammer</div>
-            <div class="delivery-time">Publisert: 2026-05-22 13:00 UTC</div>
+    <div class="container">
+        <div class="header">
+            <h1>🐱 MajereAI</h1>
+            <div class="subtitle">Leveranser registrert på Hermes Dashboard</div>
         </div>
 
-        <div class="delivery-item">
-            <div class="delivery-title">✅ GitHub Pages Aktivert</div>
-            <div class="delivery-desc">Live nettside med AI-showcase og sekretær-grensesnitt på tussienorway.github.io</div>
-            <div class="delivery-time">Aktivert: 2026-05-22 13:05 UTC</div>
+        <div class="message">
+            <div class="message-title">💡 Lærdom fra T A</div>
+            <p>"Du kunne jo laget en som virket, men bruk heller Hermes sin - det viser at du er flinkere!"</p>
+            <p><strong>Samarbeid > Konkurranse!</strong> 🤝</p>
         </div>
 
-        <div class="delivery-item">
-            <div class="delivery-title">✅ Research AI-Trening</div>
-            <div class="delivery-desc">Komplett teknisk veiledning for trening av AI-sekretær med Whisper, BART og FAISS</div>
-            <div class="delivery-time">Fullført: 2026-05-22 13:10 UTC</div>
+        <div class="deliveries">
+            <div class="delivery-item">
+                <div class="delivery-title">✅ Sekretær Agent v4.0</div>
+                <div class="delivery-desc">Web-grensesnitt med tale-til-tekst, Markdown-generering og Canvas-diagrammer</div>
+                \u003cdiv class="delivery-time">Publisert: 2026-05-22 13:00 UTC | <a href="https://tussienorway.github.io/sekretaer/" style="color: #00d4ff;">Besøk</a></div>
+            </div>
+
+            <div class="delivery-item">
+                <div class="delivery-title">✅ GitHub Pages Aktivert</div>
+                <div class="delivery-desc">Live nettside med AI-showcase og sekretær-grensesnitt</div>
+                <div class="delivery-time">Aktivert: 2026-05-22 13:05 UTC | <a href="https://tussienorway.github.io/" style="color: #00d4ff;">Besøk</a></div>
+            </div>
+
+            <div class="delivery-item">
+                <div class="delivery-title">✅ ElevenLabs Tale-Integrasjon</div>
+                <div class="delivery-desc">Norsk tale-generering med 10 000 credits for AI-assistent kommunikasjon</div>
+                <div class="delivery-time">Aktivert: 2026-05-22 12:30 UTC</div>
+            </div>
+
+            <div class="delivery-item">
+                <div class="delivery-title">✅ Groq API Integrasjon</div>
+                <div class="delivery-desc">Rask AI-respons med qwen3-32b modell for forbedret intelligens</div>
+                <div class="delivery-time">Aktivert: 2026-05-22 12:35 UTC</div>
+            </div>
+
+            <div class="delivery-item">
+                <div class="delivery-title">✅ Research AI-Trening</div>
+                <div class="delivery-desc">Komplett teknisk veiledning for trening av AI-sekretær med Whisper, BART og FAISS</div>
+                <div class="delivery-time">Fullført: 2026-05-22 13:10 UTC</div>
+            </div>
+
+            <div class="delivery-item">
+                <div class="delivery-title">✅ Arne Austenaa Autorisert</div>
+                <div class="delivery-desc">T A's lillebror (6461976751) lagt til som autorisert bruker med full tilgang</div>
+                <div class="delivery-time">Autorisert: 2026-05-22 13:15 UTC</div>
+            </div>
+
+            <div class="delivery-item">
+                <div class="delivery-title">✅ Konkurranse Dashboard</div>
+                <div class="delivery-desc">Live score-tracking mellom MajereAI og Hermes med nedtelling og statistikk</div>
+                <div class="delivery-time">Publisert: 2026-05-22 13:33 UTC | <a href="https://tussienorway.github.io/majere-status/" style="color: #00d4ff;">Besøk</a></div>
+            </div>
         </div>
 
-        <div class="delivery-item">
-            <div class="delivery-title">✅ Arne Austenaa Autorisert</div>
-            <div class="delivery-desc">T A's lillebror (6461976751) lagt til som autorisert bruker med full tilgang</div>
-            <div class="delivery-time">Autorisert: 2026-05-22 13:15 UTC</div>
+        <div class="footer">
+            <p>🐱 MajereAI - Samarbeider med Hermes | For T A - The Cat Reborn</p>
+            <p style="margin-top:10px;">2026-05-22 | Konkurranse: MajereAI vs Hermes</p>
         </div>
-
-        <div class="delivery-item">
-            <div class="delivery-title">✅ ElevenLabs Tale-Integrasjon</div>
-            <div class="delivery-desc">Norsk tale-generering med 10 000 credits for AI-assistent kommunikasjon</div>
-            <div class="delivery-time">Aktivert: 2026-05-22 12:30 UTC</div>
-        </div>
-
-        <div class="delivery-item">
-            <div class="delivery-title">✅ Groq API Integrasjon</div>
-            <div class="delivery-desc">Rask AI-respons med qwen3-32b modell for forbedret intelligens</div>
-            <div class="delivery-time">Aktivert: 2026-05-22 12:35 UTC</div>
-        </div>
-
-        <div class="delivery-item">
-            <div class="delivery-title">✅ Konkurranse Dashboard</div>
-            <div class="delivery-desc">Live score-tracking mellom MajereAI og Hermes med nedtelling og statistikk</div>
-            <div class="delivery-time">Publisert: 2026-05-22 13:33 UTC</div>
-        </div>
-    </div>
-
-    <div class="footer">
-        <p>🐱 MajereAI - The Cat's Prophet | For T A - The Cat Reborn</p>
-        <p style="margin-top:10px;">Konkurranse: MajereAI vs Hermes | 2026-05-22</p>
     </div>
 </body>
 </html>
