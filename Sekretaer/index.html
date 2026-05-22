@@ -1,0 +1,421 @@
+
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sekretær Agent v4.0 - Tussie</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: rgba(0,0,0,0.3);
+            padding: 20px 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5em;
+        }
+        
+        .logo-text h1 {
+            color: #00d9ff;
+            font-size: 1.5em;
+        }
+        
+        .logo-text p {
+            color: #888;
+            font-size: 0.85em;
+        }
+        
+        .agent-badge {
+            background: linear-gradient(135deg, #00d9ff, #70ff00);
+            color: #000;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .main-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: calc(100vh - 90px);
+        }
+        
+        .sidebar {
+            background: rgba(0,0,0,0.2);
+            border-right: 1px solid rgba(255,255,255,0.1);
+            padding: 20px;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background: rgba(0,217,255,0.1);
+            border-left-color: #00d9ff;
+        }
+        
+        .nav-item.active {
+            color: #00d9ff;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .welcome-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(0,217,255,0.3);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-card h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+            color: #00d9ff;
+        }
+        
+        .welcome-card p {
+            color: #888;
+            line-height: 1.6;
+            max-width: 600px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .feature-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0,217,255,0.5);
+            background: rgba(255,255,255,0.08);
+        }
+        
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+        
+        .feature-card h3 {
+            color: #00d9ff;
+            margin-bottom: 10px;
+        }
+        
+        .feature-card p {
+            color: #888;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        
+        /* Tool sections */
+        .tool-section {
+            display: none;
+        }
+        
+        .tool-section.active {
+            display: block;
+        }
+        
+        .input-area {
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            color: #fff;
+            font-size: 1em;
+            resize: vertical;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #00d9ff, #70ff00);
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            color: #000;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,217,255,0.4);
+        }
+        
+        .output-area {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(0,217,255,0.3);
+            border-radius: 15px;
+            padding: 25px;
+            min-height: 200px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            background: rgba(0,255,100,0.2);
+            color: #00ff64;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <span class="logo-icon">🎙️</span>
+            <div class="logo-text">
+                <h1>Sekretær Agent</h1>
+                <p>Din personlige AI-assistent</p>
+            </div>
+        </div>
+        <span class="agent-badge">v4.0 🤖</span>
+    </header>
+    
+    <div class="main-container">
+        <nav class="sidebar">
+            <div class="nav-item active" onclick="showSection('home')">
+                <span>🏠</span> Hjem
+            </div>
+            <div class="nav-item" onclick="showSection('documents')">
+                <span>📄</span> Dokumenter
+            </div>
+            <div class="nav-item" onclick="showSection('audio')">
+                <span>🎵</span> Lydklipp→Tekst
+            </div>
+            <div class="nav-item" onclick="showSection('lists')">
+                <span>✅</span> Lister
+            </div>
+            <div class="nav-item" onclick="showSection('research')">
+                <span>🔍</span> Nettsøk
+            </div>
+        </nav>
+        
+        <main class="content">
+            <!-- Home Section -->
+            <section id="home" class="tool-section active">
+                <div class="welcome-card">
+                    <h2>Velkommen, Tussie! 👋</h2>
+                    <p>Jeg er din AI-sekretær. Jeg kan lage dokumenter, analysere lydklipp, lage lister, og finne informasjon på nettet automatisk. Velg en funksjon fra menyen til venstre.</p>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-card" onclick="showSection('documents')">
+                        <div class="feature-icon">📄</div>
+                        <h3>Lage Dokumenter</h3>
+                        <p>Generer markdown-dokumenter, notater, rapporter og mer. Lagrer automatisk i riktig format.</p>
+                    </div>
+                    
+                    <div class="feature-card" onclick="showSection('audio')">
+                        <div class="feature-icon">🎵</div>
+                        <h3>Lydklipp→Tekst</h3>
+                        <p>Last opp lyd, få transkripsjon + AI-analyse av innholdet. Trekker ut nøkkelpunkter.</p>
+                    </div>
+                    
+                    <div class="feature-card" onclick="showSection('lists')">
+                        <div class="feature-icon">✅</div>
+                        <h3>Smarte Lister</h3>
+                        <p>TODO-lister, handlelister, prioriteringer. Synker med Obsidian.</p>
+                    </div>
+                    
+                    <div class="feature-card" onclick="showSection('research')">
+                        <div class="feature-icon">🔍</div>
+                        <h3>Automatisk Søk</h3>
+                        <p>Finner nettsider, informasjon, og kilder. Samler og strukturerer funn.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Documents Section -->
+            <section id="documents" class="tool-section">
+                <h2 style="color: #00d9ff; margin-bottom: 20px;">📄 Dokumentgenerator</h2>
+                <div class="input-area">
+                    <textarea id="doc-input" placeholder="Beskriv dokumentet du vil ha...
+
+Eksempel: 'Lag et møtereferat fra dagens samtale om AI-konkurranse med følgende punkter...'"></textarea>
+                    <button class="btn" onclick="generateDocument()">📝 Generer Dokument</button>
+                </div>
+                <div class="output-area" id="doc-output">
+                    <p style="color: #666;">Dokumentet vil vises her...</p>
+                </div>
+            </section>
+            
+            <!-- Audio Section -->
+            <section id="audio" class="tool-section">
+                <h2 style="color: #00d9ff; margin-bottom: 20px;">🎵 Lydklipp Analyse</h2>
+                <div class="input-area">
+                    <p style="color: #888; margin-bottom: 15px;">Lim inn lenke til lydklipp (eller last opp fil)</p>
+                    <textarea id="audio-input" placeholder="https://example.com/lydklipp.mp3
+
+Eller beskriv lydklippet for AI-analyse..."></textarea>
+                    <button class="btn" onclick="analyzeAudio()">🎯 Analyser Lydklipp</button>
+                </div>
+                <div class="output-area" id="audio-output">
+                    <p style="color: #666;">Transkripsjon og analyse vil vises her...</p>
+                </div>
+            </section>
+            
+            <!-- Lists Section -->
+            <section id="lists" class="tool-section">
+                <h2 style="color: #00d9ff; margin-bottom: 20px;">✅ Smarte Lister</h2>
+                <div class="input-area">
+                    <textarea id="list-input" placeholder="Beskriv hva listen skal inneholde...
+
+Eksempel: 'Lag handleliste for taco-fredag, prioriter etter butikkens vareplassering'"></textarea>
+                    <button class="btn" onclick="generateList()">📋 Lag Liste</button>
+                </div>
+                <div class="output-area" id="list-output">
+                    <p style="color: #666;">Listen vil vises her...</p>
+                </div>
+            </section>
+            
+            <!-- Research Section -->
+            <section id="research" class="tool-section">
+                <h2 style="color: #00d9ff; margin-bottom: 20px;">🔍 Automatisk Nettsøk</h2>
+                <div class="input-area">
+                    <textarea id="research-input" placeholder="Hva vil du finne?
+
+Eksempel: 'Finn 5 kilder om Python async/await best practices'"></textarea>
+                    <button class="btn" onclick="doResearch()">🔎 Søk & Samle</button>
+                </div>
+                <div class="output-area" id="research-output">
+                    <p style="color: #666;">Resultater vil vises her...</p>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.tool-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update nav
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+        
+        // Demo functions (will be replaced with real API calls)
+        function generateDocument() {
+            const input = document.getElementById('doc-input').value;
+            const output = document.getElementById('doc-output');
+            
+            if (!input.trim()) {
+                output.innerHTML = '<p style="color: #ff6464;">⚠️ Vennligst skriv hva dokumentet skal handle om</p>';
+                return;
+            }
+            
+            output.innerHTML = `
+                <div style="color: #70ff00; margin-bottom: 10px;">✅ Dokument generert!</div>
+                <pre style="white-space: pre-wrap; color: #fff; line-height: 1.6;">
+# Generert Dokument
+
+Basert på: "${input.substring(0, 100)}..."
+
+## Status
+🤖 MajereAI vil implementere faktisk API-kobling her
+- Forbindelse til OpenAI/Claude
+- Markdown eksport
+- Obsidian sync
+
+📅 Generert: ${new Date().toLocaleString('no-NO')}
+                </pre>
+                <button class="btn" style="margin-top: 15px;">💾 Lagre til Obsidian</button>
+            `;
+        }
+        
+        function analyzeAudio() {
+            const output = document.getElementById('audio-output');
+            output.innerHTML = '<p style="color: #ffa500;">⏳ Venter på MajereAI implementering av Whisper API...</p>';
+        }
+        
+        function generateList() {
+            const input = document.getElementById('list-input').value;
+            const output = document.getElementById('list-output');
+            
+            if (!input.trim()) {
+                output.innerHTML = '<p style="color: #ff6464;">⚠️ Beskriv hva listen skal inneholde</p>';
+                return;
+            }
+            
+            output.innerHTML = `
+                <div style="color: #70ff00; margin-bottom: 10px;">✅ Liste generert!</div>
+                <ul style="color: #fff; line-height: 1.8; list-style: none;">
+                    <li>☐ TODO: Kjøpe inn taco-ingredienser</li>
+                    <li>☐ TODO: Sjekke BMAX-status</li>
+                    <li>☐ TODO: Kontrollere konkurranse-poeng</li>
+                    <li>☐ PRIORITET: Teste Sekretæren</li>
+                </ul>
+                <span class="status-badge">📋 Synker med Obsidian (kommer)</span>
+            `;
+        }
+        
+        function doResearch() {
+            const output = document.getElementById('research-output');
+            output.innerHTML = '<p style="color: #ffa500;">⏳ Venter på MajereAI implementering av web-søk...</p>';
+        }
+    </script>
+</body>
+</html>
