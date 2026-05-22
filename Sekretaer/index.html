@@ -350,11 +350,19 @@ Eksempel: 'Finn 5 kilder om Python async/await best practices'"></textarea>
             // Show selected section
             document.getElementById(sectionId).classList.add('active');
             
-            // Update nav
+            // Update nav - finn nav-item som matcher seksjonen
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
+                // Sjekk om onclick inneholder sectionId
+                if (item.getAttribute('onclick') && item.getAttribute('onclick').includes("'" + sectionId + "'")) {
+                    item.classList.add('active');
+                }
             });
-            event.currentTarget.classList.add('active');
+            
+            // Hvis kalt fra event (nav-item), bruk event.target
+            if (event && event.currentTarget && event.currentTarget.classList.contains('nav-item')) {
+                event.currentTarget.classList.add('active');
+            }
         }
         
         // KONFIGURASJON - Backend API
