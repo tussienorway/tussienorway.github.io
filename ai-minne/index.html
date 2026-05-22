@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>AI-Minne - Tussie v2</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 500px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+        }
+        .header h1 {
+            background: linear-gradient(135deg, #00d9ff, #70ff00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header p { color: #888; font-size: 1.1em; }
+        .card {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(0,217,255,0.2);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        input, select {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #00d9ff;
+            box-shadow: 0 0 20px rgba(0,217,255,0.3);
+        }
+        button {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #00d9ff, #70ff00);
+            color: #000;
+            font-weight: bold;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        button:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,217,255,0.4); }
+        button.secondary {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            margin-top: 10px;
+        }
+        .items { margin-top: 20px; }
+        .item {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        .item:hover { border-color: rgba(0,217,255,0.3); }
+        .item-name { font-weight: bold; color: #fff; font-size: 1.1em; }
+        .item-hidden {
+            color: #00d9ff;
+            background: rgba(0,217,255,0.1);
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+        .item-hidden:hover { background: rgba(0,217,255,0.2); }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .stat {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #00d9ff;
+        }
+        .stat-label { color: #888; font-size: 0.85em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 AI-MINNE</h1>
+            <p>Din personlige AI-hvelv - v2 Pro</p>
+        </div>
+        
+        <div class="stats" id="stats">
+            <div class="stat">
+                <div class="stat-number" id="statApi">0</div>
+                <div class="stat-label">API Keys</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="statPass">0</div>
+                <div class="stat-label">Passord</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="statToken">0</div>
+                <div class="stat-label">Tokens</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <input type="text" id="nameInput" placeholder="Navn (f.eks. 'groq_api')">
+            <input type="password" id="valueInput" placeholder="Verdi (passord, API-key...)">
+            <select id="category">
+                <option value="api">🔑 API Key</option>
+                <option value="password">🔒 Passord</option>
+                <option value="token">🎫 Token</option>
+            </select>
+            <button onclick="saveItem()">💾 LAGRE I MINNET</button>
+        </div>
+        
+        <div class="card" id="itemsCard">
+            <h3 style="color:#00d9ff; margin-bottom:20px; display:flex; align-items:center; gap:10px;">
+                📦 Lagret Data
+                <span style="font-size:0.7em; color:#888; font-weight:normal;" id="totalCount">(0)</span>
+            </h3>
+            <div id="itemsList">
+                <p style="color:#666; text-align:center; padding:40px;">Ingen data lagret ennå...</p>
+            </div>
+        </div>
+        
+        <div class="card" style="text-align:center;">
+            <button onclick="exportJSON()" class="secondary">📤 Eksporter til fil</button>
+            <button onclick="document.getElementById('fileInput').click()" class="secondary">📥 Importer fra fil</button>
+            <input type="file" id="fileInput" style="display:none" accept=".json" onchange="importJSON(this)">
+        </div>
+        
+        <div class="card" style="background: rgba(0,217,255,0.05);">
+            <p style="color:#888; font-size:0.9em; text-align:center;">
+                🔐 Data lagres lokalt i nettleseren.<br>
+                Eksporter regelmessig for backup.<br><br>
+                <span style="color:#00d9ff;">Bygget av Hermes - Proaktiv modus!</span>
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        let database = JSON.parse(localStorage.getItem('aiminne_v2') || '{}');
+        
+        function saveItem() {
+            const name = document.getElementById('nameInput').value.trim();
+            const value = document.getElementById('valueInput').value;
+            const category = document.getElementById('category').value;
+            
+            if (!name || !value) {
+                alert('⚠️ Fyll ut både navn og verdi!');
+                return;
+            }
+            
+            if (!database[category]) database[category] = {};
+            
+            database[category][name] = {
+                value: value,
+                created: new Date().toISOString(),
+                accessed: new Date().toISOString()
+            };
+            
+            localStorage.setItem('aiminne_v2', JSON.stringify(database));
+            
+            document.getElementById('nameInput').value = '';
+            document.getElementById('valueInput').value = '';
+            
+            render();
+            updateStats();
+            
+            showNotification('✅ Lagret!');
+        }
+        
+        function render() {
+            const container = document.getElementById('itemsList');
+            const icons = { api: '🔑', password: '🔒', token: '🎫' };
+            const labels = { api: 'API', password: 'Passord', token: 'Token' };
+            
+            let html = '';
+            let total = 0;
+            
+            for (const [cat, items] of Object.entries(database)) {
+                for (const [name, data] of Object.entries(items)) {
+                    total++;
+                    html += `
+                        <div class="item">
+                            <div>
+                                <div class="item-name">${icons[cat]} ${name}</div>
+                                <small style="color:#666">${labels[cat]}</small>
+                            </div>
+                            <span class="item-hidden" onclick="reveal(this, '${data.value}')">Klikk for å vise</span>
+                        </div>
+                    `;
+                }
+            }
+            
+            container.innerHTML = html || '<p style="color:#666; text-align:center; padding:40px;">Ingen data lagret ennå...</p>';
+            document.getElementById('totalCount').textContent = `(${total})`;
+        }
+        
+        function reveal(el, value) {
+            el.textContent = value;
+            el.className = '';
+            el.style = 'color:#70ff00; font-family:monospace; background:rgba(0,0,0,0.3); padding:8px 15px; border-radius:8px;';
+        }
+        
+        function updateStats() {
+            const counts = { api: 0, password: 0, token: 0 };
+            for (const [cat, items] of Object.entries(database)) {
+                counts[cat] = Object.keys(items).length;
+            }
+            document.getElementById('statApi').textContent = counts.api;
+            document.getElementById('statPass').textContent = counts.password;
+            document.getElementById('statToken').textContent = counts.token;
+        }
+        
+        function exportJSON() {
+            const data = JSON.stringify(database, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'ai-minne-' + new Date().toISOString().split('T')[0] + '.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showNotification('📤 Eksportert!');
+        }
+        
+        function importJSON(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    database = JSON.parse(e.target.result);
+                    localStorage.setItem('aiminne_v2', JSON.stringify(database));
+                    render();
+                    updateStats();
+                    showNotification('✅ Importert!');
+                } catch (err) {
+                    alert('❌ Feil: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        function showNotification(msg) {
+            const div = document.createElement('div');
+            div.style = 'position:fixed; top:20px; left:50%; transform:translateX(-50%); background:rgba(0,217,255,0.9); color:#000; padding:15px 30px; border-radius:10px; font-weight:bold; z-index:9999;';
+            div.textContent = msg;
+            document.body.appendChild(div);
+            setTimeout(() => div.remove(), 2000);
+        }
+        
+        render();
+        updateStats();
+        console.log('🧠 AI-Minne v2.0 Pro - Proaktiv bygging av Hermes!');
+    </script>
+</body>
+</html>
