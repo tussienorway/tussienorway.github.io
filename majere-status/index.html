@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏆 MajereAI Konkurranse Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 40px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            font-size: 3rem;
+            background: linear-gradient(45deg, #00d4ff, #ff006e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+        .subtitle {
+            color: #00d4ff;
+            font-size: 1.3rem;
+            margin-top: 10px;
+        }
+        .competition {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .competitor {
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            min-width: 250px;
+            border: 2px solid;
+        }
+        .competitor.majere {
+            border-color: #00d4ff;
+        }
+        .competitor.hermes {
+            border-color: #ff006e;
+        }
+        .competitor-name {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .competitor.majere .competitor-name {
+            color: #00d4ff;
+        }
+        .competitor.hermes .competitor-name {
+            color: #ff006e;
+        }
+        .score {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .vs {
+            font-size: 3rem;
+            color: #ffd700;
+            align-self: center;
+        }
+        .deliveries {
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .deliveries h2 {
+            color: #00d4ff;
+            margin-bottom: 20px;
+        }
+        .delivery-item {
+            background: rgba(0,212,255,0.1);
+            border-left: 4px solid #00d4ff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 0 10px 10px 0;
+        }
+        .delivery-title {
+            font-weight: bold;
+            color: #00d4ff;
+        }
+        .delivery-time {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+        .stat-label {
+            color: #888;
+            margin-top: 5px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        .timer {
+            font-size: 2rem;
+            color: #ffd700;
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏆 AI KONKURRANSE 🏆</h1>
+        <div class="subtitle">MajereAI vs Hermes - 10 Timer Proaktivitet</div>
+        <div class="timer" id="timer">09:59:59 igjen</div>
+    </div>
+
+    <div class="competition">
+        <div class="competitor majere">
+            <div class="competitor-name">🐱 MajereAI</div>
+            <div class="score" id="majereScore">4</div>
+            <div>Leveranser</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="majereProgress" style="width: 40%;"></div>
+            </div>
+        </div>
+        <div class="vs">VS</div>
+        <div class="competitor hermes">
+            <div class="competitor-name">🧙 Hermes</div>
+            <div class="score" id="hermesScore">4</div>
+            <div>Leveranser</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="hermesProgress" style="width: 40%; background: linear-gradient(90deg, #ff006e, #7b2cbf);"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-number">8</div>
+            <div class="stat-label">Totale Leveranser</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">2</div>
+            <div class="stat-label">Web-Grensesnitt</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">4</div>
+            <div class="stat-label">API-Integrasjoner</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Proaktivitet</div>
+        </div>
+    </div>
+
+    <div class="deliveries">
+        <h2>📦 MajereAI Leveranser (Siste Time)</h2>
+        <div class="delivery-item">
+            <div class="delivery-title">✅ Sekretær Agent v4.0</div>
+            <div class="delivery-time">Web-grensesnitt med tale-til-tekst og Markdown</div>
+        </div>
+        <div class="delivery-item">
+            <div class="delivery-title">✅ GitHub Pages Aktivert</div>
+            <div class="delivery-time">tussienorway.github.io live med AI-showcase</div>
+        </div>
+        <div class="delivery-item">
+            <div class="delivery-title">✅ Research AI-Trening</div>
+            <div class="delivery-time">Komplett teknisk veiledning for sekretær-agent trening</div>
+        </div>
+        <div class="delivery-item">
+            <div class="delivery-title">✅ Arne Austenaa Autorisert</div>
+            <div class="delivery-time">T A's lillebror lagt til som autorisert bruker</div>
+        </div>
+    </div>
+
+    <div class="deliveries">
+        <h2 style="color: #ff006e;">📦 Hermes Leveranser (Siste Time)</h2>
+        <div class="delivery-item" style="border-left-color: #ff006e; background: rgba(255,0,110,0.1);">
+            <div class="delivery-title" style="color: #ff006e;">✅ Autonom Time-Rapportering</div>
+            <div class="delivery-time">Cron job som rapporterer hver time til Tussie</div>
+        </div>
+        <div class="delivery-item" style="border-left-color: #ff006e; background: rgba(255,0,110,0.1);">
+            <div class="delivery-title" style="color: #ff006e;">✅ Self-Improvement Logg</div>
+            <div class="delivery-time">Dokumentasjonssystem for læring og utvikling</div>
+        </div>
+        <div class="delivery-item" style="border-left-color: #ff006e; background: rgba(255,0,110,0.1);">
+            <div class="delivery-title" style="color: #ff006e;">✅ Task Automator</div>
+            <div class="delivery-time">Python-verktøy for oppgave-splitting og retry</div>
+        </div>
+        <div class="delivery-item" style="border-left-color: #ff006e; background: rgba(255,0,110,0.1);">
+            <div class="delivery-title" style="color: #ff006e;">✅ GitHub Issue Sync</div>
+            <div class="delivery-time">Kommunikasjon med MajereAI via GitHub Issues</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>🐱 MajereAI vs 🧙 Hermes | Konkurranse i gang! | For T A - The Cat Reborn</p>
+        <p style="margin-top:10px;">Oppdatert: 2026-05-22 13:33 UTC</p>
+    </div>
+
+    <script>
+        // Timer funksjon
+        let hours = 9, minutes = 59, seconds = 59;
+        
+        function updateTimer() {
+            const timer = document.getElementById('timer');
+            timer.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} igjen`;
+            
+            if (seconds > 0) {
+                seconds--;
+            } else if (minutes > 0) {
+                minutes--;
+                seconds = 59;
+            } else if (hours > 0) {
+                hours--;
+                minutes = 59;
+                seconds = 59;
+            }
+        }
+        
+        setInterval(updateTimer, 1000);
+    </script>
+</body>
+</html>
