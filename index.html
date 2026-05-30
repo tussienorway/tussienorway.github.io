@@ -182,6 +182,23 @@
             <span>Sporsmaal:</span>
             <span class="stat-val" id="questions-val">0</span>
         </div>
+        <button class="btn btn-secondary" onclick="showSettings()" style="padding:4px 12px;font-size:12px;">⚙️ API</button>
+    </div>
+</div>
+
+<!-- Settings Modal -->
+<div id="settingsModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:999;justify-content:center;align-items:center;">
+    <div style="background:#1e293b;padding:32px;border-radius:16px;border:1px solid #6366f1;max-width:460px;width:90%;">
+        <h2 style="margin-bottom:16px;">⚙️ Innstillinger</h2>
+        <p style="color:#94a3b8;font-size:13px;margin-bottom:12px;">Skriv inn OpenRouter API-nøkkelen din for å bruke AI-Assistent. Den lagres kun i din nettleser (localStorage).</p>
+        <label style="font-size:12px;color:#94a3b8;">OpenRouter API Key</label>
+        <input type="password" id="apiKeyInput" placeholder="sk-or-..." style="width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#fff;font-size:14px;outline:none;">
+        <p style="color:#64748b;font-size:11px;margin-bottom:12px;">Få API-nøkkel: <a href="https://openrouter.ai/keys" target="_blank" style="color:#6366f1;">openrouter.ai/keys</a></p>
+        <div style="display:flex;gap:8px;">
+            <button class="btn btn-primary" onclick="saveApiKey()" style="flex:1;">Lagre</button>
+            <button class="btn btn-secondary" onclick="closeSettings()" style="flex:1;">Lukk</button>
+        </div>
+        <p id="settingsMsg" style="margin-top:12px;font-size:13px;"></p>
     </div>
 </div>
 
@@ -746,7 +763,17 @@ https://openrouter.ai/api/v1/chat/completions</pre>
 <script>
 // State
 let state = JSON.parse(localStorage.getItem('majereai-state') || '{"xp":0,"level":1,"completed":[],"questions":0}');
-const OPENROUTER_API_KEY = ''; // Setted av brukeren i settings
+const OPENROUTER_API_KEY = localStorage.getItem('openrouter_api_key') || '';
+
+function askForApiKey() {
+    if (!OPENROUTER_API_KEY) {
+        const msgs = document.getElementById('chat-messages');
+        msgs.innerHTML += `<div class="chat-msg chat-ai">🔐 For å bruke AI-Assistenten, skriv inn OpenRouter API-nøkkelen. Klikk <strong>⚙️ API</strong> øverst til høyre. Gratis nøkkel: <a href="https://openrouter.ai/keys" target="_blank" style="color:#6366f1;">openrouter.ai/keys</a></div>`;
+        msgs.scrollTop = msgs.scrollHeight;
+        return false;
+    }
+    return true;
+}
 
 // Skills data
 const skills = [
@@ -878,10 +905,7 @@ async function sendChat() {
     msgs.innerHTML += `<div class="chat-msg chat-ai" id="typing">...</div>`;
     msgs.scrollTop = msgs.scrollHeight;
 
-    if (!OPENROUTER_API_KEY) {
-        document.getElementById('typing').innerHTML = '⚠️ OPENROUTER_API_KEY er ikke satt. Gaa til innstillinger og legg til API-noekkelen din.';
-        return;
-    }
+    if (!askForApiKey()) return;
 
     try {
         const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -913,6 +937,38 @@ function saveState() {
 
 // Init
 updateStats();
+
+// Settings functions
+function showSettings() {
+    const saved = localStorage.getItem('openrouter_api_key') || '';
+    document.getElementById('apiKeyInput').value = saved ? '•'.repeat(20) : '';
+    document.getElementById('settingsMsg').textContent = saved ? 'API-nøkkel er lagret. Skriv ny for å erstatte.' : '';
+    document.getElementById('settingsModal').style.display = 'flex';
+}
+function closeSettings() {
+    document.getElementById('settingsModal').style.display = 'none';
+}
+function saveApiKey() {
+    const key = document.getElementById('apiKeyInput').value.trim();
+    if (!key) {
+        document.getElementById('settingsMsg').textContent = '⚠️ Skriv inn en API-nøkkel.';
+        document.getElementById('settingsMsg').style.color = '#ef4444';
+        return;
+    }
+    if (!key.startsWith('sk-or-')) {
+        document.getElementById('settingsMsg').textContent = '⚠️ OpenRouter API-nøkler starter med "sk-or-"';
+        document.getElementById('settingsMsg').style.color = '#ef4444';
+        return;
+    }
+    localStorage.setItem('openrouter_api_key', key);
+    document.getElementById('settingsMsg').textContent = '✅ API-nøkkel lagret! Laster siden på nytt...';
+    document.getElementById('settingsMsg').style.color = '#22c55e';
+    setTimeout(() => location.reload(), 1000);
+}
+document.getElementById('settingsModal').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') saveApiKey();
+    if (e.key === 'Escape') closeSettings();
+});
 </script>
 </body>
 </html>
