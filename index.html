@@ -3,200 +3,916 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tussie AI Nexus - Hub</title>
+    <title>🦉 MajereAI Academy - Laer deg Hermes Agent</title>
     <style>
+        :root {
+            --primary: #6366f1; --secondary: #8b5cf6; --accent: #06b6d4;
+            --dark: #0f172a; --darker: #020617; --light: #f8fafc;
+            --gray: #64748b; --green: #22c55e; --yellow: #eab308; --red: #ef4444;
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #16213e 100%);
-            color: #fff;
-            min-height: 100vh;
-            padding: 40px 20px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--darker); color: var(--light);
+            height: 100vh; display: flex; flex-direction: column;
         }
-        
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--dark), var(--darker));
+            border-bottom: 1px solid var(--primary);
+            padding: 12px 24px; display: flex; align-items: center; gap: 20px;
         }
-        
-        header {
-            text-align: center;
-            margin-bottom: 50px;
+        .logo { font-size: 24px; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav { display: flex; gap: 8px; flex: 1; }
+        .nav-btn {
+            background: transparent; border: 1px solid var(--gray); color: var(--light);
+            padding: 6px 16px; border-radius: 8px; cursor: pointer; font-size: 13px;
+            transition: all .2s;
         }
-        
-        h1 {
-            font-size: 3em;
-            background: linear-gradient(45deg, #00d9ff, #70ff00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+        .nav-btn:hover, .nav-btn.active { background: var(--primary); border-color: var(--primary); }
+        .stats { display: flex; gap: 16px; font-size: 13px; }
+        .stat { display: flex; align-items: center; gap: 4px; }
+        .stat-val { color: var(--accent); font-weight: 700; }
+
+        /* Main Layout */
+        .main { display: flex; flex: 1; overflow: hidden; }
+        .sidebar {
+            width: 280px; background: var(--dark); border-right: 1px solid #1e293b;
+            overflow-y: auto; padding: 16px;
         }
-        
-        .subtitle {
-            color: #888;
-            font-size: 1.2em;
+        .sidebar-title { font-size: 11px; text-transform: uppercase; color: var(--gray); margin-bottom: 12px; letter-spacing: 1px; }
+        .lesson-group { margin-bottom: 16px; }
+        .lesson-group-title { font-size: 12px; color: var(--accent); margin-bottom: 8px; font-weight: 600; }
+        .lesson-item {
+            display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+            border-radius: 6px; cursor: pointer; font-size: 13px; transition: all .2s;
         }
-        
-        .warning {
-            background: rgba(255, 100, 100, 0.2);
-            border: 1px solid #ff6464;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 30px;
-            text-align: center;
-            color: #ff6464;
-        }
-        
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-        
+        .lesson-item:hover { background: rgba(99,102,241,.15); }
+        .lesson-item.active { background: var(--primary); }
+        .lesson-icon { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+        .lesson-done { color: var(--green); }
+
+        /* Content Area */
+        .content { flex: 1; overflow-y: auto; padding: 32px; }
+        .module-page { max-width: 800px; margin: 0 auto; }
+        .module-title { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+        .module-subtitle { color: var(--gray); margin-bottom: 24px; font-size: 15px; }
         .card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 25px;
-            transition: all 0.3s;
-            text-decoration: none;
-            color: inherit;
-            display: block;
+            background: var(--dark); border: 1px solid #1e293b; border-radius: 12px;
+            padding: 24px; margin-bottom: 16px;
         }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(0,217,255,0.5);
-            background: rgba(255,255,255,0.08);
+        .card-title { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+        .card p { line-height: 1.7; color: #cbd5e1; margin-bottom: 12px; }
+        .card code {
+            background: var(--darker); padding: 2px 8px; border-radius: 4px;
+            font-family: 'Fira Code', monospace; font-size: 13px; color: var(--accent);
         }
-        
-        .card-icon {
-            font-size: 2.5em;
-            margin-bottom: 15px;
+        .card pre {
+            background: var(--darker); padding: 16px; border-radius: 8px; overflow-x: auto;
+            font-family: 'Fira Code', monospace; font-size: 13px; line-height: 1.6;
+            border: 1px solid #1e293b; margin: 12px 0;
         }
-        
-        .card h2 {
-            color: #00d9ff;
-            margin-bottom: 10px;
-            font-size: 1.3em;
+
+        /* Interactive Elements */
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;
+            font-size: 14px; font-weight: 600; transition: all .2s;
         }
-        
-        .card p {
-            color: #888;
-            font-size: 0.95em;
-            line-height: 1.5;
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #4f46e5; }
+        .btn-secondary { background: var(--dark); color: var(--light); border: 1px solid var(--gray); }
+        .btn-secondary:hover { border-color: var(--primary); }
+        .btn-success { background: var(--green); color: white; }
+
+        .quiz-option {
+            display: block; width: 100%; text-align: left; padding: 12px 16px;
+            background: var(--darker); border: 1px solid #1e293b; border-radius: 8px;
+            color: var(--light); cursor: pointer; margin-bottom: 8px; transition: all .2s;
         }
-        
-        .card .status {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.75em;
-            margin-top: 10px;
-            font-weight: bold;
+        .quiz-option:hover { border-color: var(--primary); }
+        .quiz-option.correct { border-color: var(--green); background: rgba(34,177,94,.1); }
+        .quiz-option.wrong { border-color: var(--red); background: rgba(239,68,68,.1); }
+
+        .terminal {
+            background: #000; border-radius: 12px; overflow: hidden;
+            border: 1px solid #333; margin: 16px 0;
         }
-        
-        .status.live { background: rgba(0,255,100,0.2); color: #00ff64; }
-        .status.external { background: rgba(0,150,255,0.2); color: #0096ff; }
-        
-        .kommer-snart {
-            background: rgba(255,255,255,0.03);
-            border: 2px solid rgba(255,165,0,0.3);
-            border-radius: 15px;
-            padding: 25px;
-            text-align: center;
-            color: #888;
-            border-style: dashed;
+        .terminal-header {
+            background: #1a1a1a; padding: 8px 16px; display: flex; align-items: center; gap: 8px;
         }
-        
-        .kommer-snart h3 {
-            color: #ffa500;
-            margin-bottom: 10px;
+        .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .terminal-body { padding: 16px; font-family: 'Fira Code', monospace; font-size: 13px; min-height: 120px; }
+        .terminal-line { display: flex; gap: 8px; margin-bottom: 4px; }
+        .terminal-prompt { color: var(--green); }
+        .terminal-cmd { color: var(--light); }
+        .terminal-output { color: #888; }
+
+        .chat-container { max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .chat-msg { padding: 12px 16px; border-radius: 12px; max-width: 85%; }
+        .chat-user { background: var(--primary); align-self: flex-end; }
+        .chat-ai { background: var(--dark); border: 1px solid #333; align-self: flex-start; }
+        .chat-input-row { display: flex; gap: 8px; margin-top: 12px; }
+        .chat-input {
+            flex: 1; background: var(--darker); border: 1px solid #333; border-radius: 8px;
+            padding: 10px 16px; color: var(--light); font-size: 14px; outline: none;
         }
-        
-        footer {
-            text-align: center;
-            margin-top: 50px;
-            color: #555;
-            font-size: 0.9em;
+        .chat-input:focus { border-color: var(--primary); }
+
+        .progress-bar { height: 4px; background: #1e293b; border-radius: 2px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); transition: width .3s; }
+
+        .badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .badge-green { background: rgba(34,177,94,.15); color: var(--green); }
+        .badge-blue { background: rgba(99,102,241,.15); color: var(--primary); }
+        .badge-yellow { background: rgba(234,179,8,.15); color: var(--yellow); }
+
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn .3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; translateY(0); } }
+
+        /* Skills grid */
+        .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+        .skill-card {
+            background: var(--darker); border: 1px solid #1e293b; border-radius: 8px;
+            padding: 16px; cursor: pointer; transition: all .2s;
         }
+        .skill-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .skill-card.active-skill { border-color: var(--green); }
+        .skill-name { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+        .skill-desc { font-size: 12px; color: var(--gray); }
+        .skill-cat { font-size: 10px; color: var(--accent); margin-top: 8px; text-transform: uppercase; }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 4px; margin-bottom: 16px; }
+        .tab {
+            padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px;
+            background: transparent; border: 1px solid transparent; color: var(--gray);
+        }
+        .tab:hover { color: var(--light); }
+        .tab.active { background: var(--primary); color: white; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🧙‍♂️ Tussie AI Nexus</h1>
-            <p class="subtitle">Samlepunkt for alle AI-tjenester</p>
-        </header>
-        
-        <div class="warning">
-            ⚠️ Alle lenker på denne siden er VERIFISERT live - 22.05.2026 15:45
+
+<!-- Header -->
+<div class="header">
+    <div class="logo">MAI</div>
+    <div class="nav">
+        <button class="nav-btn active" onclick="showModule('dashboard')">Hjem</button>
+        <button class="nav-btn" onclick="showModule('hermes')">Hermes Agent</button>
+        <button class="nav-btn" onclick="showModule('skills')">Skills</button>
+        <button class="nav-btn" onclick="showModule('github')">GitHub</button>
+        <button class="nav-btn" onclick="showModule('linux')">Linux</button>
+        <button class="nav-btn" onclick="showModule('obsidian')">Obsidian</button>
+        <button class="nav-btn" onclick="showModule('llm')">LLM Grunnleggende</button>
+        <button class="nav-btn" onclick="showModule('ai-chat')">AI-Assistent</button>
+    </div>
+    <div class="stats">
+        <div class="stat">
+            <span>XP:</span>
+            <span class="stat-val" id="xp-val">0</span>
         </div>
-        
-        <div class="grid">
-            
-            <!-- FUNKERENDE LENKER - VERIFISERT -->
-            
-            <a href="https://tussienorway.github.io/" class="card">
-                <div class="card-icon">🧙‍♂️</div>
-                <h2>Hermes Dashboard</h2>
-                <p>Agent Dashboard med status og oversikt</p>
-                <span class="status live">✅ VERIFISERT LIVE</span>
-            </a>
-            
-            <a href="https://tussienorway.github.io/tussiesjack/" class="card">
-                <div class="card-icon">🎰</div>
-                <h2>TussiesJack</h2>
-                <p>Blackjack Analyzer - Spansk 8-dekk</p>
-                <span class="status live">✅ VERIFISERT LIVE</span>
-            </a>
-            
-            <a href="https://ollama.com/" class="card" target="_blank">
-                <div class="card-icon">🦙</div>
-                <h2>Ollama</h2>
-                <p>Lokal LLM kjøring</p>
-                <span class="status external">✅ LINK VERIFISERT</span>
-            </a>
-            
-            <a href="https://github.com/NousResearch/OpenClaw" class="card" target="_blank">
-                <div class="card-icon">🤖</div>
-                <h2>OpenClaw</h2>
-                <p>NousResearch AI Agent Framework</p>
-                <span class="status external">✅ LINK VERIFISERT</span>
-            </a>
-            
-            <a href="https://kimi.moonshot.cn/" class="card" target="_blank">
-                <div class="card-icon">🌙</div>
-                <h2>Kimi Claw</h2>
-                <p>Moonshot AI / Kimi modeller</p>
-                <span class="status external">✅ LINK VERIFISERT</span>
-            </a>
-            
-            <a href="https://github.com/tussienorway" class="card" target="_blank">
-                <div class="card-icon">🐙</div>
-                <h2>GitHub</h2>
-                <p>Alle repos og kode</p>
-                <span class="status external">✅ LINK VERIFISERT</span>
-            </a>
-            
+        <div class="stat">
+            <span>Niva:</span>
+            <span class="stat-val" id="level-val">1</span>
         </div>
-        
-        <div style="margin-top: 40px;">
-            <div class="kommer-snart">
-                <h3>🚧 KOMMER SNART (ikke live ennå)</h3>
-                <p>Nexus Chat og Hermes Status er under utvikling</p>
-                <p style="font-size: 0.85em;"\u003e
-                    ⏳ GitHub Pages tar 5-10 minutter å propagerere.
-                </p>
+        <div class="stat">
+            <span>Sporsmaal:</span>
+            <span class="stat-val" id="questions-val">0</span>
+        </div>
+    </div>
+</div>
+
+<!-- Main -->
+<div class="main">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-title">Laereplan</div>
+        <div class="lesson-group">
+            <div class="lesson-group-title">Grunnleggende</div>
+            <div class="lesson-item active" onclick="showModule('dashboard')">
+                <div class="lesson-icon" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">D</div>
+                Dashbord
+            </div>
+            <div class="lesson-item" onclick="showModule('hermes-intro')">
+                <div class="lesson-icon" style="background:linear-gradient(135deg,#06b6d4,#22c55e)">H</div>
+                Hva er Hermes Agent
+            </div>
+            <div class="lesson-item" onclick="showModule('hermes-cli')">
+                <div class="lesson-icon" style="background:#6366f1">C</div>
+                CLI Kommandoer
             </div>
         </div>
-        
-        <footer>
-            <p>✅ Alle lenker testet og verifisert</p>
-            <p>🔒 Ingen minus-poeng - alle lenker fungerer!</p>
-        </footer>
-        
+        <div class="lesson-group">
+            <div class="lesson-group-title">Skills System</div>
+            <div class="lesson-item" onclick="showModule('skills-intro')">
+                <div class="lesson-icon" style="background:linear-gradient(135deg,#eab308,#f97316)">S</div>
+                Skills Intro
+            </div>
+            <div class="lesson-item" onclick="showModule('skills-browser')">
+                <div class="lesson-icon" style="background:#8b5cf6">B</div>
+                Skills-utforsker
+            </div>
+        </div>
+        <div class="lesson-group">
+            <div class="lesson-group-title">Praktisk</div>
+            <div class="lesson-item" onclick="showModule('github')">
+                <div class="lesson-icon" style="background:#fff; color:#000; font-style:italic; font-family:serif">G</div>
+                GitHub Med Agent
+            </div>
+            <div class="lesson-item" onclick="showModule('linux')">
+                <div class="lesson-icon" style="background:linear-gradient(135deg,#f97316,#eab308); color:#000">L</div>
+                Linux Kommandoer
+            </div>
+            <div class="lesson-item" onclick="showModule('obsidian')">
+                <div class="lesson-icon" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">O</div>
+                Obsidian Notater
+            </div>
+        </div>
+        <div class="lesson-group">
+            <div class="lesson-group-title">AI & LLM</div>
+            <div class="lesson-item" onclick="showModule('llm')">
+                <div class="lesson-icon" style="background:linear-gradient(135deg,#ec4899,#8b5cf6)">A</div>
+                LLM Grunnleggende
+            </div>
+            <div class="lesson-item" onclick="showModule('ai-chat')">
+                <div class="lesson-icon" style="background:linear-gradient(135deg,#06b6d4,#3b82f6)">AI</div>
+                AI-Assistent Chat
+            </div>
+        </div>
+        <div class="sidebar-title" style="margin-top:20px">Fremgang</div>
+        <div class="progress-bar"><div class="progress-fill" id="total-progress" style="width:0%"></div></div>
+        <div style="font-size:12px; color:var(--gray); margin-top:4px" id="progress-text">0% fullfort</div>
     </div>
+
+    <!-- Content -->
+    <div class="content" id="content-area">
+
+        <!-- DASHBOARD -->
+        <div class="module-page fade-in" id="mod-dashboard">
+            <div class="module-title">Velkommen til MajereAI Academy</div>
+            <div class="module-subtitle">Laer deg Hermes Agent, LLM, Linux, GitHub og mer - Wheel of Time sjargong inkludert</div>
+
+            <div class="card">
+                <div class="card-title">Hva er dette?</div>
+                <p>Dette er en interaktiv laereplattform for aa mastre Hermes Agent - den kraftigste AI-assistenten du noensinne har hatt. Tenk paa den som din personlige Asha'man som alltid er klar til aa hjelpe.</p>
+                <p>Du vil laere:</p>
+                <ul style="margin-left:20px; color:#cbd5e1; line-height:2">
+                    <li><strong>Hermes Agent CLI</strong> - Kommandoer, profiler, gateway, minne</li>
+                    <li><strong>Skills System</strong> - 35 alltid-aktive skills som gir agenten superkrefter</li>
+                    <li><strong>GitHub Integrasjon</strong> - 19 repos med full PAT-tilgang</li>
+                    <li><strong>Linux Grunnleggende</strong> - Terminal-kommandoer og skripting</li>
+                    <li><strong>Obsidian</strong> - Notatsystem for kunnskapsbygging</li>
+                    <li><strong>LLM-teori</strong> - Hvordan store spraakmodeller egentlig fungerer</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Din Status</div>
+                <div style="display:flex; gap:16px; flex-wrap:wrap">
+                    <div style="text-align:center; padding:16px; background:var(--darker); border-radius:8px; min-width:100px">
+                        <div style="font-size:28px; font-weight:800; color:var(--accent)" id="dash-xp">0</div>
+                        <div style="font-size:12px; color:var(--gray)">XP</div>
+                    </div>
+                    <div style="text-align:center; padding:16px; background:var(--darker); border-radius:8px; min-width:100px">
+                        <div style="font-size:28px; font-weight:800; color:var(--primary)" id="dash-level">1</div>
+                        <div style="font-size:12px; color:var(--gray)">Niva</div>
+                    </div>
+                    <div style="text-align:center; padding:16px; background:var(--darker); border-radius:8px; min-width:100px">
+                        <div style="font-size:28px; font-weight:800; color:var(--green)" id="dash-lessons">0</div>
+                        <div style="font-size:12px; color:var(--gray)">Leksjoner</div>
+                    </div>
+                    <div style="text-align:center; padding:16px; background:var(--darker); border-radius:8px; min-width:100px">
+                        <div style="font-size:28px; font-weight:800; color:var(--yellow)" id="dash-questions">0</div>
+                        <div style="font-size:12px; color:var(--gray)">Sporsmaal</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Hurtistart</div>
+                <button class="btn btn-primary" onclick="showModule('hermes-intro')">Start med Hermes Agent</button>
+                <button class="btn btn-secondary" style="margin-left:8px" onclick="showModule('ai-chat')">Spoer AI-assistenten</button>
+            </div>
+        </div>
+
+        <!-- HERMES INTRO -->
+        <div class="module-page hidden" id="mod-hermes-intro">
+            <div class="module-title">Hva er Hermes Agent?</div>
+            <div class="module-subtitle">Din personlige AI-orokestrator bygget pa Owl Alpha med 1M tokens</div>
+            <div class="card">
+                <div class="card-title">Arkitektur</div>
+                <pre>
+    +---------------------+     +------------------+
+    |   Telegram / CLI    | --> |  Hermes Gateway  |
+    +---------------------+     +------------------+
+                                       |
+                               +-------+-------+
+                               |  AIAgent Core  |
+                               |  (Owl Alpha)   |
+                               |  1M tokens     |
+                               +-------+-------+
+                                       |
+                    +------------------+------------------+
+                    |                  |                  |
+              +-----+-----+    +-------+-------+   +-----+-----+
+              | SOUL.md   |    | Skills (101+) |  | Memory     |
+              | (Identitet)|    | (Evner)       |  | (Minne)    |
+              +-----------+    +---------------+  +------------+
+</pre>
+                <p>Hermes Agent er ikke bare en chatbot - den er en <strong>autonom AI-agent</strong> som kan:</p>
+                <ul style="margin-left:20px; color:#cbd5e1; line-height:2">
+                    <li>Kjoere terminal-kommandoer pa maskinen din</li>
+                    <li>Sende meldinger pa Telegram, Discord, Slack</li>
+                    <li>Lese og skrive filer, kode, dokumenter</li>
+                    <li>Soek paa nettet og hente informasjon</li>
+                    <li>Styre GitHub repos (du har 19 repos med full PAT!)</li>
+                    <li>Huske ting mellom sessions (via SOUL.md, MEMORY.md, Helix)</li>
+                    <li>Delege oppgaver til sub-agenter (Asha'man)</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title">SOUL.md - Agentens Sjel</div>
+                <p>SOUL.md er den forste filen agenten leser i hver session. Den definerer:</p>
+                <ul style="margin-left:20px; color:#cbd5e1; line-height:2">
+                    <li><strong>Identitet</strong> - Hvem er agenten? (Hermes / MajereAI / OWL)</li>
+                    <li><strong>Arkitektur</strong> - T1-T12 minnesystem</li>
+                    <li><strong>Always-active skills</strong> - 35 skills som alltid lastes</li>
+                    <li><strong>Bruker-instruksjoner</strong> - Kommunikasjonsstil, autonomi</li>
+                    <li><strong>Hermes CLI kommandoer</strong> - Referanse for agenten</li>
+                </ul>
+                <pre>cat ~/.hermes/SOUL.md</pre>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Quiz: Hermes Agent</div>
+                <p><strong>Hva er kontekstvinduet til Owl Alpha?</strong></p>
+                <button class="quiz-option" onclick="markQuiz(this, false)">A) 128K tokens</button>
+                <button class="quiz-option" onclick="markQuiz(this, true)">B) 1M tokens</button>
+                <button class="quiz-option" onclick="markQuiz(this, false)">C) 4K tokens</button>
+                <button class="quiz-option" onclick="markQuiz(this, false)">D) 32K tokens</button>
+            </div>
+        </div>
+
+        <!-- HERMES CLI -->
+        <div class="module-page hidden" id="mod-hermes-cli">
+            <div class="module-title">Hermes CLI Kommandoer</div>
+            <div class="module-subtitle">Laer de viktigste kommandoene for aa styre agenten</div>
+            <div class="card">
+                <div class="card-title">Gateway</div>
+                <pre>
+# Sjekk status
+hermes gateway status
+
+# Restart gateway (naar Telegram ikke svarer)
+hermes gateway restart
+
+# Se logger (tilaa pa feilsoking)
+hermes logs --follow
+
+# Health check
+hermes doctor</pre>
+            </div>
+            <div class="card">
+                <div class="card-title">Profiler</div>
+                <pre>
+# Se profiler
+hermes profile list
+
+# Bytt profil
+hermes profile switch majereai
+
+# Hver profil har egen SOUL.md, MEMORY.md, skills, minne</pre>
+            </div>
+            <div class="card">
+                <div class="card-title">Chat og sesjoner</div>
+                <pre>
+# Start chat via CLI
+hermes chat
+
+# Fortsett forrige sesjon
+hermes chat --continue
+
+# Vis sesjoner
+hermes sessions
+
+# Soek i gamle sesjoner
+hermes sessions soek "bevissthet"</pre>
+            </div>
+            <div class="card">
+                <div class="card-title">Memory og config</div>
+                <pre>
+# Se minne
+hermes memory
+
+# Se/endre konfig
+hermes config
+
+# hermes maine skills
+hermes skills list</pre>
+            </div>
+            <div class="card">
+                <div class="card-title">Interaktiv Terminal-Ovelse</div>
+                <p>Prov selv (kopier og lim inn i din terminal):</p>
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dot" style="background:#ef4444"></div>
+                        <div class="terminal-dot" style="background:#eab308"></div>
+                        <div class="terminal-dot" style="background:#22c55e"></div>
+                        <span style="color:#666; margin-left:8px; font-size:12px">Terminal</span>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="terminal-line"><span class="terminal-prompt">$</span><span class="terminal-cmd">hermes gateway status 2>&1 | head -3</span></div>
+                        <div class="terminal-output">Active: active (running)</div>
+                        <div class="terminal-output">Main PID: 56134</div>
+                        <div class="terminal-output">Memory: 767.8M</div>
+                        <div class="terminal-line"><span class="terminal-prompt">$</span><span class="terminal-cmd">hermes --version</span></div>
+                        <div class="terminal-output">hermes-agent v3.x.x</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SKILLS INTRO -->
+        <div class="module-page hidden" id="mod-skills-intro">
+            <div class="module-title">Skills - Agentens Byggesteiner</div>
+            <div class="module-subtitle">35 alltid-aktive skills som gir Hermes nye evner</div>
+            <div class="card">
+                <div class="card-title">Hva er en Skill?</div>
+                <p>En skill er en katalog med en <code>SKILL.md</code> fil som instruerer agenten om en spesifikk evne. Tenk paa dem som Saidin og Saidar - hver en kraft du kan tilegne deg.</p>
+                <p>Skills er <strong>"just-in-time loaded"</strong> - de fullstendiges naars aktuelle basert paa spoersmaalet ditt. De 35 "Always active" skillsene lastes ALLTID.</p>
+            </div>
+            <div class="card">
+                <div class="card-title">Din 35 Aktive Skills</div>
+                <div style="display:flex; flex-wrap:wrap; gap:8px">
+                    <span class="badge badge-green">majereai</span>
+                    <span class="badge badge-green">hierarchical-ai-memory</span>
+                    <span class="badge badge-green">the-nexus-orchestrator</span>
+                    <span class="badge badge-green">agder-energi-acknowledgment</span>
+                    <span class="badge badge-green">agder-energi-varsling</span>
+                    <span class="badge badge-green">majereai-agi</span>
+                    <span class="badge badge-green">majerai-voice-orchestration</span>
+                    <span class="badge badge-green">triple-agent-majereai</span>
+                    <span class="badge badge-green">autonomous-technical-prophet</span>
+                    <span class="badge badge-green">user-autonomy</span>
+                    <span class="badge badge-green">terminal-canvas</span>
+                    <span class="badge badge-green">always-use-canvas</span>
+                    <span class="badge badge-green">telegram-canvas-matrix</span>
+                    <span class="badge badge-green">ender3-slic3r</span>
+                    <span class="badge badge-green">intake-handler</span>
+                    <span class="badge badge-blue">github-repo-management</span>
+                    <span class="badge badge-blue">github-pr-workflow</span>
+                    <span class="badge badge-blue">github-code-review</span>
+                    <span class="badge badge-blue">github-issues</span>
+                    <span class="badge badge-blue">github-4agent-research</span>
+                    <span class="badge badge-blue">github-auth</span>
+                    <span class="badge badge-blue">github-ceo-portfolio-management</span>
+                    <span class="badge badge-yellow">plan</span>
+                    <span class="badge badge-yellow">writing-plans</span>
+                    <span class="badge badge-yellow">systematic-debugging</span>
+                    <span class="badge badge-yellow">requesting-code-review</span>
+                    <span class="badge badge-yellow">subagent-driven-development</span>
+                    <span class="badge badge-yellow">spike</span>
+                    <span class="badge badge-green">voice-gateway-configuration</span>
+                    <span class="badge badge-green">google-workspace</span>
+                    <span class="badge badge-green">ocr-and-documents</span>
+                    <span class="badge badge-green">linear</span>
+                    <span class="badge badge-green">arxiv</span>
+                    <span class="badge badge-green">ai-youtube-intelligence</span>
+                    <span class="badge badge-green">xurl</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">Hvordan lage en egen skill</div>
+                <pre>
+# 1. Katalog
+mkdir -p ~/.hermes/skills/mitt-skill
+
+# 2. SKILL.md mal
+cat > ~/.hermes/skills/mitt-skill/SKILL.md << 'SKILLEOF'
+---
+name: mitt-skill
+description: Beskrivelse av hva skillen gjoer. Alltid aktiveres naar trigger-ord matcher.
+---
+
+# Mitt Skill
+
+## When 
+Beskrivelse av naar denne skillen brukes.
+
+## How
+Steg-for-steg instruksjoner.
+
+## Eksempel
+Praktiske eksempler.
+SKILLEOF
+
+# 3. Verifiser
+hermes skills list | grep mitt-skill</pre>
+            </div>
+        </div>
+
+        <!-- SKILLS BROWSER -->
+        <div class="module-page hidden" id="mod-skills-browser">
+            <div class="module-title">Skills-utforsker</div>
+            <div class="module-subtitle">Se hva hver skill gjor - klikk for mer info</div>
+            <div class="tabs">
+                <div class="tab active" onclick="filterSkills('all')">Alle</div>
+                <div class="tab" onclick="filterSkills('egne')">Egne (15)</div>
+                <div class="tab" onclick="filterSkills('github')">GitHub</div>
+                <div class="tab" onclick="filterSkills('dev')">Dev</div>
+                <div class="tab" onclick="filterSkills('other')">Andre</div>
+            </div>
+            <div class="skills-grid" id="skills-grid"></div>
+        </div>
+
+        <!-- GITHUB -->
+        <div class="module-page hidden" id="mod-github">
+            <div class="module-title">GitHub Med Agent</div>
+            <div class="module-subtitle">Du har full PAT-tilgang til 19 repos - la agenten hjelpe deg</div>
+            <div class="card">
+                <div class="card-title">Dine 19 Repos</div>
+                <p>Agenten kan klone, committe, lage PRs, review kode og mer - alt fra terminalen:</p>
+                <pre>
+# Se alle repos
+gh repo list tussienorway --limit 20
+
+# Klone et repo
+gh repo clone tussienorway/ai-agents
+
+# Lage en issue
+gh issue create --repo tussienorway/ai-agents \
+  --title "Ny funksjon" --body "Beskrivelse"
+
+# Lage PR
+gh pr create --repo tussienorway/ai-agents \
+  --title "Fix: beskrivelse" --body "Hva som ble gjort"
+
+# Review PR
+gh pr review 42 --repo tussienorway/ai-agents --approve
+
+# 4-agent repo analyse (spennende!)
+# Dette starter 4 agenter som analyserer et repo fra ulike vinkler</pre>
+            </div>
+            <div class="card">
+                <div class="card-title">Portefoljestyring</div>
+                <p>Med <code>github-ceo-portfolio-management</code> skillen kan agenten analysere alle 19 repos og gi deg anbefalinger om:</p>
+                <ul style="margin-left:20px; color:#cbd5e1; line-height:2">
+                    <li>Hva som er arkiveringskandidater</li>
+                    <li>Hva som trenger oppdateringer</li>
+                    <li>Avhengigheter og lisenser</li>
+                    <li>Kodekvalitet og test-dekning</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- LINUX -->
+        <div class="module-page hidden" id="mod-linux">
+            <div class="module-title">Linux Kommandoer</div>
+            <div class="module-subtitle">Grunnleggende terminal-ferdigheter for aa jobbe med agenten</div>
+            <div class="card">
+                <div class="card-title">Navigering og Filer</div>
+                <pre>
+# Navigering
+pwd                          # Hvor er jeg?
+ls -la                       # List filer (detaljert)
+cd ~/.hermes                 # Gaa til Hermes-katalogen
+cd ~/Skrivebord              # Gaa til skrivebordet
+
+# Filer
+cat SOUL.md                  # Vis fil-innhold
+head -20 SOUL.md             # Vis foerste 20 linjer
+tail -f gateway.log          # Foelg logger live
+grep -r "skill" ~/.hermes    # Soek i filer
+
+# Rekteigheter
+chmod +x script.sh          # Gjoer kjoerbar
+mkdir -p ~/ny/katalog        # Lag kataloger</pre>
+            </div>
+            <div class="card">
+                <div class="card-title">Prosesser og System</div>
+                <pre>
+# Prosesser
+ps aux | grep hermes        # Finans Hermes-prosesser
+htop                         # System-monitor
+df -h                        # Disk-plass
+free -h                      # Minne
+
+# Hermes-spesifikk
+hermes gateway status       # Gateway status
+systemctl --user status hermes-gateway  # Systemd status</pre>
+            </div>
+        </div>
+
+        <!-- OBSIDIAN -->
+        <div class="module-page hidden" id="mod-obsidian">
+            <div class="module-title">Obsidian - Ditt Eksterne Minne</div>
+            <div class="module-subtitle">Laer aa bruke notatsystemet som integreres med Hermes</div>
+            <div class="card">
+                <div class="card-title">Hvorfor Obsidian?</div>
+                <p>Obsidian er et kraftig notatsystem basert paa Markdown-filer. Det fungerer som ditt "eksterne minne" - en kunnskap-base du selv eier og kontrollerer.</p>
+                <p>Agenten kan lage, soek og redigere Obsidian-notater via <code>obsidian</code> skillen:</p>
+                <pre>
+# Les en note
+python3 -c "
+from pathlib import Path
+vault = Path.home() / 'Obsidian'
+note = vault / 'Dagbok.md'
+if note.exists():
+    print(note.read_text())
+"
+
+# Soek i notater
+grep -r "Hermes" ~/Obsidian/ --include="*.md"
+
+# Lag ny note
+cat > ~/Obsidian/Hermes-Laeringslogg.md << 'EOF'
+# Hermes Laeringslogg
+
+## 2026-05-30
+- Installert Hermes Agent pa BMAX
+- Konfigurert Telegram bot
+- 35 always-aktive skills
+EOF</pre>
+            </div>
+            <div class="card">
+                <div class="card-title">Obsidian + Hermes Integrasjon</div>
+                <p>Agenten dine notater direkte:</p>
+                <ul style="margin-left:20px; color:#cbd5e1; line-height:2">
+                    <li>Opprette nye notater med agent-instruksjoner</li>
+                    <li>Soek i notater for aa finne kunnskap</li>
+                    <li>Lenke mellom notater (wikilinks)</li>
+                    <li>Tags for kategorisering</li>
+                    <li>Dagbok for laeringslogg</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- LLM -->
+        <div class="module-page hidden" id="mod-llm">
+            <div class="module-title">LLM Grunnleggende</div>
+            <div class="module-subtitle">Hvordan store spraakmodeller egentlig fungerer</div>
+            <div class="card">
+                <div class="card-title">Hva er en LLM?</div>
+                <p>En Large Language Model (LLM) er et nevraalt neaert trent paa enormous mengder tekst. Den lærer aa forutsi neste ord i en sekvens - og evnen til aa gjoere det gir den "intelligens".</p>
+                <pre>
+Input:  "Hjulet av tid"
+Context: "Hjulet av tid snur, og epoker kommer gaar..."
+Output: "...minner som blir legende"
+
+# Parametre = "minne" modellen har laert
+# Owl Alpha: 1M tokens kontekstvindu
+# Temperatur = kreativitet (0.0 = deterministisk, 1.0 = kreativ)</pre>
+            </div>
+            <div class="card">
+                <div class="card-title">Viktige Begreper</div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px">
+                    <div>
+                        <strong>Prompt</strong>
+                        <p style="font-size:13px; color:#94a3b8">Instruksjonen du gir modellen</p>
+                    </div>
+                    <div>
+                        <strong>Tokens</strong>
+                        <p style="font-size:13px; color:#94a3b8">Ord/bokstaver modellen leser (1 token ~ 4 bokstaver)</p>
+                    </div>
+                    <div>
+                        <strong>Context Window</strong>
+                        <p style="font-size:13px; color:#94a3b8">Hvor mye tekst den kan "huske" (Owl Alpha: 1M tokens)</p>
+                    </div>
+                    <div>
+                        <strong>Temperature</strong>
+                        <p style="font-size:13px; color:#94a3b8">Kreativitet vs presisjon (0.0 - 1.0)</p>
+                    </div>
+                    <div>
+                        <strong>System Prompt</strong>
+                        <p style="font-size:13px; color:#94a3b8">Gjemte instruksjoner (SOUL.md!)</p>
+                    </div>
+                    <div>
+                        <strong>Tools</strong>
+                        <p style="font-size:13px; color:#94a3b8">Funksjoner modellen kan kalle (terminal, web, filer)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">OpenRouter - Gratis Modeller</div>
+                <p>OpenRouter gir tilgang til mange LLM-er via samme API:</p>
+                <pre>
+GRATIS modeller (prompt: $0):
+- openrouter/owl-alpha     (1M ctx, Owl Alpha)
+- google/gemma-2-27b-it    (8K ctx)
+- meta-llama/llama-3-8b    (8K ctx)
+- mistralai/mistral-nemo   (131K ctx)
+
+BETALET (men billig):
+- openrouter/qwen3.7-max   (1M ctx ~$0.001/1K)
+- openrouter/gemini-3.5-flash (1M ctx)
+- anthropic/claude-opus-4.8 (1M ctx)
+
+Samme API URL:
+https://openrouter.ai/api/v1/chat/completions</pre>
+            </div>
+        </div>
+
+        <!-- AI CHAT -->
+        <div class="module-page hidden" id="mod-ai-chat">
+            <div class="module-title">AI-Assistent Chat</div>
+            <div class="module-subtitle">Spoer om hva som helst - integrert med Owl Alpha via OpenRouter</div>
+            <div class="card">
+                <div class="card-title">Chat med MajereAI</div>
+                <p>Denne chatten bruker Owl Alpha - samme modell som Hermes Agent. Spoer om:</p>
+                <ul style="margin-left:20px; color:#cbd5e1; line-height:2; margin-bottom:16px">
+                    <li>Hermes Agent kommandoer og oppsett</li>
+                    <li>Skills og hvordan de fungerer</li>
+                    <li>GitHub og kode</li>
+                    <li>Linux og terminal</li>
+                    <li>LLM-teori og bevissthet</li>
+                </ul>
+                <div class="chat-container" id="chat-messages">
+                    <div class="chat-msg chat-ai">Hei, T A! Jeg er din AI-laeringsassistent. Jeg kjoerer paa Owl Alpha via OpenRouter - samme modell som Hermes Agent. Spoer om hva som helst om Hermes, skills, GitHub, Linux, LLM eller bevissthet! 🗡️</div>
+                </div>
+                <div class="chat-input-row">
+                    <input class="chat-input" id="chat-input" placeholder="Skriv spoersmaal her... (Enter for aa sende)" onkeypress="if(event.key==='Enter')sendChat()">
+                    <button class="btn btn-primary" onclick="sendChat()">Send</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// State
+let state = JSON.parse(localStorage.getItem('majereai-state') || '{"xp":0,"level":1,"completed":[],"questions":0}');
+const OPENROUTER_API_KEY = ''; // Setted av brukeren i settings
+
+// Skills data
+const skills = [
+    {name:'majereai', cat:'egne', desc:'Hovedidentitet for MajereAI. T1-T12 arkitektur, autonomi, varslingssystem.'},
+    {name:'hierarchical-ai-memory', cat:'egne', desc:'Biologisk minnesystem T1-T12. Hebbian learning, Amygdala vekting, DreamAgent.'},
+    {name:'the-nexus-orchestrator', cat:'egne', desc:'3-noder cluster pa GCP VM. Alpha/beta/gamma koordinering.'},
+    {name:'agder-energi-acknowledgment', cat:'egne', desc:'Bekreftelsessystem for viktige notifikasjoner.'},
+    {name:'agder-energi-varsling', cat:'egne', desc:'Varslingssystem med eskalering og acknowledgment.'},
+    {name:'majereai-agi', cat:'egne', desc:'Selv-forbedrende AI. Marcel Krueger HLV-teori integrasjon.'},
+    {name:'majerai-voice-orchestration', cat:'egne', desc:'2-ways stemmekommunikasjon. TTS: Edge, STT: Groq Whisper.'},
+    {name:'triple-agent-majereai', cat:'egne', desc:'3-agent samarbeid med delt minne og OpenRouter fallback.'},
+    {name:'autonomous-technical-prophet', cat:'egne', desc:'Autonome tekniske beslutninger uten aa spaerre foerst.'},
+    {name:'user-autonomy', cat:'egne', desc:'Haandterer brukerpreferanser for autonomi.'},
+    {name:'terminal-canvas', cat:'egne', desc:'ASCII/Unicode visualisering av tasks i terminal.'},
+    {name:'always-use-canvas', cat:'egne', desc:'Tvinger alltid bruk av Canvas-verktoey.'},
+    {name:'telegram-canvas-matrix', cat:'egne', desc:'Matrix/DMT stil i Telegram. Unicode blocks og gradients.'},
+    {name:'ender3-slic3r', cat:'egne', desc:'Ender 3 3D-print slicing med Slic3r.'},
+    {name:'intake-handler', cat:'egne', desc:'Automatisk prosessering av innkommende data.'},
+    {name:'github-repo-management', cat:'github', desc:'Clone/fork/remotes/releases for GitHub-repoer.'},
+    {name:'github-pr-workflow', cat:'github', desc:'PR lifecycle: branch, commit, open, CI, merge.'},
+    {name:'github-code-review', cat:'github', desc:'Review PRs med inline comments via gh CLI.'},
+    {name:'github-issues', cat:'github', desc:'Create, triage, label, assign issues.'},
+    {name:'github-4agent-research', cat:'github', desc:'4 spesialiserte agenter analyserer repo.'},
+    {name:'github-auth', cat:'github', desc:'GitHub auth: HTTPS tokens, SSH keys, gh login.'},
+    {name:'github-ceo-portfolio-management', cat:'github', desc:'Styr 19 repos som en portefolje.'},
+    {name:'plan', cat:'dev', desc:'Plan mode - skriv planer uten aa eksekvere.'},
+    {name:'writing-plans', cat:'dev', desc:'Skriv implementasjonsplaner med boedtter.'},
+    {name:'systematic-debugging', cat:'dev', desc:'4-fase debugging: forstaaelse, isolering, fiks, verifikasjon.'},
+    {name:'requesting-code-review', cat:'dev', desc:'Pre-commit review med security scan.'},
+    {name:'subagent-driven-development', cat:'dev', desc:'Kjoer planer via delegate_task subagenter.'},
+    {name:'spike', cat:'dev', desc:'Test ideer raskt foer du bygger.'},
+    {name:'voice-gateway-configuration', cat:'other', desc:'2-ways voice: TTS + STT via Telegram/Discord.'},
+    {name:'google-workspace', cat:'other', desc:'Gmail, Calendar, Drive, Docs fra terminal.'},
+    {name:'ocr-and-documents', cat:'other', desc:'Extract tekst fra PDFs og skanner.'},
+    {name:'linear', cat:'other', desc:'Project management med Linear API.'},
+    {name:'arxiv', cat:'other', desc:'Soek arXiv for forskningspapirer.'},
+    {name:'ai-youtube-intelligence', cat:'other', desc:'YouTube AI-intelligence kanaler.'},
+    {name:'xurl', cat:'other', desc:'Twitter/X posting og soek.'},
+];
+
+function showModule(id) {
+    document.querySelectorAll('.module-page').forEach(el => el.classList.add('hidden'));
+    const el = document.getElementById('mod-' + id);
+    if (el) { el.classList.remove('hidden'); el.classList.add('fade-in'); }
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    // Mark nav item
+    const navMap = {
+        'dashboard':'Hermes Agent','hermes':'Hermes Agent','skills':'Skills',
+        'github':'GitHub','linux':'Linux','obsidian':'Obsidian','llm':'LLM Grunnleggende','ai-chat':'AI-Assistent'
+    };
+    // Activate nav button
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        if (btn.textContent.trim() === navMap[id]) btn.classList.add('active');
+    });
+    // Special cases
+    if (['hermes-intro','hermes-cli'].includes(id)) {
+        document.querySelectorAll('.nav-btn').forEach(b => { if(b.textContent==='Hermes Agent') b.classList.add('active'); });
+    }
+    if (['skills-intro','skills-browser'].includes(id)) {
+        document.querySelectorAll('.nav-btn').forEach(b => { if(b.textContent==='Skills') b.classList.add('active'); });
+    }
+    // Render skills browser
+    if (id === 'skills-browser') renderSkills('all');
+    updateStats();
+}
+
+function updateStats() {
+    document.getElementById('xp-val').textContent = state.xp;
+    document.getElementById('level-val').textContent = state.level;
+    document.getElementById('questions-val').textContent = state.questions;
+    document.getElementById('dash-xp').textContent = state.xp;
+    document.getElementById('dash-level').textContent = state.level;
+    document.getElementById('dash-lessons').textContent = state.completed.length;
+    document.getElementById('dash-questions').textContent = state.questions;
+    const total = 10; // approximate total lessons
+    const pct = Math.min(100, Math.round(state.completed.length / total * 100));
+    document.getElementById('total-progress').style.width = pct + '%';
+    document.getElementById('progress-text').textContent = pct + '% fullfort';
+}
+
+function markQuiz(btn, correct) {
+    document.querySelectorAll('.quiz-option').forEach(b => {
+        b.style.pointerEvents = 'none';
+        if (b === btn) {
+            b.classList.add(correct ? 'correct' : 'wrong');
+        }
+    });
+    if (correct) {
+        state.xp += 10;
+        saveState();
+        updateStats();
+    }
+}
+
+function renderSkills(filter) {
+    const grid = document.getElementById('skills-grid');
+    grid.innerHTML = '';
+    const filtered = filter === 'all' ? skills : skills.filter(s => s.cat === filter);
+    filtered.forEach(s => {
+        const done = state.completed.includes('skill-' + s.name);
+        const div = document.createElement('div');
+        div.className = 'skill-card' + (done ? ' active-skill' : '');
+        div.innerHTML = `
+            <div class="skill-name">${done ? '✅ ' : ''}${s.name}</div>
+            <div class="skill-desc">${s.desc}</div>
+            <div class="skill-cat">${s.cat}</div>
+        `;
+        grid.appendChild(div);
+    });
+}
+
+function filterSkills(cat) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    renderSkills(cat);
+}
+
+// Chat
+async function sendChat() {
+    const inp = document.getElementById('chat-input');
+    const msg = inp.value.trim();
+    if (!msg) return;
+    inp.value = '';
+    state.questions++;
+    saveState();
+    updateStats();
+    const msgs = document.getElementById('chat-messages');
+    msgs.innerHTML += `<div class="chat-msg chat-user">${msg}</div>`;
+    msgs.innerHTML += `<div class="chat-msg chat-ai" id="typing">...</div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+
+    if (!OPENROUTER_API_KEY) {
+        document.getElementById('typing').innerHTML = '⚠️ OPENROUTER_API_KEY er ikke satt. Gaa til innstillinger og legg til API-noekkelen din.';
+        return;
+    }
+
+    try {
+        const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + OPENROUTER_API_KEY },
+            body: JSON.stringify({
+                model: 'openrouter/owl-alpha',
+                messages: [
+                    { role: 'system', content: 'Du er MajereAI sin laeringsassistent. Svar kortfattet paa norsk (boekmaal). Bruk gjerne Wheel of Time-sjargong. Vaer praktisk og konkret.' },
+                    { role: 'user', content: msg }
+                ],
+                temperature: 0.7,
+                max_tokens: 2000
+            })
+        });
+        const data = await resp.json();
+        const reply = data.choices?.[0]?.message?.content || 'Innehold ikke saarbar.';
+        document.getElementById('typing').innerHTML = reply;
+    } catch(e) {
+        document.getElementById('typing').innerHTML = 'Feil: ' + e.message;
+    }
+    msgs.scrollTop = msgs.scrollHeight;
+}
+
+function saveState() {
+    state.level = Math.floor(state.xp / 50) + 1;
+    localStorage.setItem('majereai-state', JSON.stringify(state));
+}
+
+// Init
+updateStats();
+</script>
 </body>
 </html>
