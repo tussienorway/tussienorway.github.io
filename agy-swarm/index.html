@@ -1,0 +1,793 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1117">
+  <meta name="description" content="AGY-Swarm v2.0: Produksjonssikker multi-agent-sverm styrt av Nous Hermes Agent og Google Gemini 4 Argon, optimalisert for lokal avlastning på RTX 5060 Ti.">
+  <title>AGY-Swarm v2.0 · Hermes Agent + Gemini 4 Argon + RTX 5060 Ti</title>
+  <style>
+    :root {
+      --bg: #090d12;
+      --card-bg: #121820;
+      --card-border: #1e293b;
+      --accent-blue: #38bdf8;
+      --accent-cyan: #22d3ee;
+      --accent-purple: #a855f7;
+      --accent-green: #34d399;
+      --accent-amber: #f59e0b;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      padding: 0 16px 80px;
+      overflow-x: hidden;
+    }
+
+    /* Bakgrunnsglød */
+    .glow-bg {
+      position: fixed;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 1000px; height: 500px;
+      background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.15), rgba(168, 85, 247, 0.08) 50%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Navigasjon */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 0 32px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .nav-badge {
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-blue);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: #fff; }
+    .btn-github {
+      background: #1e293b;
+      color: #fff !important;
+      padding: 8px 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-github:hover { background: #334155; }
+
+    /* Hero */
+    .hero {
+      padding: 64px 0 48px;
+      text-align: center;
+    }
+    .hero-tags {
+      display: inline-flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+    }
+    .tag.primary {
+      color: var(--accent-cyan);
+      background: rgba(34, 211, 238, 0.1);
+      border-color: rgba(34, 211, 238, 0.25);
+    }
+    .tag.purple {
+      color: var(--accent-purple);
+      background: rgba(168, 85, 247, 0.1);
+      border-color: rgba(168, 85, 247, 0.25);
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      max-width: 720px;
+      margin: 0 auto 36px;
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      color: var(--text-muted);
+    }
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--accent-blue);
+      color: #04111d;
+    }
+    .btn-primary:hover {
+      background: #7dd3fc;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.35);
+    }
+    .btn-secondary {
+      background: var(--card-bg);
+      color: #fff;
+      border: 1px solid var(--card-border);
+    }
+    .btn-secondary:hover {
+      background: #1e293b;
+      border-color: #475569;
+    }
+
+    /* Nøkkeltall / Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 56px;
+    }
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .stat-card:hover { border-color: rgba(56, 189, 248, 0.4); }
+    .stat-num {
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      margin-bottom: 4px;
+      background: linear-gradient(135deg, #38bdf8, #34d399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-num.purple {
+      background: linear-gradient(135deg, #a855f7, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Seksjoner */
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 1rem;
+      max-width: 650px;
+      margin-bottom: 32px;
+    }
+
+    /* Grunnlov Grid */
+    .rules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 64px;
+    }
+    .rule-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .rule-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: var(--accent-blue);
+    }
+    .rule-card.purple::before { background: var(--accent-purple); }
+    .rule-card.green::before { background: var(--accent-green); }
+    .rule-card.amber::before { background: var(--accent-amber); }
+    .rule-card h3 {
+      font-size: 1.18rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+    .rule-card p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+    .rule-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 3px 8px;
+      border-radius: 6px;
+      color: var(--accent-cyan);
+      margin-top: 14px;
+    }
+
+    /* Interaktiv Maskinvare-Kalkulator */
+    .calc-box {
+      background: #0f1622;
+      border: 1px solid #1e293b;
+      border-radius: 24px;
+      padding: 36px;
+      margin-bottom: 64px;
+      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.5);
+    }
+    .calc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .tab-pills {
+      display: flex;
+      background: #192231;
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .tab-btn {
+      padding: 8px 18px;
+      border-radius: 8px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .tab-btn.active {
+      background: var(--accent-blue);
+      color: #071524;
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+    }
+
+    /* VRAM Bar */
+    .vram-bar-wrap {
+      margin-bottom: 24px;
+    }
+    .vram-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .vram-bar {
+      height: 20px;
+      background: #192231;
+      border-radius: 9999px;
+      overflow: hidden;
+      display: flex;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .bar-seg {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+    .seg-weights { background: #38bdf8; }
+    .seg-kv { background: #a855f7; }
+    .seg-cuda { background: #64748b; }
+    .seg-free { background: rgba(52, 211, 153, 0.35); }
+
+    .vram-legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+    .specs-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 24px;
+      font-size: 0.92rem;
+    }
+    .specs-table th, .specs-table td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .specs-table th { color: var(--text-muted); font-weight: 600; font-size: 0.82rem; text-transform: uppercase; }
+
+    /* Code Snippets */
+    .terminal-box {
+      background: #090e16;
+      border: 1px solid #1e293b;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+    .terminal-bar {
+      background: #121926;
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid #1e293b;
+    }
+    .terminal-code {
+      padding: 18px 20px;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      color: #e2e8f0;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .btn-copy {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-copy:hover { color: #fff; border-color: #fff; }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 36px;
+      margin-top: 64px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+    footer a { color: var(--accent-blue); text-decoration: none; font-weight: 600; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 640px) {
+      .calc-header { flex-direction: column; align-items: flex-start; }
+      nav { flex-direction: column; gap: 14px; align-items: flex-start; }
+      .nav-links { width: 100%; justify-content: space-between; }
+    }
+  </style>
+</head>
+<body>
+  <div class="glow-bg"></div>
+
+  <div class="container">
+    <!-- Navigasjon -->
+    <nav>
+      <a href="/" class="nav-brand">
+        <span>🩸 AGY-Swarm</span>
+        <span class="nav-badge">v2.0 PROD</span>
+      </a>
+      <div class="nav-links">
+        <a href="/">← Tilbake til oversikt</a>
+        <a href="#arkitektur">Arkitektur</a>
+        <a href="#maskinvare">RTX 5060 Ti</a>
+        <a href="#benchmark">Benchmark</a>
+        <a href="https://github.com/tussienorway/agy-swarm" class="btn-github" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-tags">
+        <span class="tag primary">Nous Hermes Agent (Kropp)</span>
+        <span class="tag purple">Google Gemini 4 Argon (Hjerne)</span>
+        <span class="tag">RTX 5060 Ti Blackwell Local Hybrid</span>
+      </div>
+      <h1>Autonom Multi-Agent Produksjonssverm</h1>
+      <p>
+        Fullstendig tilstandssikker multi-agent-sverm med hard Git Worktree-isolasjon,
+        Tabula Rasa Blackboard (SQLite WAL) og hybrid lokal avlastning som kutter 92 % av sky-API-kostnadene.
+      </p>
+      <div class="hero-actions">
+        <a href="#maskinvare" class="btn btn-primary">Konfigurer RTX 5060 Ti ↓</a>
+        <a href="https://github.com/tussienorway/agy-swarm" class="btn btn-secondary" target="_blank" rel="noopener">Klon fra GitHub ↗</a>
+      </div>
+    </section>
+
+    <!-- Nøkkeltall / Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num">-92.0 %</div>
+        <div class="stat-label">API Token Reduksjon i Skyen</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num purple">88.25 %</div>
+        <div class="stat-label">Total Kostnadsbesparelse</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">100 %</div>
+        <div class="stat-label">Sjef-verifisering (Gemini 4 Argon)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num purple">35 / 35</div>
+        <div class="stat-label">Enhetstester Grønne (pytest)</div>
+      </div>
+    </div>
+
+    <!-- Arkitektur & Grunnlov -->
+    <section id="arkitektur" style="padding-top: 24px;">
+      <h2 class="section-title">Systemets Grunnlov</h2>
+      <p class="section-desc">
+        Fem ufravikelige arkitekturvalg som forhindrer kontekstforurensning, merge-konflikter og hallusinert suksess.
+      </p>
+
+      <div class="rules-grid">
+        <div class="rule-card">
+          <h3>1. Hermes som Kropp, Gemini 4 som Hjerne</h3>
+          <p>
+            Nous Hermes Agent håndterer varig tilstand, minne, cron-tidsplaner, Telegram-gateways og makro-DAG i Hermes Kanban.
+            Gemini 4 Argon i <code>agy</code> utfører dyp kodebygging i isolerte mapper.
+          </p>
+          <span class="rule-tag">SKILL.md &lt;= 15 KB</span>
+        </div>
+
+        <div class="rule-card purple">
+          <h3>2. Hard Worktree & Fotavtrykkslås</h3>
+          <p>
+            Ingen agenter deler mappe. Hver oppgave tildeles et låst git worktree (<code>git worktree add --lock</code>)
+            og må deklarere <code>footprint_files</code>. Kollisjonsfrie bølger kjøres via <code>partition_by_footprint()</code>.
+          </p>
+          <span class="rule-tag">Zero File Overlaps</span>
+        </div>
+
+        <div class="rule-card green">
+          <h3>3. Tabula Rasa Blackboard (SQLite WAL)</h3>
+          <p>
+            Rå stdout og git diff lagres på disk i <code>blackboard.sqlite</code>. Hermes mottar kun en validert Pydantic-kvittering
+            (<code>SwarmExecutionReceipt</code>). Kontekstvinduet holdes rent for støy.
+          </p>
+          <span class="rule-tag">get_tail_log(lines=40)</span>
+        </div>
+
+        <div class="rule-card amber">
+          <h3>4. SWARM Illusion Delta Guard</h3>
+          <p>
+            Måler avviket mellom lokal suksess og reell integrasjon: &Delta;<sub>illusion</sub> = C<sub>perceived</sub> - C<sub>distributed</sub>.
+            Hvis &Delta;<sub>illusion</sub> &gt; 0.15, senkes samtidighet automatisk fra 3 til 2 og high thinking påbys.
+          </p>
+          <span class="rule-tag">Circuit Breaker &gt; 0.15</span>
+        </div>
+
+        <div class="rule-card">
+          <h3>5. Automatisk SFT & DPO Harvester</h3>
+          <p>
+            Modulen <code>harvester.py</code> kobler <code>~/.gemini/antigravity-cli/</code> SQLite-sesjoner med verifiserte Blackboard-resultater.
+            Ekstraherer automatiske gullstandard SFT-trajektorier og DPO-preferansepar uten LLM-kostnad.
+          </p>
+          <span class="rule-tag">Auto DSPy / GEPA Evolution</span>
+        </div>
+
+        <div class="rule-card purple">
+          <h3>6. Remote Ask-User Bridge</h3>
+          <p>
+            Fanger opp <code>ASK_USER_BLOCK:</code> når krav er tvetydige. Varsler operatør over Telegram og blokkerer oppgaven i Hermes Kanban
+            uten å kaste bort tokens i en blind loop.
+          </p>
+          <span class="rule-tag">Telegram Bot Bridge</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interaktiv Maskinvare-Kalkulator for RTX 5060 Ti -->
+    <section id="maskinvare" style="padding-top: 24px;">
+      <h2 class="section-title">Maskinvare-Optimalisering: RTX 5060 Ti (Blackwell GB206)</h2>
+      <p class="section-desc">
+        Nøyaktig matematisk VRAM-budsjettering for å kjøre lokale modeller med null API-kostnad, mens <code>agy</code> forblir sjefen.
+      </p>
+
+      <div class="calc-box">
+        <div class="calc-header">
+          <div>
+            <h3 style="font-size: 1.3rem; font-weight: 800; color: #fff;">VRAM Allokering & Modelloppsett</h3>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 2px;">Velg kortutgave for å se VRAM-budsjett og startkommandoer.</p>
+          </div>
+          <div class="tab-pills">
+            <button class="tab-btn active" id="btn-16gb" onclick="setEdition(16)">16 GB GDDR7 (Anbefalt)</button>
+            <button class="tab-btn" id="btn-8gb" onclick="setEdition(8)">8 GB GDDR7</button>
+          </div>
+        </div>
+
+        <!-- VRAM Bar -->
+        <div class="vram-bar-wrap">
+          <div class="vram-bar-label">
+            <span id="vram-usage-text">Brukt: 10.60 GB / 16.00 GB (66.3 %)</span>
+            <span id="vram-free-text" style="color: var(--accent-green);">5.40 GB fri buffer (33.7 %)</span>
+          </div>
+          <div class="vram-bar">
+            <div id="bar-weights" class="bar-seg seg-weights" style="width: 48.1%;"></div>
+            <div id="bar-kv" class="bar-seg seg-kv" style="width: 9.4%;"></div>
+            <div id="bar-cuda" class="bar-seg seg-cuda" style="width: 8.8%;"></div>
+            <div id="bar-free" class="bar-seg seg-free" style="width: 33.7%;"></div>
+          </div>
+          <div class="vram-legend">
+            <div class="legend-item"><div class="legend-dot" style="background: #38bdf8;"></div> Modellvekter (Q4_K_M)</div>
+            <div class="legend-item"><div class="legend-dot" style="background: #a855f7;"></div> KV-Cache (FP8)</div>
+            <div class="legend-item"><div class="legend-dot" style="background: #64748b;"></div> CUDA Runtime / Windows DWM</div>
+            <div class="legend-item"><div class="legend-dot" style="background: #34d399;"></div> Sikker VRAM-buffer</div>
+          </div>
+        </div>
+
+        <table class="specs-table">
+          <thead>
+            <tr>
+              <th>Modell / Oppsett</th>
+              <th>VRAM</th>
+              <th>Kontekst</th>
+              <th>Rolle i Svermen</th>
+            </tr>
+          </thead>
+          <tbody id="specs-body">
+            <!-- Fylles dynamisk av JS -->
+          </tbody>
+        </table>
+
+        <!-- Terminal Launch Command -->
+        <div class="terminal-box">
+          <div class="terminal-bar">
+            <span>ANBEFALT STARTKOMMANDO (<span id="cmd-type">vLLM FP8</span>)</span>
+            <button class="btn-copy" onclick="copyCommand()">Kopier</button>
+          </div>
+          <div class="terminal-code" id="launch-code">vllm serve Qwen/Qwen2.5-Coder-14B-Instruct-GPTQ-Int4 --port 8000 --gpu-memory-utilization 0.88 --max-model-len 16384 --kv-cache-dtype fp8 --enforce-eager</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Benchmark & Sammenligning -->
+    <section id="benchmark" style="padding-top: 24px;">
+      <h2 class="section-title">Benchmark: Ren Sky vs. Hybrid Local Chief</h2>
+      <p class="section-desc">
+        Resultater fra den automatiserte evalueringssuiten <code>test_profiles_benchmark.py</code>.
+      </p>
+
+      <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 18px; padding: 28px; overflow-x: auto;">
+        <table class="specs-table" style="margin-top: 0;">
+          <thead>
+            <tr>
+              <th>Metrikk</th>
+              <th>Ren Sky (Gemini 4 + Claude 3.7)</th>
+              <th>Hybrid Local Chief (RTX 5060 Ti + agy)</th>
+              <th>Besparelse / Ytelse</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>API Tokens Brukt</strong></td>
+              <td>12 500 tokens</td>
+              <td>1 000 tokens (kun sjefens verifisering)</td>
+              <td><span style="color: var(--accent-green); font-weight: 700;">-92.0 % reduksjon</span></td>
+            </tr>
+            <tr>
+              <td><strong>API Kostnad (4 oppgaver)</strong></td>
+              <td>$0.1003</td>
+              <td>$0.0118</td>
+              <td><span style="color: var(--accent-green); font-weight: 700;">88.25 % besparelse</span></td>
+            </tr>
+            <tr>
+              <td><strong>Verifiseringsrate</strong></td>
+              <td>100 %</td>
+              <td>100 % (verifisert av Gemini 4 Argon)</td>
+              <td><span style="color: var(--accent-cyan); font-weight: 700;">Uendret høy kvalitet</span></td>
+            </tr>
+            <tr>
+              <td><strong>GPU-minnebruk</strong></td>
+              <td>0 GB</td>
+              <td>10.6 GB (passer perfekt i 16 GB VRAM)</td>
+              <td><span style="color: var(--accent-blue); font-weight: 700;">Null OOM-risiko</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Rask Start CLI -->
+    <section style="padding-top: 48px;">
+      <h2 class="section-title">Kjør agy-swarm Lokalt</h2>
+      <div class="terminal-box">
+        <div class="terminal-bar">
+          <span>POWERSHELL / BASH OPPSTART</span>
+        </div>
+        <div class="terminal-code"># 1. Se tilgjengelige profiler
+agy-swarm profile list
+
+# 2. Aktiver Hybrid Local Chief profil
+agy-swarm profile set hybrid-rtx5060ti-16gb
+
+# 3. Inspiser maskinvareallokering
+agy-swarm hardware --edition 16
+
+# 4. Start 3-panels operatør-cockpit
+./scripts/start_swarm_tmux.sh  # Linux / WSL
+.\scripts\start_swarm_cockpit.ps1  # Windows PowerShell</div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div>
+        <strong>tussienorway/agy-swarm</strong> · Utviklet for Nous Hermes Agent & Google Gemini 4 Argon
+      </div>
+      <div>
+        <a href="/">Nettsidene mine</a> · <a href="https://github.com/tussienorway">GitHub</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const data = {
+      16: {
+        total: 16.0,
+        weights: 7.70,
+        kv: 1.50,
+        cuda: 1.40,
+        used: 10.60,
+        free: 5.40,
+        cmd: "vllm serve Qwen/Qwen2.5-Coder-14B-Instruct-GPTQ-Int4 --port 8000 --gpu-memory-utilization 0.88 --max-model-len 16384 --kv-cache-dtype fp8 --enforce-eager",
+        cmdType: "vLLM FP8 (14B)",
+        specs: [
+          { name: "Qwen2.5-Coder-14B (Q4_K_M)", vram: "10.60 GB", ctx: "16 384 tokens", role: "Hovedkoder for features og refaktorering" },
+          { name: "Dual-Resident: 7B Coder + 7B Reasoner", vram: "10.34 GB", ctx: "8 192 tokens", role: "Samtidig koder + DeepSeek-R1 tenker (null swap-lag)" },
+          { name: "Gemini 4 Argon (agy CLI)", vram: "Sky (API)", ctx: "1 048 576 tokens", role: "Sjef: Arkitektur, reviews og sluttverifisering" }
+        ]
+      },
+      8: {
+        total: 8.0,
+        weights: 3.98,
+        kv: 0.44,
+        cuda: 1.40,
+        used: 5.82,
+        free: 2.18,
+        cmd: "llama-server.exe -m qwen2.5-coder-7b-instruct-q4_k_m.gguf -c 8192 -ngl 99 --flash-attn --port 8080 --host 127.0.0.1",
+        cmdType: "llama.cpp (7B)",
+        specs: [
+          { name: "Qwen2.5-Coder-7B (Q4_K_M)", vram: "5.82 GB", ctx: "8 192 tokens", role: "Rask kodebygger og triage-agent" },
+          { name: "DeepSeek-R1-Distill-Qwen-7B", vram: "5.82 GB", ctx: "8 192 tokens", role: "Lokal feilsøker og resonnerer" },
+          { name: "Gemini 4 Argon (agy CLI)", vram: "Sky (API)", ctx: "1 048 576 tokens", role: "Sjef: Arkitektur og sluttverifisering" }
+        ]
+      }
+    };
+
+    function setEdition(ed) {
+      document.getElementById("btn-16gb").classList.toggle("active", ed === 16);
+      document.getElementById("btn-8gb").classList.toggle("active", ed === 8);
+
+      const d = data[ed];
+      const wPct = ((d.weights / d.total) * 100).toFixed(1);
+      const kvPct = ((d.kv / d.total) * 100).toFixed(1);
+      const cPct = ((d.cuda / d.total) * 100).toFixed(1);
+      const fPct = ((d.free / d.total) * 100).toFixed(1);
+
+      document.getElementById("bar-weights").style.width = wPct + "%";
+      document.getElementById("bar-kv").style.width = kvPct + "%";
+      document.getElementById("bar-cuda").style.width = cPct + "%";
+      document.getElementById("bar-free").style.width = fPct + "%";
+
+      const usedPct = ((d.used / d.total) * 100).toFixed(1);
+      const freePct = ((d.free / d.total) * 100).toFixed(1);
+      document.getElementById("vram-usage-text").textContent = `Brukt: ${d.used.toFixed(2)} GB / ${d.total.toFixed(2)} GB (${usedPct} %)`;
+      document.getElementById("vram-free-text").textContent = `${d.free.toFixed(2)} GB fri buffer (${freePct} %)`;
+
+      document.getElementById("cmd-type").textContent = d.cmdType;
+      document.getElementById("launch-code").textContent = d.cmd;
+
+      const tbody = document.getElementById("specs-body");
+      tbody.innerHTML = d.specs.map(s => `
+        <tr>
+          <td><strong>${s.name}</strong></td>
+          <td><span style="color: var(--accent-blue); font-family: var(--font-mono); font-weight: 700;">${s.vram}</span></td>
+          <td>${s.ctx}</td>
+          <td><span style="color: var(--text-muted);">${s.role}</span></td>
+        </tr>
+      `).join("");
+    }
+
+    function copyCommand() {
+      const code = document.getElementById("launch-code").textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.querySelector(".btn-copy");
+        btn.textContent = "Kopiert!";
+        setTimeout(() => { btn.textContent = "Kopier"; }, 2000);
+      });
+    }
+
+    // Init 16GB
+    setEdition(16);
+  </script>
+</body>
+</html>
