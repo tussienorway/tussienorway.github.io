@@ -1,19 +1,19 @@
-# tussienorway.github.io
+# Tussie Norway — prosjekter og nettsider
 
-Hovedsiden min på GitHub Pages: **https://tussienorway.github.io/**
+Personlig prosjektoversikt på **https://tussienorway.github.io/**. Siden henter offentlige repoer fra GitHub API-et og viser hvilke som har GitHub Pages aktivert. Nye Pages-sider kommer automatisk med.
 
-Siden viser en *live* oversikt over alle nettsidene mine. Hver gang den åpnes, spør den GitHub sitt offentlige API
-(`https://api.github.com/users/tussienorway/repos`) og lister alle repoer som har GitHub Pages slått på.
-Nye sider dukker derfor opp automatisk, uten at denne siden må endres.
+## Funksjoner
 
-- Søk, sortering (sist oppdatert / navn) og «Oppdater»-knapp
-- Siste resultat lagres i nettleseren (localStorage), så noe vises selv om GitHub sin grense på 60 oppslag i timen er nådd
-- «Andre offentlige repoer» (uten nettside) ligger sammenslått nederst
-- Ingen byggesteg: alt ligger i `index.html`. `.nojekyll` slår av Jekyll.
+- Søk i navn, beskrivelse, språk og emner.
+- Sorter på sist oppdatert, navn eller stjerner.
+- Se nøkkeltall, språk, emner og oppdateringstid for prosjektene.
+- Åpne nettsider og GitHub-repoer direkte fra kortene.
+- Repoer uten nettside ligger samlet i en egen, utfoldbar liste.
+- Sist hentede data lagres i nettleseren og vises hvis GitHub API-et ikke svarer eller har nådd oppslagsgrensen.
+- Responsiv visning, tastaturfokus, hoppelenke og støtte for redusert bevegelse.
 
-## Publisere
-1. Lag et **offentlig** repo som heter nøyaktig `tussienorway.github.io`.
-2. Last opp `index.html`, `README.md` og `.nojekyll`.
-3. Settings → Pages → «Deploy from a branch» → `main` / `(root)`.
+## Teknisk
 
-Merk: Private repoer og sider vises ikke (API-et uten innlogging ser bare offentlige repoer).
+Dette er en statisk side uten byggesteg eller eksterne JavaScript-avhengigheter. Alt ligger i `index.html`; GitHub sitt offentlige API er datakilden, og `localStorage` holder en lokal reservekopi.
+
+GitHub Pages publiserer `main` fra rotmappen i repoet `tussienorway/tussienorway.github.io`.
