@@ -145,7 +145,8 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
-  </style>
+  .local-apps{margin-top:40px;padding:25px;border:1px solid var(--line);border-radius:18px;background:var(--surface)}.local-apps p{color:var(--muted);max-width:80ch}.local-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:12px;margin:18px 0}.local-grid a{display:flex;flex-direction:column;gap:8px;padding:18px;border:1px solid var(--line);border-radius:12px;text-decoration:none;background:var(--green-soft);overflow-wrap:anywhere}.local-grid a:hover{border-color:var(--green)}.local-grid span,.local-grid small{color:var(--muted)}.local-apps summary{cursor:pointer;padding:12px 0;font-weight:650}.local-apps form{display:flex;flex-wrap:wrap;gap:12px;align-items:end}.local-apps label{display:grid;gap:5px}.local-apps input{max-width:100%;padding:8px}.local-apps button{padding:9px 14px;cursor:pointer}
+</style>
 </head>
 <body>
   <a class="skip-link" href="#main">Hopp til innhold</a>
@@ -195,7 +196,20 @@
         <summary><span>Prosjekter uten nettside <span class="other-count" id="otherCount">0 prosjekter</span></span></summary>
         <div class="other-body"><p class="other-note">Disse repoene har ingen offentlig GitHub Pages-side ennå.</p><div class="grid" id="otherGrid"></div></div>
       </details>
-    </main>
+
+<section class="local-apps" aria-labelledby="local-title">
+  <div class="section-heading"><h2 id="local-title">På denne PC-en</h2></div>
+  <p>Snarveier til lokale apper og tjenester. PC-en og tjenesten må være på. Lenker til 127.0.0.1 åpner en tjeneste på enheten du bruker nå — fra mobilen åpner de ikke PC-en.</p>
+  <div class="local-grid">
+    <a href="http://127.0.0.1:4050/" target="_blank" rel="noopener noreferrer"><strong>AGY Swarm ↗</strong><span>AI-team, prosjektråd og forskningslogg</span><small>127.0.0.1:4050</small></a>
+    <a href="http://127.0.0.1:18789/" target="_blank" rel="noopener noreferrer"><strong>OpenClaw Control ↗</strong><span>Lokalt kontrollpanel</span><small>127.0.0.1:18789</small></a>
+  </div>
+  <details><summary>Lokale API-er og andre tjenester</summary><p>Disse adressene er tekniske endepunkter og har ikke nødvendigvis en nettside. Kartlagt 23. oktober 2026; dette er ikke en løpende statusmåling.</p><div class="local-grid">
+<a href="http://127.0.0.1:4000/" target="_blank" rel="noopener noreferrer"><strong>Lokal HTTP-tjeneste ↗</strong><small>127.0.0.1:4000</small></a><a href="http://127.0.0.1:7999/" target="_blank" rel="noopener noreferrer"><strong>Lokal HTTP-tjeneste ↗</strong><small>127.0.0.1:7999</small></a><a href="http://127.0.0.1:8080/" target="_blank" rel="noopener noreferrer"><strong>Lokal modellserver ↗</strong><small>127.0.0.1:8080</small></a><a href="http://127.0.0.1:8091/" target="_blank" rel="noopener noreferrer"><strong>Lokal modellserver ↗</strong><small>127.0.0.1:8091</small></a><a href="http://127.0.0.1:8092/" target="_blank" rel="noopener noreferrer"><strong>Lokal modellserver ↗</strong><small>127.0.0.1:8092</small></a><a href="http://127.0.0.1:8765/" target="_blank" rel="noopener noreferrer"><strong>Lokal HTTP-tjeneste ↗</strong><small>127.0.0.1:8765</small></a><a href="http://127.0.0.1:8766/" target="_blank" rel="noopener noreferrer"><strong>Lokal HTTP-tjeneste ↗</strong><small>127.0.0.1:8766</small></a></div></details>
+ <details><summary>Legg til en lokal snarvei</summary><p>Ekstra snarveier lagres bare i denne nettleseren.</p><form id="local-link-form"><label>Navn <input id="local-name" required maxlength="80" placeholder="Min lokale app"></label><label>Port <input id="local-port" type="number" required min="1" max="65535" placeholder="3000"></label><button type="submit">Legg til</button></form><p id="local-message" role="status"></p></details>
+ <div id="custom-local-links" class="local-grid"></div>
+</section>
+</main>
 
     <footer class="footer">
       <span>Oppdatert fra offentlige GitHub-data. Sist hentet: <time id="fetchedAt">venter …</time></span>
@@ -399,5 +413,9 @@
       load();
     })();
   </script>
-</body>
+<script>
+(()=>{const key='tussie-local-links-v1';let links=[];try{const v=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(v))links=v.filter(x=>typeof x.name==='string'&&Number.isInteger(x.port)&&x.port>0&&x.port<65536);}catch{}
+function render(){const box=document.getElementById('custom-local-links');box.replaceChildren();for(const x of links){const a=document.createElement('a');a.href='http://127.0.0.1:'+x.port+'/';a.target='_blank';a.rel='noopener noreferrer';a.textContent=x.name+' · '+x.port+' ↗';box.append(a);}}
+document.getElementById('local-link-form').addEventListener('submit',e=>{e.preventDefault();const name=document.getElementById('local-name').value.trim();const port=Number(document.getElementById('local-port').value);if(!name||!Number.isInteger(port)||port<1||port>65535)return;links=links.filter(x=>x.port!==port);links.push({name,port});render();try{localStorage.setItem(key,JSON.stringify(links));document.getElementById('local-message').textContent='Snarveien er lagret i denne nettleseren.';}catch{document.getElementById('local-message').textContent='Snarveien vises, men nettleseren tillater ikke lagring.'}e.target.reset();});render();})();
+</script></body>
 </html>
