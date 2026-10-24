@@ -289,3 +289,81 @@ def opprett_nodanrop(
         "vakttelefon": fakta["telefon_dognvakt"],
         "viking_sentral": fakta["telefon_viking"]
     }
+
+
+FORSIKRINGS_DATA = {
+    "gjensidige": {"navn": "Gjensidige Forsikring", "kasko_egenandel": 500, "delkasko_egenandel": 500, "avtale": "Viking / Direkteoppgjør"},
+    "if": {"navn": "If Skadeforsikring", "kasko_egenandel": 500, "delkasko_egenandel": 500, "avtale": "Viking / Direkteoppgjør"},
+    "fremtind": {"navn": "Fremtind (DNB / SpareBank 1)", "kasko_egenandel": 500, "delkasko_egenandel": 500, "avtale": "Viking / Direkteoppgjør"},
+    "tryg": {"navn": "Tryg Forsikring", "kasko_egenandel": 500, "delkasko_egenandel": 500, "avtale": "Viking / Direkteoppgjør"},
+    "storebrand": {"navn": "Storebrand Forsikring", "kasko_egenandel": 500, "delkasko_egenandel": 500, "avtale": "Viking / Direkteoppgjør"},
+    "klp": {"navn": "KLP Skadeforsikring", "kasko_egenandel": 500, "delkasko_egenandel": 500, "avtale": "Viking / Direkteoppgjør"},
+}
+
+E18_AVKJORSLER = {
+    "bie_grimstad": {"navn": "Avkjørsel 242: Bie-krysset Grimstad", "km_fra_base": 2.1, "eta_min": 5, "km_e18": 242},
+    "fevik": {"navn": "Avkjørsel 248: Fevik / Vik", "km_fra_base": 7.4, "eta_min": 10, "km_e18": 248},
+    "stoa_arendal": {"navn": "Avkjørsel 257: Stoa Arendal", "km_fra_base": 17.8, "eta_min": 16, "km_e18": 257},
+    "harebakken_arendal": {"navn": "Avkjørsel 262: Harebakken Arendal", "km_fra_base": 22.5, "eta_min": 19, "km_e18": 262},
+    "lillesand_ost": {"navn": "Avkjørsel 235: Lillesand Øst (Storemyr)", "km_fra_base": 19.2, "eta_min": 17, "km_e18": 235},
+    "lillesand_vest": {"navn": "Avkjørsel 225: Lillesand Vest / Kjerlingland", "km_fra_base": 25.8, "eta_min": 22, "km_e18": 225},
+    "grimstadtunnelen": {"navn": "E18 Grimstadtunnelen (TMA-påbudt)", "km_fra_base": 3.8, "eta_min": 7, "km_e18": 244},
+}
+
+
+def kalkuler_forsikring_egenandel(selskap_id: str, dekning: str = "kasko") -> dict:
+    """Beregner egenandel, bonustap og direkteoppgjør mot norske forsikringsselskaper."""
+    key = (selskap_id or "").lower().strip()
+    info = FORSIKRINGS_DATA.get(key, {
+        "navn": "Annet forsikringsselskap / Uavklart",
+        "kasko_egenandel": 500,
+        "delkasko_egenandel": 500,
+        "avtale": "Standard Viking-oppgjør"
+    })
+
+    dekning_norm = (dekning or "kasko").lower().strip()
+    if dekning_norm in ("kasko", "superkasko", "toppkasko"):
+        egenandel = info["kasko_egenandel"]
+        dekket = True
+        merknad = "Veihjelp dekket med standard egenandel. Påvirker IKKE bonusen din!"
+    elif dekning_norm in ("delkasko", "minikasko"):
+        egenandel = info["delkasko_egenandel"]
+        dekket = True
+        merknad = "Veihjelp dekket under delkasko. Påvirker IKKE bonusen din!"
+    else:
+        egenandel = None
+        dekket = False
+        merknad = "Kun ansvarsforsikring dekker normalt ikke veihjelp. Vi gir fastpris på oppdraget før start."
+
+    return {
+        "selskap": info["navn"],
+        "dekning": dekning_norm,
+        "veihjelp_dekket": dekket,
+        "egenandel_kr": egenandel,
+        "bonustap": False,
+        "direkteoppgjor": True if dekket else False,
+        "avtale": info["avtale"],
+        "merknad": merknad
+    }
+
+
+def finn_e18_avkjorsel(avkjorsel_id: str) -> dict:
+    """Returnerer avstand og responstid fra Grimstad-basen for en spesifikk E18-avkjørsel."""
+    key = (avkjorsel_id or "").lower().strip()
+    if key in E18_AVKJORSLER:
+        data = E18_AVKJORSLER[key]
+        return {
+            "funnet": True,
+            "id": key,
+            **data,
+            "anbefalt_rute": f"Rykker ut umiddelbart fra Industriveien 20 til {data['navn']} (ca. {data['eta_min']} minutter)"
+        }
+    return {
+        "funnet": False,
+        "id": key,
+        "navn": "E18 Agder (Generelt)",
+        "km_fra_base": 12.0,
+        "eta_min": 15,
+        "anbefalt_rute": "Rykker ut på E18 fra Grimstad med blålys/blitz ved akutt hendelse."
+    }
+

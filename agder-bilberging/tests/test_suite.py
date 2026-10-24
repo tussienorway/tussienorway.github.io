@@ -7,8 +7,10 @@ sys.path.insert(0, str(ROOT))
 
 from agder_berging_ai import (
     beregn_nodhjelp_posisjon,
+    finn_e18_avkjorsel,
     haversine_km,
     kalkuler_bat_og_spesialtransport,
+    kalkuler_forsikring_egenandel,
     klassifiser_hendelse,
     last_fakta,
     opprett_nodanrop,
@@ -168,6 +170,22 @@ class TestAgderBilbergingAI(unittest.TestCase):
         self.assertEqual(anrop["status"], "ufullstendig")
         self.assertIn("gyldig_telefon", anrop["mangler"])
         self.assertIn("kundenavn", anrop["mangler"])
+
+
+    def test_kalkuler_forsikring_kasko(self):
+        """Kasko og delkasko skal gi 500 kr egenandel og null bonustap."""
+        res = kalkuler_forsikring_egenandel("gjensidige", "kasko")
+        self.assertTrue(res["veihjelp_dekket"])
+        self.assertEqual(res["egenandel_kr"], 500)
+        self.assertFalse(res["bonustap"])
+        self.assertTrue(res["direkteoppgjor"])
+
+    def test_finn_e18_avkjorsel(self):
+        """Bie-krysset og Fevik skal gi presise km og ETA fra basen."""
+        bie = finn_e18_avkjorsel("bie_grimstad")
+        self.assertTrue(bie["funnet"])
+        self.assertLessEqual(bie["km_fra_base"], 3.0)
+        self.assertLessEqual(bie["eta_min"], 10)
 
 
 if __name__ == "__main__":

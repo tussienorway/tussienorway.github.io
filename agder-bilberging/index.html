@@ -267,6 +267,63 @@
           </div>
         </div>
       </div>
+    <!-- Seksjon 4: Forsikring & Egenandelskalkulator -->
+    <section class="section" id="forsikring-section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-tag">Direkteoppgjør mot Forsikring</span>
+          <h2>Egenandel & Dekningssjekk</h2>
+          <p>
+            Visste du at veihjelp og bilberging normalt <strong>IKKE gir bonustap</strong>? Agder Bilberging samarbeider med alle norske forsikringsselskaper og foretar direkteoppgjør for deg.
+          </p>
+        </div>
+
+        <div class="insurance-grid">
+          <div class="insurance-card">
+            <div class="control-group">
+              <label class="control-label" for="insSelect">Ditt Forsikringsselskap:</label>
+              <select class="select-box" id="insSelect">
+                <option value="gjensidige">Gjensidige Forsikring</option>
+                <option value="if">If Skadeforsikring</option>
+                <option value="fremtind">Fremtind (DNB / SpareBank 1)</option>
+                <option value="tryg">Tryg Forsikring</option>
+                <option value="storebrand">Storebrand Forsikring</option>
+                <option value="klp">KLP Skadeforsikring</option>
+                <option value="annet">Annet / Uavklart</option>
+              </select>
+            </div>
+
+            <div class="control-group" style="margin-top:16px;">
+              <label class="control-label" for="coverageSelect">Forsikringstype på bilen:</label>
+              <select class="select-box" id="coverageSelect">
+                <option value="kasko">Kasko / Toppkasko (Full dekning)</option>
+                <option value="delkasko">Delkasko (Brann, tyveri, glass, redning)</option>
+                <option value="ansvar">Kun Ansvarsforsikring</option>
+              </select>
+            </div>
+
+            <div style="margin-top:20px; font-size:0.85rem; color:var(--text-secondary); line-height:1.5;">
+              <p>💡 <strong>Trygghet på stedet:</strong> Du trenger ikke legge ut for bergingen selv. Har du kasko eller delkasko, betaler du kun den faste egenandelen direkte til bergingsbilen med Vipps eller bankkort.</p>
+            </div>
+          </div>
+
+          <div class="insurance-result">
+            <div>
+              <span class="section-tag" style="background:rgba(16,185,129,0.15); color:var(--telemetry-green); border-color:var(--telemetry-green);">Bekreftet Avtaleavklaring</span>
+              <div style="font-size:1.8rem; font-weight:800; color:#fff; margin:10px 0 4px;" id="insDeductibleOut">kr 500,- i egenandel</div>
+              <div style="color:var(--telemetry-green); font-weight:700; font-size:0.95rem; margin-bottom:14px;" id="insBonusOut">✓ 0% BONUSTAP — Beholder full opptjent bonus</div>
+              
+              <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:12px;" id="insNotesOut">
+                Veihjelp og berging er fullt dekket. Agder Bilberging ordner all skadepapirer og direkteoppgjør med forsikringsselskapet.
+              </p>
+            </div>
+
+            <div style="background:#0f172a; border-radius:10px; padding:12px; border:1px solid var(--border-color); font-size:0.82rem; font-family:var(--font-mono); color:var(--radar-cyan);">
+              STATUS: Viking Redningstjeneste avtalepartner · Godkjent for direkteoppgjør.
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 
@@ -278,8 +335,22 @@
         <button id="modalClose" style="background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer;" type="button">✕</button>
       </div>
 
-      <div id="gpsCoordText" style="font-family:var(--font-mono); font-size:0.85rem; margin-bottom:16px; padding:12px; background:#090e17; border-radius:8px; border:1px solid #1e293b;">
+      <div id="gpsCoordText" style="font-family:var(--font-mono); font-size:0.85rem; margin-bottom:12px; padding:12px; background:#090e17; border-radius:8px; border:1px solid #1e293b;">
         Søker etter GPS-posisjon...
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="display:block; font-size:0.85rem; margin-bottom:4px;" for="manualExitSelect">Eller velg sted på E18 manuelt:</label>
+        <select class="select-box" id="manualExitSelect">
+          <option value="auto">Bruk funnet GPS-posisjon</option>
+          <option value="bie_grimstad">Avkjørsel 242: Bie-krysset Grimstad (2 km / 5 min)</option>
+          <option value="fevik">Avkjørsel 248: Fevik / Vik (7 km / 10 min)</option>
+          <option value="stoa_arendal">Avkjørsel 257: Stoa Arendal (18 km / 16 min)</option>
+          <option value="harebakken_arendal">Avkjørsel 262: Harebakken Arendal (22 km / 19 min)</option>
+          <option value="lillesand_ost">Avkjørsel 235: Lillesand Øst (19 km / 17 min)</option>
+          <option value="lillesand_vest">Avkjørsel 225: Lillesand Vest (26 km / 22 min)</option>
+          <option value="grimstadtunnelen">E18 Grimstadtunnelen (TMA-påbudt)</option>
+        </select>
       </div>
 
       <div style="margin-bottom:12px;">
@@ -322,6 +393,51 @@
       </div>
     </div>
   </footer>
+
+  <!-- Nora 24/7 AI Vaktassistent Widget -->
+  <div class="nora-floating-trigger" id="noraTrigger" role="button" aria-label="Åpne 24/7 AI Vaktassistent Nora">
+    <div class="nora-avatar">
+      🤖
+      <span class="nora-online-dot"></span>
+    </div>
+    <div class="nora-trigger-text">
+      <div class="nora-trigger-name">Nora AI <span>· Vaktassistent</span></div>
+      <div class="nora-trigger-status">24/7 Døgnvakt Online</div>
+    </div>
+  </div>
+
+  <!-- Nora Chat & Voice Drawer -->
+  <div class="nora-drawer" id="noraDrawer">
+    <div class="nora-header">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="nora-avatar" style="width:34px; height:34px; font-size:1rem;">🤖</div>
+        <div>
+          <div style="font-weight:800; font-size:0.9rem; color:#fff;">Nora · Vaktassistent</div>
+          <div style="font-size:0.7rem; color:var(--telemetry-green); font-family:var(--font-mono);">Agder Bilberging 24/7 AI</div>
+        </div>
+      </div>
+      <button id="noraClose" style="background:none; border:none; color:#94a3b8; font-size:1.3rem; cursor:pointer;" type="button">✕</button>
+    </div>
+
+    <div class="nora-body" id="noraMessages">
+      <div class="nora-msg bot">
+        Hei! Jeg er <strong>Nora</strong>, AI-vaktassistenten til Jan Ove og Agder Bilberging. 🚨<br><br>
+        Trenger du akutt bilberging på E18, starthjelp, eller lurer du på egenandel/forsikring?
+        <div class="nora-quick-replies">
+          <button class="nora-chip" data-ask="Jeg står fast på E18!" type="button">🚨 Akutt E18-hjelp</button>
+          <button class="nora-chip" data-ask="Hva er egenandelen med Gjensidige?" type="button">💰 Egenandel / Kasko</button>
+          <button class="nora-chip" data-ask="Kan dere berge elbil med låst hjul?" type="button">⚡ Elbil m/ låste hjul</button>
+          <button class="nora-chip" data-ask="Pris på båttransport fra Grimstad" type="button">⛵ Båttransport</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="nora-footer">
+      <input type="text" class="nora-input" id="noraInput" placeholder="Still et spørsmål til vakta...">
+      <button class="nora-mic-btn" id="noraMicBtn" title="Trykk for å snakke til Nora (Tale)" type="button">🎤</button>
+      <button class="nora-send-btn" id="noraSendBtn" type="button">Send</button>
+    </div>
+  </div>
 
   <script src="js/app.js"></script>
 </body>

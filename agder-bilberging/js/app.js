@@ -209,6 +209,32 @@
         );
       }
     });
+
+    const manualExitSelect = document.getElementById('manualExitSelect');
+    if (manualExitSelect) {
+      const exitCoordinates = {
+        bie_grimstad: { lat: 58.3512, lng: 8.5721, name: 'Bie-krysset Grimstad (Avkjørsel 242)', km: 2.1, eta: 5 },
+        fevik: { lat: 58.3845, lng: 8.6543, name: 'Fevik / Vik (Avkjørsel 248)', km: 7.4, eta: 10 },
+        stoa_arendal: { lat: 58.4612, lng: 8.7212, name: 'Stoa Arendal (Avkjørsel 257)', km: 17.8, eta: 16 },
+        harebakken_arendal: { lat: 58.4812, lng: 8.7612, name: 'Harebakken Arendal (Avkjørsel 262)', km: 22.5, eta: 19 },
+        lillesand_ost: { lat: 58.2612, lng: 8.3912, name: 'Lillesand Øst (Avkjørsel 235)', km: 19.2, eta: 17 },
+        lillesand_vest: { lat: 58.2412, lng: 8.3512, name: 'Lillesand Vest (Avkjørsel 225)', km: 25.8, eta: 22 },
+        grimstadtunnelen: { lat: 58.3580, lng: 8.5850, name: 'E18 Grimstadtunnelen (TMA-påbudt)', km: 3.8, eta: 7 }
+      };
+
+      manualExitSelect.addEventListener('change', () => {
+        const val = manualExitSelect.value;
+        if (exitCoordinates[val]) {
+          const pt = exitCoordinates[val];
+          currentCoords.lat = pt.lat;
+          currentCoords.lng = pt.lng;
+          playBeep(900, 'sine', 0.06);
+          if (gpsCoordText) {
+            gpsCoordText.innerHTML = `<strong>Manuelt valgt:</strong> ${pt.name}<br><span style="color:#10b981;">Avstand fra base: ${pt.km} km · Estimert utrykning: <strong>ca. ${pt.eta} min</strong></span>`;
+          }
+        }
+      });
+    }
   }
 
   if (modalClose) {
@@ -227,6 +253,23 @@
 
       const smsText = `NØDASSISTANSE AGDER BILBERGING: Navn: ${name}, Tlf: ${phone}, Regnr: ${regnr}, GPS: ${currentCoords.lat},${currentCoords.lng}, Problem: ${desc}`;
       const encodedSms = encodeURIComponent(smsText);
+
+      // Lagre til felles hendelseslogg for vaktleder-operasjonssentralen
+      try {
+        const incidents = JSON.parse(localStorage.getItem('agder_incidents') || '[]');
+        incidents.unshift({
+          id: 'H-' + Math.floor(1000 + Math.random() * 9000),
+          tid: new Date().toLocaleTimeString('nb-NO', { hour: '2-digit', minute: '2-digit' }),
+          navn: name,
+          telefon: phone,
+          regnr: regnr,
+          beskrivelse: desc,
+          posisjon: `${currentCoords.lat}, ${currentCoords.lng}`,
+          status: 'NY HENDELSE',
+          prioritet: (desc.toLowerCase().includes('kollisjon') || desc.toLowerCase().includes('e18')) ? 'P1' : 'P2'
+        });
+        localStorage.setItem('agder_incidents', JSON.stringify(incidents.slice(0, 20)));
+      } catch (e) {}
 
       const resBox = document.getElementById('dispatchResult');
       if (resBox) {
@@ -643,6 +686,227 @@
         `;
       }
     });
+  }
+
+  // =========================================================================
+  // 4b. Forsikrings- og Egenandelskalkulator
+  // =========================================================================
+  const insSelect = document.getElementById('insSelect');
+  const coverageSelect = document.getElementById('coverageSelect');
+  const insDeductibleOut = document.getElementById('insDeductibleOut');
+  const insBonusOut = document.getElementById('insBonusOut');
+  const insNotesOut = document.getElementById('insNotesOut');
+
+  function updateInsuranceCalc() {
+    if (!insSelect || !coverageSelect) return;
+    const selskaper = {
+      gjensidige: 'Gjensidige Forsikring',
+      if: 'If Skadeforsikring',
+      fremtind: 'Fremtind Forsikring',
+      tryg: 'Tryg Forsikring',
+      storebrand: 'Storebrand Forsikring',
+      klp: 'KLP Forsikring',
+      annet: 'Forsikringsselskap'
+    };
+
+    const coverage = coverageSelect.value;
+    const selskapNavn = selskaper[insSelect.value] || 'Ditt selskap';
+
+    if (coverage === 'kasko') {
+      if (insDeductibleOut) insDeductibleOut.textContent = 'kr 500,- i egenandel';
+      if (insBonusOut) {
+        insBonusOut.textContent = '✓ 0% BONUSTAP — Beholder full opptjent bonus';
+        insBonusOut.style.color = '#10b981';
+      }
+      if (insNotesOut) {
+        insNotesOut.textContent = `Veihjelp og berging er fullt dekket via kaskoavtalen med ${selskapNavn}. Agder Bilberging ordner direkteoppgjøret med Viking/selskapet, du betaler kun egenandelen.`;
+      }
+    } else if (coverage === 'delkasko') {
+      if (insDeductibleOut) insDeductibleOut.textContent = 'kr 500,- i egenandel';
+      if (insBonusOut) {
+        insBonusOut.textContent = '✓ 0% BONUSTAP — Ingen innvirkning på bilbonus';
+        insBonusOut.style.color = '#10b981';
+      }
+      if (insNotesOut) {
+        insNotesOut.textContent = `Delkasko dekker redning og berging ved kollisjon, utforkjøring og motorstopp for ${selskapNavn}. Egenandelen er standard 500 kr.`;
+      }
+    } else {
+      if (insDeductibleOut) insDeductibleOut.textContent = 'Fastpris avtales på forhånd';
+      if (insBonusOut) {
+        insBonusOut.textContent = 'ℹ️ Kun ansvar dekker normalt ikke egen berging';
+        insBonusOut.style.color = '#f59e0b';
+      }
+      if (insNotesOut) {
+        insNotesOut.textContent = `Ved ren ansvarsforsikring dekkes ikke berging av eget kjøretøy. Jan Ove gir deg et uforpliktende fastpristilbud før bergebilen rykker ut.`;
+      }
+    }
+  }
+
+  if (insSelect && coverageSelect) {
+    insSelect.addEventListener('change', () => {
+      playBeep(850, 'sine', 0.05);
+      updateInsuranceCalc();
+    });
+    coverageSelect.addEventListener('change', () => {
+      playBeep(850, 'sine', 0.05);
+      updateInsuranceCalc();
+    });
+  }
+
+  // =========================================================================
+  // 4c. Nora 24/7 AI Vaktassistent (Chat & Tale)
+  // =========================================================================
+  const noraTrigger = document.getElementById('noraTrigger');
+  const noraDrawer = document.getElementById('noraDrawer');
+  const noraClose = document.getElementById('noraClose');
+  const noraInput = document.getElementById('noraInput');
+  const noraSendBtn = document.getElementById('noraSendBtn');
+  const noraMicBtn = document.getElementById('noraMicBtn');
+  const noraMessages = document.getElementById('noraMessages');
+
+  if (noraTrigger && noraDrawer) {
+    noraTrigger.addEventListener('click', () => {
+      playBeep(920, 'sine', 0.08);
+      noraDrawer.classList.toggle('active');
+      if (noraDrawer.classList.contains('active') && noraInput) {
+        setTimeout(() => noraInput.focus(), 150);
+      }
+    });
+  }
+
+  if (noraClose && noraDrawer) {
+    noraClose.addEventListener('click', () => {
+      noraDrawer.classList.remove('active');
+    });
+  }
+
+  function appendNoraMsg(text, sender = 'bot') {
+    if (!noraMessages) return;
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `nora-msg ${sender}`;
+    msgDiv.innerHTML = text;
+    noraMessages.appendChild(msgDiv);
+    noraMessages.scrollTop = noraMessages.scrollHeight;
+  }
+
+  function generateNoraResponse(question) {
+    const q = (question || '').toLowerCase();
+    playBeep(1100, 'sine', 0.06);
+
+    if (q.includes('e18') || q.includes('kollisjon') || q.includes('fast') || q.includes('havari') || q.includes('stått')) {
+      return `⚠️ <strong>SIKKERHETSRÅD FRA VAKTLEDER:</strong><br>
+      1. Ta på refleksvest og still deg <em>bak autovernet</em> umiddelbart.<br>
+      2. PUTE-02 (TMA-støtputebil) og FLAK-03 er klare i Grimstad.<br>
+      Vil du at jeg åpner <a href="#" onclick="document.getElementById('btnGpsNow').click(); return false;" style="color:#38bdf8; text-decoration:underline;">1-Klikk GPS Nødanrop</a> for å sende posisjonen til Jan Ove?`;
+    }
+
+    if (q.includes('egenandel') || q.includes('forsikring') || q.includes('gjensidige') || q.includes('if') || q.includes('pris') || q.includes('bonus')) {
+      return `💡 <strong>Forsikring & Egenandel:</strong><br>
+      Har du kasko eller delkasko, er egenandelen på veihjelp standard <strong>500 kr</strong> (0 kr bonustap!). Agder Bilberging er godkjent Viking-stasjon og tar direkteoppgjøret med forsikringsselskapet ditt på stedet.`;
+    }
+
+    if (q.includes('elbil') || q.includes('låst') || q.includes('tesla') || q.includes('batteri') || q.includes('hjul')) {
+      return `⚡ <strong>Elbil-berging:</strong><br>
+      Ingen fare! Vår MAN TGL flakbil (FLAK-03) har spesialskates (rulleskøyter) slik at vi trekker opp elbiler med låst parkeringsbrems eller flatt batteri uten skade på drivlinjen eller motorene.`;
+    }
+
+    if (q.includes('båt') || q.includes('marina') || q.includes('snekke') || q.includes('kran') || q.includes('løft')) {
+      return `⛵ <strong>Båttransport & Båtløft:</strong><br>
+      Vi har Iveco Eurocargo (KRAN-04) med 14 tm kran og justerbar båtvugge. Vi kjører opptil 30 fot mellom Grimstad Gjestehavn, Arendal, Fevik og Lillesand. Sjekk kalkulatoren lenger oppe på siden for direkte pris!`;
+    }
+
+    return `Takk for henvendelsen! Agder Bilberging har døgnvakt 24/7 på E18 med 5 utrykningsbiler stasjonert i Industriveien 20 i Grimstad. Du kan nå vaktleder Jan Ove direkte på tlf <a href="tel:90566147" style="color:#fbbf24; font-weight:700;">905 66 147</a> eller sende nødsignal via knappen øverst.`;
+  }
+
+  function handleNoraSubmit() {
+    if (!noraInput) return;
+    const text = noraInput.value.trim();
+    if (!text) return;
+
+    appendNoraMsg(text, 'user');
+    noraInput.value = '';
+
+    setTimeout(() => {
+      const resp = generateNoraResponse(text);
+      appendNoraMsg(resp, 'bot');
+    }, 450);
+  }
+
+  if (noraSendBtn) {
+    noraSendBtn.addEventListener('click', handleNoraSubmit);
+  }
+  if (noraInput) {
+    noraInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleNoraSubmit();
+      }
+    });
+  }
+
+  // Quick chips
+  document.addEventListener('click', (e) => {
+    if (e.target && e.target.classList.contains('nora-chip')) {
+      const ask = e.target.getAttribute('data-ask');
+      if (ask) {
+        appendNoraMsg(ask, 'user');
+        setTimeout(() => {
+          const resp = generateNoraResponse(ask);
+          appendNoraMsg(resp, 'bot');
+        }, 400);
+      }
+    }
+  });
+
+  // Tale (Web Speech API)
+  if (noraMicBtn) {
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRec) {
+      const recognizer = new SpeechRec();
+      recognizer.lang = 'nb-NO';
+      recognizer.continuous = false;
+      recognizer.interimResults = false;
+
+      let isRecording = false;
+
+      noraMicBtn.addEventListener('click', () => {
+        if (!isRecording) {
+          try {
+            recognizer.start();
+            isRecording = true;
+            noraMicBtn.classList.add('recording');
+            playBeep(600, 'sine', 0.1);
+          } catch (e) {
+            isRecording = false;
+            noraMicBtn.classList.remove('recording');
+          }
+        } else {
+          recognizer.stop();
+          isRecording = false;
+          noraMicBtn.classList.remove('recording');
+        }
+      });
+
+      recognizer.onresult = (evt) => {
+        isRecording = false;
+        noraMicBtn.classList.remove('recording');
+        const speechText = evt.results[0][0].transcript;
+        if (noraInput) noraInput.value = speechText;
+        handleNoraSubmit();
+      };
+
+      recognizer.onerror = () => {
+        isRecording = false;
+        noraMicBtn.classList.remove('recording');
+      };
+
+      recognizer.onend = () => {
+        isRecording = false;
+        noraMicBtn.classList.remove('recording');
+      };
+    } else {
+      noraMicBtn.style.display = 'none';
+    }
   }
 
   // =========================================================================
