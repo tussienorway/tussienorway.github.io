@@ -28,6 +28,35 @@
     </div>
   </header>
 
+  <!-- Interactive Trial Activation Modal -->
+  <div id="trialModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-sky-500/40 rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl">
+      <button onclick="closeTrialModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl font-bold p-2">✕</button>
+      <div class="flex items-center gap-2 mb-3">
+        <span class="bg-emerald-500/20 text-emerald-400 text-xs font-bold px-2.5 py-0.5 rounded-full border border-emerald-500/40">0 KR I DAG</span>
+        <span class="text-xs text-slate-400">7 dager uforpliktende prøvetid</span>
+      </div>
+      <h3 class="text-2xl font-black text-white">Aktiver 24/7 AI-telefonvakt</h3>
+      <p class="text-xs text-slate-300 mt-2 mb-4 leading-relaxed">
+        Vi kobler Nora opp mot telefonnummeret deres slik at ingen akutte henvendelser går tapt for <strong>ALTA BERGNINGSSENTER AS</strong>. Fyll inn nummeret under, så sender vi oppsettsbekreftelse på SMS.
+      </p>
+      <form id="trialForm" onsubmit="submitTrialActivation(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">Ditt Mobilnummer (for vaktvarsler):</label>
+          <input type="tel" id="trialPhone" required placeholder="+47 900 00 000" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-sky-500" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">E-postadresse:</label>
+          <input type="email" id="trialEmail" placeholder="daglig.leder@bedrift.no" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-sky-500" />
+        </div>
+        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3.5 px-4 rounded-xl transition shadow-lg shadow-emerald-950/40">
+          ✓ Bekreft og Start 7 Dager Gratis Prøvetid
+        </button>
+      </form>
+      <div id="trialStatus" class="hidden mt-4 p-4 rounded-xl text-xs font-semibold bg-emerald-950/60 border border-emerald-600/60 text-emerald-300 text-center"></div>
+    </div>
+  </div>
+
   <!-- Interactive Booking Modal -->
   <div id="bookingModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-700 max-w-lg w-full rounded-3xl p-6 sm:p-8 shadow-2xl relative">
@@ -164,12 +193,12 @@
         Prøv løsningen gratis i 7 dager. Når du er fornøyd, aktiverer du eget domene og 24/7 AI-sekretær med Vipps eller Stripe.
       </p>
       <div class="inline-flex flex-wrap justify-center gap-4">
-        <a href="/checkout/919269324?provider=vipps" class="bg-orange-500 hover:bg-orange-400 text-white font-bold px-6 py-3 rounded-xl transition">
-          Aktiver med Vipps Bedrift
-        </a>
-        <a href="/checkout/919269324?provider=stripe" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-6 py-3 rounded-xl transition">
-          Aktiver med Kort / Faktura (Stripe)
-        </a>
+        <button onclick="openTrialModal('vipps')" class="bg-orange-500 hover:bg-orange-400 text-white font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-orange-950/40">
+          🚀 Start 7 Dager Gratis Prøvetid (Vipps)
+        </button>
+        <button onclick="openTrialModal('stripe')" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-indigo-950/40">
+          Start Gratis Prøvetid (Kort / Faktura)
+        </button>
       </div>
     </section>
   </main>
@@ -247,6 +276,26 @@
     }
 
     // Booking Modal controls
+    function openTrialModal(provider) {
+      initAudio();
+      playChime(600, 0.05);
+      const modal = document.getElementById('trialModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+    function closeTrialModal() {
+      const modal = document.getElementById('trialModal');
+      if (modal) modal.classList.add('hidden');
+    }
+    function submitTrialActivation(e) {
+      e.preventDefault();
+      const phone = document.getElementById('trialPhone').value.trim();
+      const status = document.getElementById('trialStatus');
+      playSuccessChord();
+      status.innerHTML = `🎉 <strong>Prøvetid aktivert!</strong> Vi har registrert aktiveringen for ${COMPANY_NAME}. Arne Austenå vil kontakte deg på ${phone} innen 15 minutter for å bekrefte viderekobling.`;
+      status.classList.remove('hidden');
+      speakDemo('Gratulerer! Prøvetiden for ' + COMPANY_NAME + ' er nå aktivert. Vi tar kontakt på SMS om kort tid.');
+    }
+
     function openBookingModal() {
       playChime(660, 0.08);
       const modal = document.getElementById('bookingModal');
