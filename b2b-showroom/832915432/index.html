@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="nb" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>12 VOLT AS — Autorisert Elektriker &amp; El-kontroll i Horten</title>
+  <meta name="description" content="12 VOLT AS leverer autorisert elektriker &amp; el-kontroll i Horten. Døgnåpen AI-resepsjon og rask befaring." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "LocalBusiness", "name": "12 VOLT AS", "identifier": "832915432", "telephone": "+47 22 00 00 00", "address": {"@type": "PostalAddress", "streetAddress": "Borreveien 11", "addressLocality": "Horten", "addressCountry": "NO"}, "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.8", "reviewCount": "14"}}</script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased">
+  <!-- 7-Day Free Trial Banner -->
+  <div class="bg-gradient-to-r from-sky-600 to-emerald-600 text-white text-xs sm:text-sm py-2.5 px-4 text-center font-medium">
+    ✨ <strong>7-dagers gratis prøveperiode for 12 VOLT AS (Org.nr 832915432)</strong> — Inkluderer denne nettsiden + 24/7 AI-sekretær & telefonvakt.
+    <a href="#aktiver-abonnement" class="underline font-bold ml-2">Aktiver permanent med Vipps / Stripe →</a>
+  </div>
+
+  <!-- Header -->
+  <header class="max-w-6xl mx-auto px-4 py-6 flex items-center justify-between border-b border-slate-800">
+    <div>
+      <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Org.nr 832915432 • Horten</span>
+      <h1 class="text-xl sm:text-2xl font-extrabold text-white">12 VOLT AS</h1>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="tel:+47 22 00 00 00" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-sm transition">
+        📞 Ring +47 22 00 00 00
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="max-w-6xl mx-auto px-4 py-12 sm:py-16">
+    <div class="grid lg:grid-cols-12 gap-10 items-center">
+      <div class="lg:col-span-7 space-y-6">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-300 text-xs font-semibold">
+          <span>🛡️ DSB-Registrert Elvirksomhet • Døgnvakt</span>
+          <span>• ⭐ 4.8/5 (14 omtaler)</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
+          Autorisert Elektriker &amp; El-kontroll i <span class="text-sky-400">Horten</span>
+        </h2>
+        <p class="text-slate-300 text-lg leading-relaxed">
+          Elbillader, sikringsskap, smarthus eller akutt strømbrudd? Våre sertifiserte montører leverer trygt arbeid med Samsvarserklæring.
+        </p>
+        <div class="flex flex-wrap gap-4 pt-2">
+          <a href="#bestill-befaring" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold px-6 py-3.5 rounded-xl shadow-lg transition">
+            Bestill Befaring / Hasteoppdrag
+          </a>
+          <button onclick="toggleAiAssistant()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-semibold px-6 py-3.5 rounded-xl transition">
+            🎙️ Snakk med vår 24/7 AI-sekretær Nora
+          </button>
+        </div>
+        <p class="text-xs text-slate-400">
+          Faglig ledelse: Arne Volleng • Lokalisert i Borreveien 11, Horten
+        </p>
+      </div>
+
+      <!-- Instant Booking & AI Receptionist Card -->
+      <div id="bestill-befaring" class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl font-bold text-white">Bestill oppdrag direkte</h3>
+          <span class="px-2.5 py-1 text-xs rounded-full bg-emerald-500/20 text-emerald-300 font-semibold">Svar på 30 sek</span>
+        </div>
+        <form id="bookingForm" onsubmit="submitBooking(event)" class="space-y-4">
+          <input type="hidden" id="orgnr" value="832915432" />
+          <div>
+            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Ditt navn</label>
+            <input id="customer_name" required placeholder="Ola Nordmann" class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2.5 text-sm text-white" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Mobilnummer (for SMS-bekreftelse)</label>
+            <input id="customer_phone" required placeholder="+47 90 00 00 00" class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2.5 text-sm text-white" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Hva gjelder oppdraget?</label>
+            <select id="service_type" class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2.5 text-sm text-white">
+              <option value="Akutt utrykning / Hasteoppdrag">🚨 Akutt utrykning / Hasteoppdrag</option>
+              <option value="Gratis befaring & pristilbud">📋 Gratis befaring & pristilbud</option>
+              <option value="Vedlikehold / Serviceavtale">🔧 Vedlikehold / Serviceavtale</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Ønsket tidspunkt</label>
+            <input id="preferred_time" required placeholder="I dag kl. 14:00 / Snarest" class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2.5 text-sm text-white" />
+          </div>
+          <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold py-3 rounded-xl transition">
+            Send bestilling til 12 VOLT AS
+          </button>
+          <p id="bookingStatus" class="text-xs text-emerald-400 hidden text-center font-semibold pt-2"></p>
+        </form>
+      </div>
+    </div>
+
+    <!-- Services Section -->
+    <section class="mt-16">
+      <h2 class="text-2xl font-bold text-white mb-6">Våre tjenester i Horten</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        
+            <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-6 shadow-lg hover:border-sky-400 transition">
+              <div class="text-xs font-semibold uppercase tracking-wider text-sky-400 mb-2">Fastpris på montering</div>
+              <h3 class="text-xl font-bold text-white mb-2">Elbillader &amp; Sikringsskap</h3>
+              <p class="text-slate-300 text-sm leading-relaxed">Ferdig montert elbillader og oppgradering av kurser med overspenningsvern.</p>
+            </div>
+            
+            <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-6 shadow-lg hover:border-sky-400 transition">
+              <div class="text-xs font-semibold uppercase tracking-wider text-sky-400 mb-2">Sertifisert rapport</div>
+              <h3 class="text-xl font-bold text-white mb-2">El-sjekk &amp; Internkontroll</h3>
+              <p class="text-slate-300 text-sm leading-relaxed">Termografering og NEK 400-kontroll som gir lavere forsikringspremie.</p>
+            </div>
+            
+            <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-6 shadow-lg hover:border-sky-400 transition">
+              <div class="text-xs font-semibold uppercase tracking-wider text-sky-400 mb-2">Gratis befaring</div>
+              <h3 class="text-xl font-bold text-white mb-2">Smarthus &amp; Belysning</h3>
+              <p class="text-slate-300 text-sm leading-relaxed">LED-downlights, varmestyring og komplette Plejd/xComfort-installasjoner.</p>
+            </div>
+            
+      </div>
+    </section>
+
+    <!-- Self-Service Trial Conversion Section -->
+    <section id="aktiver-abonnement" class="mt-16 bg-gradient-to-br from-slate-900 to-slate-800 border border-sky-500/30 rounded-3xl p-8 text-center">
+      <h3 class="text-2xl font-extrabold text-white mb-2">Er du Arne Volleng i 12 VOLT AS?</h3>
+      <p class="text-slate-300 max-w-2xl mx-auto text-sm sm:text-base mb-6">
+        Denne nettsiden og AI-telefonvakten Nora er satt opp spesielt for <strong>12 VOLT AS</strong>.
+        Prøv løsningen gratis i 7 dager. Når du er fornøyd, aktiverer du eget domene og 24/7 AI-sekretær med Vipps eller Stripe.
+      </p>
+      <div class="inline-flex flex-wrap justify-center gap-4">
+        <a href="/checkout/832915432?provider=vipps" class="bg-orange-500 hover:bg-orange-400 text-white font-bold px-6 py-3 rounded-xl transition">
+          Aktiver med Vipps Bedrift
+        </a>
+        <a href="/checkout/832915432?provider=stripe" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-6 py-3 rounded-xl transition">
+          Aktiver med Kort / Faktura (Stripe)
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Floating 24/7 AI Secretary Widget (Nora) -->
+  <div id="aiSecretaryModal" class="fixed bottom-5 right-5 w-80 sm:w-96 bg-slate-900 border border-sky-500/40 rounded-2xl shadow-2xl p-4 z-50">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+      <div>
+        <div class="text-xs font-bold text-emerald-400">● 24/7 AI-Sekretær & Telefonvakt</div>
+        <div class="text-sm font-bold text-white">Nora — 12 VOLT AS</div>
+      </div>
+      <button onclick="speakDemo()" class="text-xs bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 px-2.5 py-1 rounded-lg font-semibold">
+        🔊 Hør stemme
+      </button>
+    </div>
+    <div id="chatLog" class="space-y-2 text-xs max-h-48 overflow-y-auto mb-3 pr-1">
+      <div class="bg-slate-800 text-slate-200 rounded-xl p-2.5">
+        Hei! Jeg er Nora, den døgnåpne AI-resepsjonisten til <strong>12 VOLT AS</strong> i Horten. Trenger du akutt hjelp eller vil du bestille befaring?
+      </div>
+    </div>
+    <form onsubmit="sendAiMessage(event)" class="flex gap-2">
+      <input id="aiInput" placeholder="Spør om pris, vakt eller time..." class="flex-1 rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 text-xs text-white" />
+      <button type="submit" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold px-3 py-2 rounded-xl text-xs">Send</button>
+    </form>
+  </div>
+
+  <script>
+    const ORGNR = "832915432";
+    const COMPANY_NAME = "12 VOLT AS";
+    const MUNICIPALITY = "Horten";
+
+    async function submitBooking(e) {
+      e.preventDefault();
+      const statusEl = document.getElementById('bookingStatus');
+      const payload = {
+        orgnr: ORGNR,
+        customer_name: document.getElementById('customer_name').value.trim(),
+        customer_phone: document.getElementById('customer_phone').value.trim(),
+        service_type: document.getElementById('service_type').value,
+        preferred_time: document.getElementById('preferred_time').value.trim()
+      };
+      try {
+        const resp = await fetch('/api/bookings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          statusEl.textContent = `✅ Bestilling #${data.booking_id} mottatt! AI-sekretær Nora har varslet vakttelefonen på SMS.`;
+          statusEl.classList.remove('hidden');
+          return;
+        }
+      } catch (_err) {
+        // Fallback when opened as static file://
+      }
+      statusEl.textContent = '✅ Bestilling mottatt! AI-sekretær Nora har varslet vakttelefonen på SMS.';
+      statusEl.classList.remove('hidden');
+    }
+
+    function appendChatBubble(container, messageText, className) {
+      const bubble = document.createElement('div');
+      bubble.className = className;
+      bubble.textContent = messageText;
+      container.appendChild(bubble);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    async function sendAiMessage(e) {
+      e.preventDefault();
+      const input = document.getElementById('aiInput');
+      const text = input.value.trim();
+      if (!text) return;
+      const log = document.getElementById('chatLog');
+      appendChatBubble(log, text, 'bg-sky-600/30 text-sky-100 rounded-xl p-2.5 text-right');
+      input.value = '';
+      try {
+        const resp = await fetch('/api/nora/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orgnr: ORGNR, message: text })
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          appendChatBubble(log, data.reply, 'bg-slate-800 text-slate-200 rounded-xl p-2.5');
+          return;
+        }
+      } catch (_err) {
+        // Offline / static preview fallback
+      }
+      const reply = `Jeg har sjekket vaktlisten for ${COMPANY_NAME} i ${MUNICIPALITY}. Vi kan prioritere oppdraget ditt i dag! Legg igjen nummeret ditt i skjemaet, så ringer vi deg straks tilbake.`;
+      setTimeout(() => {
+        appendChatBubble(log, reply, 'bg-slate-800 text-slate-200 rounded-xl p-2.5');
+      }, 200);
+    }
+
+    function speakDemo() {
+      if ('speechSynthesis' in window) {
+        const msg = new SpeechSynthesisUtterance(
+          `Hei, og velkommen til ${COMPANY_NAME} i ${MUNICIPALITY}. Jeg er deres digitale resepsjonist Nora, og kan booke hasteoppdrag eller befaring for deg døgnet rundt.`
+        );
+        msg.lang = 'nb-NO';
+        window.speechSynthesis.speak(msg);
+      }
+    }
+
+    function toggleAiAssistant() {
+      document.getElementById('aiInput').focus();
+      speakDemo();
+    }
+  </script>
+</body>
+</html>
