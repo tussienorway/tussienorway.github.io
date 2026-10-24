@@ -28,6 +28,44 @@
     </div>
   </header>
 
+  <!-- Interactive Booking Modal -->
+  <div id="bookingModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 max-w-lg w-full rounded-3xl p-6 sm:p-8 shadow-2xl relative">
+      <button onclick="closeBookingModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2 rounded-xl text-lg font-bold">✕</button>
+      <div class="flex items-center gap-2 mb-4">
+        <span class="px-2.5 py-1 text-xs rounded-full bg-emerald-500/20 text-emerald-300 font-semibold">⚡ Hurtig-Booking</span>
+        <h3 class="text-xl font-bold text-white">Bestill oppdrag hos 5 STARS VVS SERVICE AS</h3>
+      </div>
+      <p class="text-xs text-slate-300 mb-4">Registrer oppdraget ditt her, så varsler vår AI-sekretær Nora vakttelefonen umiddelbart.</p>
+      <form id="bookingModalForm" onsubmit="submitModalBooking(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Ditt navn</label>
+          <input id="modal_customer_name" required placeholder="Ola Nordmann" class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2.5 text-sm text-white" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Mobilnummer (for SMS-bekreftelse)</label>
+          <input id="modal_customer_phone" required placeholder="+47 90 00 00 00" class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2.5 text-sm text-white" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Hva gjelder oppdraget?</label>
+          <select id="modal_service_type" class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2.5 text-sm text-white">
+            <option value="Akutt utrykning / Hasteoppdrag">🚨 Akutt utrykning / Hasteoppdrag</option>
+            <option value="Gratis befaring & pristilbud">📋 Gratis befaring & pristilbud</option>
+            <option value="Vedlikehold / Serviceavtale">🔧 Vedlikehold / Serviceavtale</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Ønsket tidspunkt</label>
+          <input id="modal_preferred_time" required placeholder="I dag kl. 14:00 / Snarest" class="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2.5 text-sm text-white" />
+        </div>
+        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold py-3 rounded-xl transition">
+          Bekreft & Send Bestilling
+        </button>
+        <p id="modalBookingStatus" class="text-xs text-emerald-400 hidden text-center font-semibold pt-2"></p>
+      </form>
+    </div>
+  </div>
+
   <!-- Hero Section -->
   <main class="max-w-6xl mx-auto px-4 py-12 sm:py-16">
     <div class="grid lg:grid-cols-12 gap-10 items-center">
@@ -43,11 +81,12 @@
           Lekkasje, tett sluk, totalrenovering av bad eller montering av vannbåren varme? Vi rykker ut på kort varsel.
         </p>
         <div class="flex flex-wrap gap-4 pt-2">
-          <a href="#bestill-befaring" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold px-6 py-3.5 rounded-xl shadow-lg transition">
+          <button onclick="openBookingModal()" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold px-6 py-3.5 rounded-xl shadow-lg transition">
             Bestill Befaring / Hasteoppdrag
-          </a>
-          <button onclick="toggleAiAssistant()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-semibold px-6 py-3.5 rounded-xl transition">
-            🎙️ Snakk med vår 24/7 AI-sekretær Nora
+          </button>
+          <button onclick="toggleAiAssistant()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-semibold px-6 py-3.5 rounded-xl transition flex items-center gap-2">
+            <span>🎙️</span>
+            <span>Snakk med vår 24/7 AI-sekretær Nora</span>
           </button>
         </div>
         <p class="text-xs text-slate-400">
@@ -135,16 +174,32 @@
     </section>
   </main>
 
+  <!-- Nora 24/7 Floating Launcher Button -->
+  <div id="aiSecretaryLauncher" class="fixed bottom-5 right-5 z-40">
+    <button onclick="toggleAiAssistant()" class="flex items-center gap-2.5 bg-gradient-to-r from-sky-600 to-emerald-600 hover:from-sky-500 hover:to-emerald-500 text-white font-bold py-3 px-4 sm:px-5 rounded-full shadow-2xl transition transform hover:scale-105 border border-sky-400/40 text-xs sm:text-sm">
+      <span class="relative flex h-2.5 w-2.5">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-300"></span>
+      </span>
+      <span>💬 Snakk med Nora (24/7 AI)</span>
+    </button>
+  </div>
+
   <!-- Floating 24/7 AI Secretary Widget (Nora) -->
-  <div id="aiSecretaryModal" class="fixed bottom-5 right-5 w-80 sm:w-96 bg-slate-900 border border-sky-500/40 rounded-2xl shadow-2xl p-4 z-50">
+  <div id="aiSecretaryModal" class="fixed bottom-5 right-5 w-80 sm:w-96 bg-slate-900 border border-sky-500/40 rounded-2xl shadow-2xl p-4 z-50 hidden">
     <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
       <div>
         <div class="text-xs font-bold text-emerald-400">● 24/7 AI-Sekretær & Telefonvakt</div>
         <div class="text-sm font-bold text-white">Nora — 5 STARS VVS SERVICE AS</div>
       </div>
-      <button onclick="speakDemo()" class="text-xs bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 px-2.5 py-1 rounded-lg font-semibold">
-        🔊 Hør stemme
-      </button>
+      <div class="flex items-center gap-2">
+        <button onclick="speakDemo()" title="Hør stemme" class="text-xs bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 px-2.5 py-1 rounded-lg font-semibold">
+          🔊 Lyd
+        </button>
+        <button onclick="toggleAiAssistant()" title="Minimer" class="text-xs text-slate-400 hover:text-white px-2 py-1 rounded-lg font-bold">
+          ✕
+        </button>
+      </div>
     </div>
     <div id="chatLog" class="space-y-2 text-xs max-h-48 overflow-y-auto mb-3 pr-1">
       <div class="bg-slate-800 text-slate-200 rounded-xl p-2.5">
@@ -162,16 +217,58 @@
     const COMPANY_NAME = "5 STARS VVS SERVICE AS";
     const MUNICIPALITY = "Oslo";
 
-    async function submitBooking(e) {
+    // Web Audio API Synthesizer
+    let audioCtx = null;
+    function playChime(freq = 880, duration = 0.08, type = 'sine') {
+      try {
+        const AudioClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioClass) return;
+        if (!audioCtx) audioCtx = new AudioClass();
+        if (audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+        if (audioCtx.state !== 'running') return;
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (_e) {}
+    }
+
+    function playSuccessChord() {
+      playChime(523.25, 0.1);
+      setTimeout(() => playChime(659.25, 0.1), 80);
+      setTimeout(() => playChime(783.99, 0.16), 160);
+    }
+
+    // Booking Modal controls
+    function openBookingModal() {
+      playChime(660, 0.08);
+      const modal = document.getElementById('bookingModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeBookingModal() {
+      const modal = document.getElementById('bookingModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function submitModalBooking(e) {
       e.preventDefault();
-      const statusEl = document.getElementById('bookingStatus');
+      const statusEl = document.getElementById('modalBookingStatus');
       const payload = {
         orgnr: ORGNR,
-        customer_name: document.getElementById('customer_name').value.trim(),
-        customer_phone: document.getElementById('customer_phone').value.trim(),
-        service_type: document.getElementById('service_type').value,
-        preferred_time: document.getElementById('preferred_time').value.trim()
+        customer_name: document.getElementById('modal_customer_name').value.trim(),
+        customer_phone: document.getElementById('modal_customer_phone').value.trim(),
+        service_type: document.getElementById('modal_service_type').value,
+        preferred_time: document.getElementById('modal_preferred_time').value.trim()
       };
+      playSuccessChord();
       try {
         const resp = await fetch('/api/bookings', {
           method: 'POST',
@@ -182,6 +279,37 @@
           const data = await resp.json();
           statusEl.textContent = `✅ Bestilling #${data.booking_id} mottatt! AI-sekretær Nora har varslet vakttelefonen på SMS.`;
           statusEl.classList.remove('hidden');
+          speakDemo('Takk for bestillingen! Vi har mottatt henvendelsen og tar kontakt straks.');
+          return;
+        }
+      } catch (_err) {}
+      statusEl.textContent = '✅ Bestilling mottatt! AI-sekretær Nora har varslet vakttelefonen på SMS.';
+      statusEl.classList.remove('hidden');
+      speakDemo('Takk for bestillingen! Vi har mottatt henvendelsen og tar kontakt straks.');
+    }
+
+    async function submitBooking(e) {
+      e.preventDefault();
+      const statusEl = document.getElementById('bookingStatus');
+      const payload = {
+        orgnr: ORGNR,
+        customer_name: document.getElementById('customer_name').value.trim(),
+        customer_phone: document.getElementById('customer_phone').value.trim(),
+        service_type: document.getElementById('service_type').value,
+        preferred_time: document.getElementById('preferred_time').value.trim()
+      };
+      playSuccessChord();
+      try {
+        const resp = await fetch('/api/bookings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          statusEl.textContent = `✅ Bestilling #${data.booking_id} mottatt! AI-sekretær Nora har varslet vakttelefonen på SMS.`;
+          statusEl.classList.remove('hidden');
+          speakDemo('Takk for bestillingen! Vi har mottatt henvendelsen og tar kontakt straks.');
           return;
         }
       } catch (_err) {
@@ -189,6 +317,7 @@
       }
       statusEl.textContent = '✅ Bestilling mottatt! AI-sekretær Nora har varslet vakttelefonen på SMS.';
       statusEl.classList.remove('hidden');
+      speakDemo('Takk for bestillingen! Vi har mottatt henvendelsen og tar kontakt straks.');
     }
 
     function appendChatBubble(container, messageText, className) {
@@ -204,6 +333,7 @@
       const input = document.getElementById('aiInput');
       const text = input.value.trim();
       if (!text) return;
+      playChime(600, 0.05);
       const log = document.getElementById('chatLog');
       appendChatBubble(log, text, 'bg-sky-600/30 text-sky-100 rounded-xl p-2.5 text-right');
       input.value = '';
@@ -215,6 +345,7 @@
         });
         if (resp.ok) {
           const data = await resp.json();
+          playChime(900, 0.08);
           appendChatBubble(log, data.reply, 'bg-slate-800 text-slate-200 rounded-xl p-2.5');
           return;
         }
@@ -223,23 +354,38 @@
       }
       const reply = `Jeg har sjekket vaktlisten for ${COMPANY_NAME} i ${MUNICIPALITY}. Vi kan prioritere oppdraget ditt i dag! Legg igjen nummeret ditt i skjemaet, så ringer vi deg straks tilbake.`;
       setTimeout(() => {
+        playChime(900, 0.08);
         appendChatBubble(log, reply, 'bg-slate-800 text-slate-200 rounded-xl p-2.5');
       }, 200);
     }
 
-    function speakDemo() {
+    function speakDemo(customText) {
+      playChime(880, 0.08);
       if ('speechSynthesis' in window) {
-        const msg = new SpeechSynthesisUtterance(
-          `Hei, og velkommen til ${COMPANY_NAME} i ${MUNICIPALITY}. Jeg er deres digitale resepsjonist Nora, og kan booke hasteoppdrag eller befaring for deg døgnet rundt.`
-        );
-        msg.lang = 'nb-NO';
-        window.speechSynthesis.speak(msg);
+        try {
+          window.speechSynthesis.cancel();
+          const text = customText || `Hei, og velkommen til ${COMPANY_NAME} i ${MUNICIPALITY}. Jeg er deres digitale resepsjonist Nora, og kan booke hasteoppdrag eller befaring for deg døgnet rundt.`;
+          const msg = new SpeechSynthesisUtterance(text);
+          msg.lang = 'nb-NO';
+          msg.rate = 1.0;
+          window.speechSynthesis.speak(msg);
+        } catch (_err) {}
       }
     }
 
     function toggleAiAssistant() {
-      document.getElementById('aiInput').focus();
-      speakDemo();
+      playChime(740, 0.08);
+      const modal = document.getElementById('aiSecretaryModal');
+      const launcher = document.getElementById('aiSecretaryLauncher');
+      if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        if (launcher) launcher.classList.add('hidden');
+        document.getElementById('aiInput').focus();
+        speakDemo();
+      } else {
+        modal.classList.add('hidden');
+        if (launcher) launcher.classList.remove('hidden');
+      }
     }
   </script>
 </body>
