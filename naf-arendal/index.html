@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#002253">
+  <meta name="description" content="NAF Senter Arendal - Åsbieveien 14 (Stoa). Offisielt godkjent NAF testsenter og verksted. EU-kontroll, NAF Eierskiftetiltak, Aviloo Elbil Batteritest og service. Døgnåpen nøkkelautomat.">
+  <title>NAF Senter Arendal · Testsenter, EU-kontroll & Elbilverksted</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Topplinje -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="brand" aria-label="NAF Senter Arendal Hjem">
+        <div class="brand-badge">NAF</div>
+        <div>
+          <div class="brand-title">NAF SENTER ARENDAL</div>
+          <div class="brand-sub">Åsbieveien 14, 4848 Arendal · Stoa næringspark</div>
+        </div>
+      </a>
+
+      <div class="nav-actions">
+        <a href="mekaniker.html" class="btn-nav-portal">⚡ Mekaniker AI-Portal</a>
+        <a href="tel:08505" class="btn-phone">
+          <span>📞 Sentral: 08505</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Seksjon -->
+    <section class="hero-section">
+      <div class="container hero-grid">
+        <div>
+          <div class="hero-badge-pill">
+            <span class="live-dot"></span>
+            <span>NAF KONTROLLORGAN 01 · ÅSBIEVEIEN 14 ARENDAL</span>
+          </div>
+          <h1>Uavhengig biltest, EU-kontroll & <span style="color:var(--naf-yellow);">Elbil-diagnose</span> i Arendal.</h1>
+          <p class="hero-lead">
+            Vi selger ikke biler og vi anbefaler aldri unødige reparasjoner. Hos NAF Senter Arendal på Stoa får du Norges tryggeste tilstandsrapport, eierskiftetiltak og sertifisert Aviloo elbil-batteritest.
+          </p>
+
+          <!-- Reg.nr Hurtigoppslag -->
+          <div class="regnr-box">
+            <div style="font-size:0.88rem; font-weight:700; color:#fff; margin-bottom:10px;">
+              🔍 Tast inn bilnummeret ditt for umiddelbar NAF-status:
+            </div>
+            <div class="regnr-input-wrap">
+              <div class="norway-flag-strip">
+                <span>N</span>
+              </div>
+              <input type="text" id="regnrInput" class="regnr-input" placeholder="EK 12345" maxlength="8">
+              <button class="btn-regnr-submit" id="btnRegnrSubmit" type="button">Sjekk bil</button>
+            </div>
+
+            <div id="regnrResultBox" class="regnr-result"></div>
+          </div>
+        </div>
+
+        <!-- Senterinfo & Hurtigfakta -->
+        <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:18px; padding:28px;">
+          <h3 style="font-size:1.2rem; font-weight:800; color:var(--naf-yellow); margin-bottom:16px;">
+            Åpent alle hverdager på Stoa
+          </h3>
+
+          <div style="display:flex; flex-direction:column; gap:14px; font-size:0.88rem;">
+            <div style="display:flex; gap:12px; align-items:flex-start;">
+              <span style="font-size:1.2rem;">📍</span>
+              <div>
+                <strong>Adresse:</strong> Åsbieveien 14, 4848 Arendal<br>
+                <span style="color:var(--text-secondary); font-size:0.8rem;">Like ved Stoa handelsområde, enkel adkomst fra E18.</span>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:12px; align-items:flex-start;">
+              <span style="font-size:1.2rem;">⏰</span>
+              <div>
+                <strong>Åpningstider:</strong> Mandag – Fredag: 08:00 – 16:00<br>
+                <span style="color:var(--text-secondary); font-size:0.8rem;">Lørdag og søndag: Stengt.</span>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:12px; align-items:flex-start;">
+              <span style="font-size:1.2rem;">🔑</span>
+              <div>
+                <strong>Døgnåpen Nøkkelautomat:</strong><br>
+                <span style="color:var(--text-secondary); font-size:0.8rem;">Hent bilen når det passer deg! Innlevering via sikkert nøkkelinnkast til høyre for døra ved postkassa.</span>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:12px; align-items:flex-start;">
+              <span style="font-size:1.2rem;">☕</span>
+              <div>
+                <strong>Venterom & Wifi:</strong><br>
+                <span style="color:var(--text-secondary); font-size:0.8rem;">Slapp av med gratis kaffe og trådløst nett mens EU-kontrollen utføres (ca. 45 min).</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border-color); display:flex; gap:10px;">
+            <button class="btn-regnr-submit" style="width:100%; text-align:center; padding:12px;" onclick="openBookingModal('eu_kontroll')">
+              📅 Bestill Time på Senteret
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tjenester & Medlemspriser -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-tag">Uavhengig Kvalitet</span>
+          <h2>Tester og kontroller ved NAF Senter Arendal</h2>
+          <p style="color:var(--text-secondary); max-width:650px;">
+            Som NAF-medlem sparer du mellom 15 % og 20 % på alle våre kontroller. Vi utfører arbeidet nøytralt og objektivt.
+          </p>
+        </div>
+
+        <div class="service-grid">
+          <div class="service-card">
+            <div>
+              <div class="service-title">EU-kontroll (PKK)</div>
+              <p class="service-desc">Obligatorisk trafikksikkerhets- og miljøkontroll for biler inntil 3,5 tonn. Utføres på ca. 45 minutter.</p>
+            </div>
+            <div>
+              <div class="price-row">
+                <span class="price-medlem">kr 1 195,-</span>
+                <span class="price-ikke-medlem">kr 1 450,-</span>
+              </div>
+              <button class="btn-book-service" onclick="openBookingModal('eu_kontroll')">Bestill EU-kontroll</button>
+            </div>
+          </div>
+
+          <div class="service-card">
+            <div>
+              <div class="service-title">NAF Test ved Kjøp & Salg</div>
+              <p class="service-desc">Omfattende tilstandsrapport over 100 punkter. Avslører skjulte mangler, bremsetilstand og kollisjonsskader.</p>
+            </div>
+            <div>
+              <div class="price-row">
+                <span class="price-medlem">kr 2 490,-</span>
+                <span class="price-ikke-medlem">kr 3 190,-</span>
+              </div>
+              <button class="btn-book-service" onclick="openBookingModal('eierskiftetest')">Bestill Eierskiftetiltak</button>
+            </div>
+          </div>
+
+          <div class="service-card">
+            <div>
+              <div class="service-title">NAF Aviloo Batteritest (Elbil)</div>
+              <p class="service-desc">Måler reell batterihelse (SoH), gjenværende rekkevidde og cellebalanse med offisielt NAF-sertifikat.</p>
+            </div>
+            <div>
+              <div class="price-row">
+                <span class="price-medlem">kr 1 890,-</span>
+                <span class="price-ikke-medlem">kr 2 390,-</span>
+              </div>
+              <button class="btn-book-service" onclick="openBookingModal('elbil_batteritest')">Bestill Batteritest</button>
+            </div>
+          </div>
+
+          <div class="service-card">
+            <div>
+              <div class="service-title">Garantiutløpstest</div>
+              <p class="service-desc">Grundig gjennomgang før nybilgarantien på 5 år / 100 000 km utløper. Spar titusenvis på garantikrav.</p>
+            </div>
+            <div>
+              <div class="price-row">
+                <span class="price-medlem">kr 2 190,-</span>
+                <span class="price-ikke-medlem">kr 2 790,-</span>
+              </div>
+              <button class="btn-book-service" onclick="openBookingModal('garantiutlopstest')">Bestill Garantiutløp</button>
+            </div>
+          </div>
+
+          <div class="service-card">
+            <div>
+              <div class="service-title">Klimaservice (AC) & Gass</div>
+              <p class="service-desc">Tømming, trykktesting og påfylling av kuldemedium. Fjerner lukt og sikrer iskald luft på varme dager.</p>
+            </div>
+            <div>
+              <div class="price-row">
+                <span class="price-medlem">kr 1 590,-</span>
+                <span class="price-ikke-medlem">kr 1 990,-</span>
+              </div>
+              <button class="btn-book-service" onclick="openBookingModal('ac_service')">Bestill AC-service</button>
+            </div>
+          </div>
+
+          <div class="service-card">
+            <div>
+              <div class="service-title">Hjulskift & Dekksjekk</div>
+              <p class="service-desc">Raskt dekkskifte på bukk, mønsterdybdekontroll, TPMS-kalibrering og korrekt momenttiltrekking.</p>
+            </div>
+            <div>
+              <div class="price-row">
+                <span class="price-medlem">kr 490,-</span>
+                <span class="price-ikke-medlem">kr 690,-</span>
+              </div>
+              <button class="btn-book-service" onclick="openBookingModal('hjulskift_dekksjekk')">Bestill Hjulskift</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interaktiv Elbil Batterihelse Simulator -->
+    <section class="section" id="elbil-seksjon">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-tag">NAF Aviloo Elbil-diagnose</span>
+          <h2>Beregn batteridegradering & helsetilstand (SoH)</h2>
+          <p style="color:var(--text-secondary); max-width:680px;">
+            Elbiler taper gradvis batterikapasitet over tid. Test simulatoren under for å se forventet State of Health basert på bilens alder og kjørelengde:
+          </p>
+        </div>
+
+        <div class="ev-health-card">
+          <div>
+            <div class="control-group">
+              <div class="control-label">
+                <span>Bilens Alder:</span>
+                <span id="evAgeVal" style="color:var(--naf-yellow); font-family:var(--font-mono);">4 år</span>
+              </div>
+              <input type="range" class="range-slider" id="evAgeSlider" min="1" max="10" value="4">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Kjørelengde (km):</span>
+                <span id="evKmVal" style="color:var(--naf-yellow); font-family:var(--font-mono);">65 000 km</span>
+              </div>
+              <input type="range" class="range-slider" id="evKmSlider" min="5000" max="250000" step="5000" value="65000">
+            </div>
+
+            <div style="background:#080d1a; border-radius:10px; padding:16px; border:1px solid var(--border-color); margin-top:20px; font-size:0.85rem;">
+              <strong>Hva sjekker NAF Aviloo-testen i Åsbieveien 14?</strong>
+              <ul style="margin:8px 0 0 18px; color:var(--text-secondary);">
+                <li>Reell tilgjengelig batterikapasitet (kWh) målt under faktisk kjøresyklus.</li>
+                <li>Celleubalanse i mV (avslører svake batterimoduler før garantien utløper).</li>
+                <li>Offisielt NAF/Aviloo sertifikat som øker bruktbilverdien ved salg.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="ev-gauge-container">
+            <div class="gauge-circle">
+              <span class="gauge-val" id="sohPctOut">92.5%</span>
+              <span class="gauge-label">State of Health</span>
+            </div>
+            <div id="sohStatusBadge" style="font-weight:800; font-size:0.85rem; margin-bottom:8px; font-family:var(--font-mono);">
+              MEGET GOD HELSETILSTAND (A)
+            </div>
+            <div id="sohDegradationOut" style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:8px;">
+              Estimert kapasitetstap: ca. 5.6 kWh av 75 kWh batteripakke
+            </div>
+            <div id="sohWarrantyOut" style="font-size:0.78rem; text-align:center; max-width:320px; line-height:1.4;">
+              ✓ Innenfor bilimportørens 8 år / 160 000 km batterigaranti.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal for Timebestilling -->
+  <div class="nora-drawer" id="bookingModal" style="width:480px; height:auto; max-height:90vh; top:50%; left:50%; transform:translate(-50%, -50%); bottom:auto; right:auto;">
+    <div class="nora-header">
+      <div style="font-weight:800; font-size:1rem; color:#fff;">📅 Bestill time · NAF Senter Arendal</div>
+      <button id="modalClose" style="background:none; border:none; color:#94a3b8; font-size:1.3rem; cursor:pointer;" type="button">✕</button>
+    </div>
+    <div style="padding:22px; background:#080d1a;">
+      <div class="control-group">
+        <label class="control-label" for="modalServiceSelect">Ønsket tjeneste:</label>
+        <select class="select-box" id="modalServiceSelect">
+          <option value="eu_kontroll">EU-kontroll (PKK) - kr 1 195,- (medlem)</option>
+          <option value="eierskiftetiltak">NAF Test ved kjøp og salg - kr 2 490,-</option>
+          <option value="elbil_batteritest">Aviloo Elbil Batteritest - kr 1 890,-</option>
+          <option value="garantiutlopstest">Garantiutløpstest - kr 2 190,-</option>
+          <option value="ac_service">Klimaservice AC - kr 1 590,-</option>
+          <option value="hjulskift_dekksjekk">Hjulskift & Dekksjekk - kr 490,-</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="modalRegnr">Kjøretøyets Reg.nr:</label>
+        <input type="text" id="modalRegnr" class="select-box" placeholder="F.eks. EK 12345" style="text-transform:uppercase; font-family:var(--font-mono);">
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="modalName">Ditt Navn:</label>
+        <input type="text" id="modalName" class="select-box" placeholder="Ola Nordmann">
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="modalPhone">Ditt Telefonnummer:</label>
+        <input type="tel" id="modalPhone" class="select-box" placeholder="Mobil for SMS-bekreftelse">
+      </div>
+
+      <div style="margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+        <input type="checkbox" id="modalMemberCheck" checked style="width:18px; height:18px; accent-color:var(--naf-yellow);">
+        <label for="modalMemberCheck" style="font-size:0.85rem; color:#fff; font-weight:600;">Jeg er NAF-medlem (Få medlemsrabatt)</label>
+      </div>
+
+      <button id="btnConfirmBooking" class="btn-regnr-submit" style="width:100%; padding:12px; font-size:0.95rem;" type="button">
+        Bekreft Timeforespørsel
+      </button>
+
+      <div id="bookingResult" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- Nora 24/7 AI Vaktassistent Widget -->
+  <div class="nora-floating-trigger" id="noraTrigger" role="button" aria-label="Åpne NAF Arendal AI-assistent Nora">
+    <div class="nora-avatar">
+      🤖
+      <span class="nora-online-dot"></span>
+    </div>
+    <div>
+      <div style="font-weight:800; font-size:0.88rem; color:#fff;">Nora AI <span>· NAF Rådgiver</span></div>
+      <div style="font-size:0.72rem; color:var(--naf-yellow); font-family:var(--font-mono);">Senter Arendal 24/7</div>
+    </div>
+  </div>
+
+  <!-- Nora Chat Drawer -->
+  <div class="nora-drawer" id="noraDrawer">
+    <div class="nora-header">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="nora-avatar" style="width:34px; height:34px; font-size:1rem;">🤖</div>
+        <div>
+          <div style="font-weight:800; font-size:0.9rem; color:#fff;">Nora · NAF Senter Arendal</div>
+          <div style="font-size:0.7rem; color:var(--tech-emerald); font-family:var(--font-mono);">Testsenter & Verkstedsrådgiver</div>
+        </div>
+      </div>
+      <button id="noraClose" style="background:none; border:none; color:#94a3b8; font-size:1.3rem; cursor:pointer;" type="button">✕</button>
+    </div>
+
+    <div class="nora-body" id="noraMessages">
+      <div class="nora-msg bot">
+        Hei! Jeg er <strong>Nora</strong>, din AI-rådgiver for NAF Senter Arendal i Åsbieveien 14. 🚗<br><br>
+        Lurer du på EU-kontroll, NAF Eierskiftetiltak, åpningstider, eller vil du hente/levere nøkler i døgnautomaten?
+        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+          <button class="nora-chip" data-ask="Hva koster EU-kontroll?" type="button">🔍 Pris EU-kontroll</button>
+          <button class="nora-chip" data-ask="Åpningstider og nøkkelautomat?" type="button">🔑 Nøkkelautomat 24/7</button>
+          <button class="nora-chip" data-ask="Hvordan fungerer Aviloo batteritest?" type="button">⚡ Elbil batteritest</button>
+          <button class="nora-chip" data-ask="Hvor i Arendal ligger senteret?" type="button">📍 Adresse på Stoa</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="nora-footer">
+      <input type="text" class="nora-input" id="noraInput" placeholder="Spør om tester, priser, frister...">
+      <button class="nora-mic-btn" id="noraMicBtn" title="Trykk for å snakke til Nora (Tale)" type="button">🎤</button>
+      <button class="nora-send-btn" id="noraSendBtn" type="button">Send</button>
+    </div>
+  </div>
+
+  <!-- Bunntekst -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div style="font-weight:900; color:var(--naf-yellow); font-size:1.1rem; margin-bottom:8px;">NAF SENTER ARENDAL</div>
+          <p style="font-size:0.85rem; line-height:1.5;">
+            Åsbieveien 14, 4848 Arendal (Stoa næringspark).<br>
+            Telefon: <a href="tel:08505" style="color:#fff; font-weight:700;">08505</a> · Direkte verksted: 37 00 28 50<br>
+            E-post: senter.arendal@naf.no
+          </p>
+        </div>
+        <div>
+          <strong style="color:#fff; display:block; margin-bottom:8px;">Fasiliteter</strong>
+          <p style="font-size:0.85rem; line-height:1.5;">
+            ✓ Døgnåpen nøkkelautomat for utlevering<br>
+            ✓ Sikker nøkkelinnkast ved postkasse<br>
+            ✓ Kunderom med gratis kaffe & wifi<br>
+            ✓ Statens vegvesen Kontrollorgan 01
+          </p>
+        </div>
+        <div>
+          <strong style="color:#fff; display:block; margin-bottom:8px;">Mekaniker & Intern Portal</strong>
+          <p style="font-size:0.85rem; line-height:1.5;">
+            Autoparts AI delesøk, OBD2 feilkodetriage og PKK-mangelkalkulator for mekanikerne i Åsbieveien 14.<br>
+            <a href="mekaniker.html" style="color:var(--tech-cyan); font-weight:700;">→ Åpne Mekaniker AI-Portal</a>
+          </p>
+        </div>
+      </div>
+      <div style="border-top:1px solid var(--border-color); padding-top:20px; text-align:center; font-size:0.8rem; color:#64748b;">
+        NAF Senter Arendal · En del av Norges Automobil-Forbund · Teknologi og AI-plattform av Austenå Webløsninger.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#001f4d">
+  <title>Mekaniker AI-Portal · NAF Senter Arendal (Åsbieveien 14)</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .bukk-card {
+      background: #080d1a;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+    .bukk-status-busy {
+      color: #f59e0b;
+      font-weight: 800;
+      font-size: 0.75rem;
+    }
+    .bukk-status-ready {
+      color: #10b981;
+      font-weight: 800;
+      font-size: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="mekaniker-header">
+    <div class="container navbar">
+      <a href="index.html" class="brand">
+        <div class="brand-badge" style="background:var(--tech-cyan); color:#001f4d;">NAF AI</div>
+        <div>
+          <div class="brand-title" style="color:#fff;">NAF SENTER ARENDAL // VERKSTEDPORTAL</div>
+          <div class="brand-sub" style="color:var(--naf-yellow);">Internflate for mekanikere & kundemottak · Åsbieveien 14, Stoa</div>
+        </div>
+      </a>
+      <div class="nav-actions">
+        <a href="index.html" class="btn-nav-portal" style="border-color:var(--naf-yellow); color:var(--naf-yellow);">← Tilbake til Kundesiden</a>
+        <a href="tel:08505" class="btn-phone">08505</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="mekaniker-grid">
+      <!-- Venstre Kolonne: Bukkestatus & Lokale Grossister -->
+      <aside class="mekaniker-sidebar">
+        <h3 style="font-size:0.95rem; font-family:var(--font-mono); color:var(--tech-cyan); margin-bottom:14px; text-transform:uppercase;">
+          🏗️ Bukk- & Løftestatus (Åsbieveien 14)
+        </h3>
+
+        <div class="bukk-card" style="border-left:4px solid #f59e0b;">
+          <div style="display:flex; justify-content:space-between;">
+            <strong style="font-size:0.85rem; color:#fff;">Bukk 1: 4-søyler PKK / Lys</strong>
+            <span class="bukk-status-busy">I BRUK (Audi e-tron)</span>
+          </div>
+          <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">EU-kontroll pågår · Mekaniker: Stian</div>
+        </div>
+
+        <div class="bukk-card" style="border-left:4px solid #10b981;">
+          <div style="display:flex; justify-content:space-between;">
+            <strong style="font-size:0.85rem; color:#fff;">Bukk 2: Hunter 3D 4-hjul</strong>
+            <span class="bukk-status-ready">LEDIG</span>
+          </div>
+          <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Klar for hjulstillingskontroll</div>
+        </div>
+
+        <div class="bukk-card" style="border-left:4px solid #f59e0b;">
+          <div style="display:flex; justify-content:space-between;">
+            <strong style="font-size:0.85rem; color:#fff;">Bukk 3: 2-søyler Reparasjon</strong>
+            <span class="bukk-status-busy">I BRUK (VW Passat)</span>
+          </div>
+          <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Bremsebytte foran · Venter budbil Meca Stoa</div>
+        </div>
+
+        <div class="bukk-card" style="border-left:4px solid #10b981;">
+          <div style="display:flex; justify-content:space-between;">
+            <strong style="font-size:0.85rem; color:#fff;">Bukk 4: Aviloo Elbil-diagnose</strong>
+            <span class="bukk-status-ready">LEDIG</span>
+          </div>
+          <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Batteritester & Høyspentverneutstyr klart</div>
+        </div>
+
+        <hr style="border:none; border-top:1px solid var(--border-color); margin:20px 0;">
+
+        <h3 style="font-size:0.95rem; font-family:var(--font-mono); color:var(--naf-yellow); margin-bottom:12px; text-transform:uppercase;">
+          📦 Lokale Grossister (Arendal)
+        </h3>
+
+        <div class="grossist-badge">
+          <div>
+            <strong>Meca Arendal (Stoa)</strong><br>
+            <span style="color:#94a3b8; font-size:0.75rem;">1,4 km fra senteret</span>
+          </div>
+          <span style="color:var(--tech-emerald); font-weight:800;">~25 min bud</span>
+        </div>
+
+        <div class="grossist-badge">
+          <div>
+            <strong>Mekonomen (Vesterveien)</strong><br>
+            <span style="color:#94a3b8; font-size:0.75rem;">2,2 km fra senteret</span>
+          </div>
+          <span style="color:var(--tech-emerald); font-weight:800;">~30 min bud</span>
+        </div>
+
+        <div class="grossist-badge">
+          <div>
+            <strong>Romnes Agder (Arendal)</strong><br>
+            <span style="color:#94a3b8; font-size:0.75rem;">3,5 km fra senteret</span>
+          </div>
+          <span style="color:var(--tech-emerald); font-weight:800;">~35 min bud</span>
+        </div>
+
+        <div class="grossist-badge">
+          <div>
+            <strong>Hellanor / NDS Group</strong><br>
+            <span style="color:#94a3b8; font-size:0.75rem;">5,0 km fra senteret</span>
+          </div>
+          <span style="color:#38bdf8; font-weight:800;">~45 min bud</span>
+        </div>
+      </aside>
+
+      <!-- Høyre Kolonne: AI Verktøy for Mekanikerne -->
+      <div>
+        <!-- Verktøy 1: AI Delesøker & Bestillingsmotor -->
+        <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:16px; padding:24px; margin-bottom:24px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h3 style="font-size:1.25rem; font-weight:800; color:var(--naf-yellow);">
+              ⚡ AutoParts AI · Hurtigdelesøk & Budrekvisisjon
+            </h3>
+            <span style="font-size:0.75rem; font-family:var(--font-mono); color:var(--tech-emerald);">LIVE GROSSIST-KOBLING STOA</span>
+          </div>
+          <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:16px;">
+            Mekanikeren taster inn del eller feilsymptom. AI-en matcher automatisk mot lagrene hos Meca Stoa, Mekonomen og Romnes med nøyaktig budbillevering til Åsbieveien 14:
+          </p>
+
+          <div style="display:grid; grid-template-columns:1fr 180px auto; gap:10px; margin-bottom:14px;">
+            <input type="text" id="partSearchInput" class="select-box" placeholder="F.eks. Bremseskiver foran, Bærearm, DPF differansetrykk...">
+            <input type="text" id="partRegnrInput" class="select-box" placeholder="Reg.nr (f.eks. EK 12345)" style="text-transform:uppercase; font-family:var(--font-mono);">
+            <button id="btnSearchParts" class="btn-regnr-submit" type="button" style="padding:0 20px;">Søk Lager</button>
+          </div>
+
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
+            <button class="nora-chip" onclick="document.getElementById('partSearchInput').value='Bremseskiver foran slitt'; handlePartsSearch();" type="button">Bremseskiver & klosser</button>
+            <button class="nora-chip" onclick="document.getElementById('partSearchInput').value='Bærearm slark'; handlePartsSearch();" type="button">Bærearm / Bærekule</button>
+            <button class="nora-chip" onclick="document.getElementById('partSearchInput').value='EGR ventil'; handlePartsSearch();" type="button">EGR-ventil</button>
+            <button class="nora-chip" onclick="document.getElementById('partSearchInput').value='Partikkelfilter sensor'; handlePartsSearch();" type="button">DPF trykksensor</button>
+            <button class="nora-chip" onclick="document.getElementById('partSearchInput').value='12V AGM batteri'; handlePartsSearch();" type="button">12V AGM Batteri</button>
+          </div>
+
+          <div id="partsResultBox" style="display:none; margin-top:14px;"></div>
+        </div>
+
+        <!-- Verktøy 2: AI OBD2 DTC Feilkodetriage -->
+        <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:16px; padding:24px; margin-bottom:24px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h3 style="font-size:1.2rem; font-weight:800; color:var(--tech-cyan);">
+              🔍 AI OBD2 DTC Feilkodetriage & Reparasjonsassistent
+            </h3>
+            <span style="font-size:0.75rem; font-family:var(--font-mono); color:#94a3b8;">BOSCH KTS / AUTEL INTEGRERT</span>
+          </div>
+          <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:14px;">
+            Tast inn feilkode fra diagnosetesteren. Få umiddelbart sannsynlige årsaker, PKK-konsekvens (Grad 2) og konkrete måleinstrukser:
+          </p>
+
+          <div style="display:flex; gap:10px; margin-bottom:12px;">
+            <input type="text" id="dtcInput" class="select-box" placeholder="F.eks. P0420, P0300, P2463, C0035, P0A80..." style="text-transform:uppercase; font-family:var(--font-mono); width:280px;">
+            <button id="btnDiagnoseDtc" class="btn-regnr-submit" type="button" style="padding:0 20px;">Diagnostiser</button>
+          </div>
+
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
+            <button class="nora-chip" onclick="testDtcCode('P0420')" type="button">P0420 (Katalysator)</button>
+            <button class="nora-chip" onclick="testDtcCode('P0300')" type="button">P0300 (Feiltenning)</button>
+            <button class="nora-chip" onclick="testDtcCode('P2463')" type="button">P2463 (DPF Sot)</button>
+            <button class="nora-chip" onclick="testDtcCode('C0035')" type="button">C0035 (ABS-sensor)</button>
+            <button class="nora-chip" onclick="testDtcCode('P0A80')" type="button">P0A80 (Elbil Batteri)</button>
+          </div>
+
+          <div id="dtcResultBox" style="display:none; margin-top:14px;"></div>
+        </div>
+
+        <!-- Verktøy 3: AI PKK Mangelgradering (Statens vegvesen) -->
+        <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:16px; padding:24px;">
+          <h3 style="font-size:1.2rem; font-weight:800; color:#fff; margin-bottom:12px;">
+            📋 AI PKK Mangelgradering (Statens vegvesen Kontrollorgan 01)
+          </h3>
+          <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:14px;">
+            Rask bedømmelse av om en observasjon kvalifiserer til Grad 1 (merknad), Grad 2 (etterkontroll) eller Grad 3 (kjøreforbud):
+          </p>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr auto; gap:10px; margin-bottom:12px;">
+            <input type="text" id="pkkCompInput" class="select-box" placeholder="Kontrollpunkt (f.eks. Bærekule, Bremseslange, Eksos)">
+            <input type="text" id="pkkObsInput" class="select-box" placeholder="Observasjon (f.eks. Slakk under belasting, Sprukket og lekker)">
+            <button id="btnEvalPkk" class="btn-regnr-submit" type="button" style="padding:0 20px;">Vurder Feilgrad</button>
+          </div>
+
+          <div id="pkkResultBox" style="display:none; margin-top:12px;"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer style="margin-top:60px; border-top:1px solid var(--border-color); padding:30px 0; text-align:center; font-size:0.8rem; color:#64748b;">
+    NAF Senter Arendal // Intern Verkstedsportal · Autorisert for PKK, NAF-tester og Aviloo Elbildiagnose · Utviklet av Austenå Webløsninger.
+  </footer>
+
+  <script src="js/mekaniker.js"></script>
+</body>
+</html>

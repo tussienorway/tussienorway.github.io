@@ -1,0 +1,124 @@
+{
+  "senter_navn": "NAF Senter Arendal",
+  "kjede": "Norges Automobil-Forbund (NAF)",
+  "adresse": "Åsbieveien 14",
+  "postnummer": "4848",
+  "poststed": "Arendal",
+  "fylke": "Agder",
+  "beliggenhet": "Åsbieskogen / Stoa næringsområde",
+  "posisjon": {
+    "lat": 58.4610,
+    "lng": 8.7240
+  },
+  "telefon_felles": "08505",
+  "telefon_direkte": "+47 37 00 28 50",
+  "epost": "senter.arendal@naf.no",
+  "apningstider": {
+    "hverdager": "08:00 - 16:00",
+    "helg": "Stengt (Nøkkelautomat døgnåpen 24/7)"
+  },
+  "fasiliteter": [
+    "Døgnåpen nøkkelautomat for henting av bil etter kl. 16",
+    "Sikkert nøkkelinnkast ved postkasse på høyre side av inngangsdør",
+    "Kunderom med gratis wifi, kaffe og arbeidsplasser",
+    "Elbil-ladere for kunder under kontroll",
+    "Kjøretøy inntil 3,5 tonn (NB: tar ikke store bobiler)",
+    "Autorisert Statens vegvesen Kontrollorgan 01"
+  ],
+  "tjenester": [
+    {
+      "id": "eu_kontroll",
+      "navn": "EU-kontroll (Periodisk Kjøretøykontroll - PKK)",
+      "pris_medlem": 1195,
+      "pris_ikke_medlem": 1450,
+      "varighet_min": 45,
+      "beskrivelse": "Lovpålagt trafikksikkerhets- og miljøkontroll for personbiler og varebiler inntil 3,5 tonn."
+    },
+    {
+      "id": "eierskiftetest",
+      "navn": "NAF Test ved Kjøp og Salg (Eierskiftetiltak)",
+      "pris_medlem": 2490,
+      "pris_ikke_medlem": 3190,
+      "varighet_min": 90,
+      "beskrivelse": "Omfattende tilstandsrapport på over 100 punkter. Avslører skjulte feil, bremsetilstand og lakkskader før handel."
+    },
+    {
+      "id": "garantiutlopstest",
+      "navn": "Garantiutløpstest (Før nybilgarantien utløper)",
+      "pris_medlem": 2190,
+      "pris_ikke_medlem": 2790,
+      "varighet_min": 75,
+      "beskrivelse": "Grundig rapport over feil og slitasjer som forhandleren må utbedre på garantien før 5 år / 100 000 km er nådd."
+    },
+    {
+      "id": "elbil_batteritest",
+      "navn": "NAF Aviloo Elbil Batteritest (State of Health - SoH)",
+      "pris_medlem": 1890,
+      "pris_ikke_medlem": 2390,
+      "varighet_min": 60,
+      "beskrivelse": "Uavhengig diagnose av reell batterikapasitet, cellebalanse og degradering med offisielt NAF/Aviloo-sertifikat."
+    },
+    {
+      "id": "hjulskift_dekksjekk",
+      "navn": "Hjulskift & Mønsterdybdekontroll",
+      "pris_medlem": 490,
+      "pris_ikke_medlem": 690,
+      "varighet_min": 30,
+      "beskrivelse": "Raskt hjulskift, kontroll av mønsterdybde, lufttrykk, TPMS-sensorer og momenttiltrekking av bolter."
+    },
+    {
+      "id": "ac_service",
+      "navn": "Klimaservice (AC) & Desinfisering",
+      "pris_medlem": 1590,
+      "pris_ikke_medlem": 1990,
+      "varighet_min": 60,
+      "beskrivelse": "Tømming, trykktesting, etterfylling av R134a/R1234yf gass, sporemiddel og antibakteriell rens av kupefilter."
+    },
+    {
+      "id": "hjulstilling_4hjul",
+      "navn": "4-Hjulskontroll & Hjulstillingsjustering",
+      "pris_medlem": 1690,
+      "pris_ikke_medlem": 2190,
+      "varighet_min": 60,
+      "beskrivelse": "Optisk 3D-måling og justering av spissing, camber og caster for å hindre skjev dekkslitasje og høyt forbruk."
+    },
+    {
+      "id": "service_oljeskift",
+      "navn": "Periodisk Bilservice iht. Produsentspesifikasjon",
+      "pris_medlem": 2490,
+      "pris_ikke_medlem": 2990,
+      "varighet_min": 90,
+      "beskrivelse": "Merkeservice med godkjent stempel i serviceheftet. Nybilgarantien opprettholdes 100% iht. EU-gruppeunntaket."
+    }
+  ],
+  "deleleverandorer_arendal": [
+    {
+      "id": "meca_stoa",
+      "navn": "Meca Arendal (Stoa)",
+      "avstand_km": 1.4,
+      "estimert_budtid_min": 25,
+      "lager_dekning": "Svært god på VAG, Toyota, BMW, Volvo og Ford"
+    },
+    {
+      "id": "mekonomen_stoa",
+      "navn": "Mekonomen Arendal (Vesterveien)",
+      "avstand_km": 2.2,
+      "estimert_budtid_min": 30,
+      "lager_dekning": "Komplett sortiment på bremser, forstilling og filter"
+    },
+    {
+      "id": "romnes_agder",
+      "navn": "Romnes Agder (Arendal)",
+      "avstand_km": 3.5,
+      "estimert_budtid_min": 40,
+      "lager_dekning": "Spesialist på bilelektrisk, sensorer, startere og dynamoer"
+    },
+    {
+      "id": "hellanor_sor",
+      "navn": "Hellanor / NDS Group Sør",
+      "avstand_km": 5.0,
+      "estimert_budtid_min": 45,
+      "lager_dekning": "Ekspertise på Hella lys, diagnoseutstyr og tyske merker"
+    }
+  ]
+}
