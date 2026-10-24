@@ -367,3 +367,182 @@ def finn_e18_avkjorsel(avkjorsel_id: str) -> dict:
         "anbefalt_rute": "Rykker ut på E18 fra Grimstad med blålys/blitz ved akutt hendelse."
     }
 
+
+def sjekk_flate_beredskap(flate: list[dict] | None = None, fakta: dict | None = None) -> dict:
+    """Kontrollerer drivstoffnivå (<35%), dekktilstand, kjettinger og spesialutstyr for hele flåten."""
+    fakta = fakta or last_fakta()
+    kjøretøy_liste = flate if flate is not None else fakta.get("flate", [])
+
+    rapport = {
+        "totalt_biler": len(kjøretøy_liste),
+        "antall_operative": 0,
+        "antall_lav_drivstoff": 0,
+        "antall_dekkvarsler": 0,
+        "antall_utstyrsvarsler": 0,
+        "varsler": [],
+        "biler": []
+    }
+
+    for bil in kjøretøy_liste:
+        bil_id = bil.get("id", "Ukjent")
+        modell = bil.get("modell", "")
+        status = bil.get("status", "ukjent")
+        sjafor = bil.get("sjafor", "Ikke tildelt")
+
+        # Drivstoffsjekk (<35% lavt nivå)
+        drivstoff = bil.get("drivstoff", {})
+        prosent = drivstoff.get("prosent", 100)
+        rekkevidde = drivstoff.get("rekkevidde_km", 500)
+        lav_drivstoff = prosent < 35
+        if lav_drivstoff:
+            rapport["antall_lav_drivstoff"] += 1
+            rapport["varsler"].append({
+                "bil_id": bil_id,
+                "type": "LAVT_DRIVSTOFF",
+                "alvorlighetsgrad": "ADVARSEL",
+                "melding": f"{bil_id} ({modell}) har lav drivstoffreserve ({prosent}% / {rekkevidde} km). Bør fylles før langdistanse."
+            })
+
+        # Dekksjekk (mønsterdybde vs krav og kjettinger)
+        dekk = bil.get("dekk", {})
+        monster = dekk.get("monsterdybde_mm", 8.0)
+        minstekrav = dekk.get("minstekrav_mm", 5.0)
+        kjettinger = dekk.get("kjettinger_sett", 0)
+        dekk_ok = monster >= minstekrav and dekk.get("kjettinger_godkjent", True)
+        if monster < minstekrav:
+            rapport["antall_dekkvarsler"] += 1
+            rapport["varsler"].append({
+                "bil_id": bil_id,
+                "type": "DEKKSLITASJE",
+                "alvorlighetsgrad": "KRITISK",
+                "melding": f"{bil_id} har mønsterdybde {monster} mm, under lovpålagt minstekrav ({minstekrav} mm)!"
+            })
+
+        # Utstyrssjekk (sertifisert kranwire etc.)
+        utstyr = bil.get("utstyr_status", {})
+        utstyr_ok = True
+        if bil_id in ("TUNG-01", "KRAN-04") and not utstyr.get("sertifisert_kranwire", False):
+            utstyr_ok = False
+            rapport["antall_utstyrsvarsler"] += 1
+            rapport["varsler"].append({
+                "bil_id": bil_id,
+                "type": "KRANWIRE_KONTROLL",
+                "alvorlighetsgrad": "KRITISK",
+                "melding": f"{bil_id} mangler gyldig sertifisering på kranwire/løfteutstyr!"
+            })
+
+        er_operativ = status in ("beredskap", "aktiv_patrulje", "oppdrag") and (monster >= minstekrav)
+        if er_operativ:
+            rapport["antall_operative"] += 1
+
+        rapport["biler"].append({
+            "id": bil_id,
+            "modell": modell,
+            "status": status,
+            "sjafor": sjafor,
+            "drivstoff_prosent": prosent,
+            "rekkevidde_km": rekkevidde,
+            "lav_drivstoff": lav_drivstoff,
+            "monsterdybde_mm": monster,
+            "dekk_ok": dekk_ok,
+            "kjettinger_sett": kjettinger,
+            "piggdekk": dekk.get("piggdekk", False),
+            "har_elbil_skates": utstyr.get("elbil_skates", False),
+            "har_oljesanering": utstyr.get("oljesaneringssett", False),
+            "sertifisert_wire": utstyr.get("sertifisert_kranwire", False),
+            "operativ": er_operativ
+        })
+
+    return rapport
+
+
+def finn_optimal_bergingsressurs(
+    hendelse_tekst: str,
+    posisjon: dict | None = None,
+    kundenavn: str | None = None,
+    telefon: str | None = None,
+    regnr: str | None = None,
+    flate: list[dict] | None = None,
+    fakta: dict | None = None
+) -> dict:
+    """AI-algoritme som matcher hendelsestype + lokasjon på E18 med best egnet, operativ bil med nok drivstoff og utstyr."""
+    fakta = fakta or last_fakta()
+    triage = klassifiser_hendelse(hendelse_tekst, fakta)
+    lat = posisjon.get("lat") if posisjon else None
+    lng = posisjon.get("lng") if posisjon else None
+    pos_data = beregn_nodhjelp_posisjon(lat, lng, fakta)
+    kat = triage["kategori"]
+    krever_tma = triage["krever_tma_sikring"]
+    folded = _fold(hendelse_tekst)
+
+    kjøretøy_liste = flate if flate is not None else fakta.get("flate", [])
+    bil_kart = {b["id"]: b for b in kjøretøy_liste}
+
+    # Bestem primærbil-ID basert på utstyrskrav
+    if kat == "tungberging":
+        valgt_id = "TUNG-01"
+        utstyrskrav = ["25t hydraulisk vinsj", "sertifisert kranwire", "akselgafler"]
+    elif kat == "bat_transport":
+        valgt_id = "KRAN-04"
+        utstyrskrav = ["14tm kran", "båtvugge", "sertifiserte stropper"]
+    elif kat == "terreng_vinsj":
+        valgt_id = "4X4-05"
+        utstyrskrav = ["4x4 lavserie", "Warn terrengvinsj", "snøkjettinger / piggdekk"]
+    elif "elbil" in folded or "batteri" in folded or "skates" in folded:
+        valgt_id = "FLAK-03"
+        utstyrskrav = ["elbil-skates (GoJak)", "hydraulisk skyveflak", "oljesaneringssett"]
+    else:
+        valgt_id = "FLAK-03"
+        utstyrskrav = ["hydraulisk skyveflak", "løftebrille", "oljesaneringssett"]
+
+    primar_bil = bil_kart.get(valgt_id)
+    drivstoff_info = primar_bil.get("drivstoff", {}) if primar_bil else {}
+    prosent = drivstoff_info.get("prosent", 100)
+    rekkevidde = drivstoff_info.get("rekkevidde_km", 400)
+    lavt_drivstoff = prosent < 35
+
+    tur_retur_km = (pos_data["avstand_base_km"] or 15.0) * 2
+    drivstoff_tilstrekkelig = rekkevidde >= (tur_retur_km + 20)
+
+    # HMS & TMA Tilleggsbil
+    tma_bil = bil_kart.get("PUTE-02") if krever_tma else None
+
+    # Sjåførmelding (SMS-ordre)
+    sjafor_navn = primar_bil.get("sjafor", "Vakthavende") if primar_bil else "Jan Ove"
+    sjafor_sms = (
+        f"[AGDER BILBERGING DISPATCH] OPPDRAG TIL {valgt_id} ({sjafor_navn}): "
+        f"Kategori: {kat.upper()} | Sted: {pos_data['narmeste_e18_punkt']} ({pos_data['avstand_base_km'] or '?'} km). "
+        f"Kunde: {kundenavn or 'Navn ikke oppgitt'} (tlf: {telefon or 'Mangler'}). "
+        f"Regnr: {regnr or 'Ukjent'}. "
+        f"Utstyr bekreftet: {', '.join(utstyrskrav)}. "
+        f"Drivstoff: {prosent}% ({rekkevidde} km). "
+        f"{'TMA-PUTE (PUTE-02) rykker ut i tospann!' if krever_tma else 'Normal varsling.'}"
+    )
+
+    # Kundemelding (SMS til bilist)
+    bilist_sms = (
+        f"Hei {kundenavn or 'bilist'}, Jan Ove fra Agder Bilberging her. "
+        f"Vår redningsbil {valgt_id} ({primar_bil.get('modell', '') if primar_bil else ''}) "
+        f"{'+ TMA-støtputebil ' if krever_tma else ''}er rykket ut mot {pos_data['narmeste_e18_punkt']}. "
+        f"Estimert ankomst: ca. {pos_data['eta_min']} min. "
+        f"VIKTIG HMS: Ta på refleksvest og vent bak autovernet! Tlf døgnvakt: {fakta.get('telefon_dognvakt', '905 66 147')}."
+    )
+
+    return {
+        "kategori": kat,
+        "primar_bil_id": valgt_id,
+        "primar_bil": primar_bil,
+        "krever_tma": krever_tma,
+        "tma_bil": tma_bil,
+        "utstyrskrav": utstyrskrav,
+        "drivstoff_prosent": prosent,
+        "rekkevidde_km": rekkevidde,
+        "lavt_drivstoff_advarsel": lavt_drivstoff,
+        "drivstoff_tilstrekkelig": drivstoff_tilstrekkelig,
+        "beregnet_tur_retur_km": round(tur_retur_km, 1),
+        "posisjon": pos_data,
+        "sjafor_sms": sjafor_sms,
+        "bilist_sms": bilist_sms
+    }
+
+

@@ -8,12 +8,14 @@ sys.path.insert(0, str(ROOT))
 from agder_berging_ai import (
     beregn_nodhjelp_posisjon,
     finn_e18_avkjorsel,
+    finn_optimal_bergingsressurs,
     haversine_km,
     kalkuler_bat_og_spesialtransport,
     kalkuler_forsikring_egenandel,
     klassifiser_hendelse,
     last_fakta,
     opprett_nodanrop,
+    sjekk_flate_beredskap,
     valider_telefon,
 )
 
@@ -187,6 +189,96 @@ class TestAgderBilbergingAI(unittest.TestCase):
         self.assertLessEqual(bie["km_fra_base"], 3.0)
         self.assertLessEqual(bie["eta_min"], 10)
 
+    def test_flate_beredskap_drivstoff_og_dekk(self):
+        """Test flåteanalyse for drivstoff (<35%), mønsterdybde, kjettinger og kranwire."""
+        rapport = sjekk_flate_beredskap(fakta=self.fakta)
+        self.assertEqual(rapport["totalt_biler"], 5)
+        self.assertEqual(rapport["antall_operative"], 5)
+        self.assertEqual(rapport["antall_lav_drivstoff"], 1)  # FLAK-03 har 28%
+        
+        # Finn FLAK-03 og sjekk lavt drivstoffvarsel
+        flak = next(b for b in rapport["biler"] if b["id"] == "FLAK-03")
+        self.assertTrue(flak["lav_drivstoff"])
+        self.assertEqual(flak["drivstoff_prosent"], 28)
+        self.assertTrue(flak["har_elbil_skates"])
+        self.assertTrue(flak["har_oljesanering"])
+
+        # Sjekk TUNG-01 og 4X4-05
+        tung = next(b for b in rapport["biler"] if b["id"] == "TUNG-01")
+        self.assertFalse(tung["lav_drivstoff"])
+        self.assertTrue(tung["sertifisert_wire"])
+        self.assertEqual(tung["kjettinger_sett"], 4)
+
+        landcruiser = next(b for b in rapport["biler"] if b["id"] == "4X4-05")
+        self.assertTrue(landcruiser["piggdekk"])
+        self.assertGreaterEqual(landcruiser["monsterdybde_mm"], 10.0)
+
+    def test_flate_beredskap_kritisk_monsterdybde_edge_case(self):
+        """Edge case: Kjøretøy med under 5.0 mm mønsterdybde skal flagges som KRITISK dekkfeil."""
+        slitt_flate = [
+            {
+                "id": "TEST-01",
+                "modell": "Scania Test",
+                "status": "beredskap",
+                "drivstoff": {"prosent": 80, "rekkevidde_km": 600},
+                "dekk": {"monsterdybde_mm": 3.8, "minstekrav_mm": 5.0, "kjettinger_godkjent": True},
+                "utstyr_status": {"sertifisert_kranwire": True}
+            }
+        ]
+        rapport = sjekk_flate_beredskap(flate=slitt_flate, fakta=self.fakta)
+        self.assertEqual(rapport["antall_dekkvarsler"], 1)
+        self.assertEqual(rapport["antall_operative"], 0)
+        self.assertEqual(rapport["varsler"][0]["type"], "DEKKSLITASJE")
+
+    def test_flate_beredskap_manglende_wire_edge_case(self):
+        """Edge case: Kranbil/tungbil uten sertifisert wire skal flagge KRANWIRE_KONTROLL."""
+        usertifisert_flate = [
+            {
+                "id": "TUNG-01",
+                "modell": "Scania",
+                "status": "beredskap",
+                "drivstoff": {"prosent": 80, "rekkevidde_km": 600},
+                "dekk": {"monsterdybde_mm": 8.0, "minstekrav_mm": 5.0, "kjettinger_godkjent": True},
+                "utstyr_status": {"sertifisert_kranwire": False}
+            }
+        ]
+        rapport = sjekk_flate_beredskap(flate=usertifisert_flate, fakta=self.fakta)
+        self.assertEqual(rapport["antall_utstyrsvarsler"], 1)
+        self.assertEqual(rapport["varsler"][0]["type"], "KRANWIRE_KONTROLL")
+
+    def test_finn_optimal_bergingsressurs_e18_tungberging(self):
+        """E18 uhell med vogntog skal allokere TUNG-01 + PUTE-02 TMA-støtpute og generere SMS."""
+        res = finn_optimal_bergingsressurs(
+            hendelse_tekst="Vogntog med henger har sakset på E18 ved Fevik, sperrer venstre felt",
+            posisjon={"lat": 58.3845, "lng": 8.6543},
+            kundenavn="Litauisk Transportselskap",
+            telefon="91234567",
+            regnr="AA12345",
+            fakta=self.fakta
+        )
+        self.assertEqual(res["primar_bil_id"], "TUNG-01")
+        self.assertTrue(res["krever_tma"])
+        self.assertIsNotNone(res["tma_bil"])
+        self.assertIn("PUTE-02", res["sjafor_sms"])
+        self.assertIn("refleksvest og vent bak autovernet", res["bilist_sms"])
+        self.assertTrue(res["drivstoff_tilstrekkelig"])
+
+    def test_finn_optimal_bergingsressurs_elbil_lavt_drivstoff(self):
+        """Elbil med låst aksel skal velge FLAK-03 og flagge lav drivstoffreserve (28%)."""
+        res = finn_optimal_bergingsressurs(
+            hendelse_tekst="Elbil Tesla Model Y har låst alle fire hjul etter feil, trenger skates",
+            posisjon={"lat": 58.3512, "lng": 8.5721},
+            kundenavn="Kari Nordmann",
+            telefon="99887766",
+            regnr="EB99887",
+            fakta=self.fakta
+        )
+        self.assertEqual(res["primar_bil_id"], "FLAK-03")
+        self.assertTrue(res["lavt_drivstoff_advarsel"])
+        self.assertIn("elbil-skates", res["utstyrskrav"][0])
+        self.assertIn("EB99887", res["sjafor_sms"])
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+

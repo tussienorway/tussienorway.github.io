@@ -780,13 +780,32 @@
     });
   }
 
-  function appendNoraMsg(text, sender = 'bot') {
+  let noraVoiceEnabled = false;
+
+  function speakNoraResponse(htmlText) {
+    if (!('speechSynthesis' in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      const plain = htmlText.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+      const utter = new SpeechSynthesisUtterance(plain);
+      utter.lang = 'nb-NO';
+      utter.rate = 1.05;
+      utter.pitch = 1.0;
+      window.speechSynthesis.speak(utter);
+    } catch (e) {}
+  }
+
+  function appendNoraMsg(text, sender = 'bot', shouldSpeak = false) {
     if (!noraMessages) return;
     const msgDiv = document.createElement('div');
     msgDiv.className = `nora-msg ${sender}`;
     msgDiv.innerHTML = text;
     noraMessages.appendChild(msgDiv);
     noraMessages.scrollTop = noraMessages.scrollHeight;
+
+    if (sender === 'bot' && (shouldSpeak || noraVoiceEnabled)) {
+      speakNoraResponse(text);
+    }
   }
 
   function generateNoraResponse(question) {
@@ -890,6 +909,7 @@
       recognizer.onresult = (evt) => {
         isRecording = false;
         noraMicBtn.classList.remove('recording');
+        noraVoiceEnabled = true;
         const speechText = evt.results[0][0].transcript;
         if (noraInput) noraInput.value = speechText;
         handleNoraSubmit();

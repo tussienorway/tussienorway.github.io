@@ -112,7 +112,30 @@
       "modell": "Scania R580 V8",
       "utstyr": "Omars kranaggregat, doble 25-tonns hydrauliske vinsjer, akselgafler, kraftuttak",
       "stasjonert": "Grimstad Base",
-      "status": "beredskap"
+      "status": "beredskap",
+      "sjafor": "Jan Ove Thygesen",
+      "drivstoff": {
+        "type": "diesel",
+        "prosent": 82,
+        "tank_liter": 600,
+        "rekkevidde_km": 875,
+        "lav_drivstoff_advarsel": false
+      },
+      "dekk": {
+        "monsterdybde_mm": 10.5,
+        "minstekrav_mm": 5.0,
+        "piggdekk": false,
+        "kjettinger_sett": 4,
+        "kjettinger_godkjent": true,
+        "tilstand": "optimal"
+      },
+      "utstyr_status": {
+        "sertifisert_kranwire": true,
+        "kranwire_kontroll_utloper": "2027-04-15",
+        "elbil_skates": false,
+        "oljesaneringssett": true,
+        "vinsj_kapasitet_tonn": 25.0
+      }
     },
     {
       "id": "PUTE-02",
@@ -120,7 +143,30 @@
       "modell": "Mercedes-Benz Atego",
       "utstyr": "Verdegro TMA-støtpute, LED VMS-skilt, blitzbjelke, kollisjonsdemper godkjent Statens vegvesen",
       "stasjonert": "E18 Beredskap Grimstad",
-      "status": "aktiv_patrulje"
+      "status": "aktiv_patrulje",
+      "sjafor": "Tore M.",
+      "drivstoff": {
+        "type": "diesel",
+        "prosent": 65,
+        "tank_liter": 200,
+        "rekkevidde_km": 620,
+        "lav_drivstoff_advarsel": false
+      },
+      "dekk": {
+        "monsterdybde_mm": 9.0,
+        "minstekrav_mm": 5.0,
+        "piggdekk": false,
+        "kjettinger_sett": 2,
+        "kjettinger_godkjent": true,
+        "tilstand": "optimal"
+      },
+      "utstyr_status": {
+        "sertifisert_kranwire": false,
+        "elbil_skates": false,
+        "oljesaneringssett": true,
+        "vms_skilt_operativt": true,
+        "stotpute_sertifisert": true
+      }
     },
     {
       "id": "FLAK-03",
@@ -128,7 +174,30 @@
       "modell": "MAN TGL 12.250",
       "utstyr": "6-tonns hydraulisk skyveflak, 2-tonns brille, elbil-skates, fjernstyring, oljesaneringssett",
       "stasjonert": "Grimstad Base",
-      "status": "beredskap"
+      "status": "beredskap",
+      "sjafor": "Kjetil S.",
+      "drivstoff": {
+        "type": "diesel",
+        "prosent": 28,
+        "tank_liter": 180,
+        "rekkevidde_km": 260,
+        "lav_drivstoff_advarsel": true
+      },
+      "dekk": {
+        "monsterdybde_mm": 8.5,
+        "minstekrav_mm": 5.0,
+        "piggdekk": false,
+        "kjettinger_sett": 2,
+        "kjettinger_godkjent": true,
+        "tilstand": "god"
+      },
+      "utstyr_status": {
+        "sertifisert_kranwire": false,
+        "elbil_skates": true,
+        "oljesaneringssett": true,
+        "skates_antall": 4,
+        "vinsj_kapasitet_tonn": 5.0
+      }
     },
     {
       "id": "KRAN-04",
@@ -136,7 +205,30 @@
       "modell": "Iveco Eurocargo",
       "utstyr": "HMF 14-tonnmeter kran med båtåk, hydraulisk flak, båtstøtter",
       "stasjonert": "Grimstad Base",
-      "status": "oppdrag"
+      "status": "oppdrag",
+      "sjafor": "Morten B.",
+      "drivstoff": {
+        "type": "diesel",
+        "prosent": 74,
+        "tank_liter": 220,
+        "rekkevidde_km": 680,
+        "lav_drivstoff_advarsel": false
+      },
+      "dekk": {
+        "monsterdybde_mm": 9.2,
+        "minstekrav_mm": 5.0,
+        "piggdekk": false,
+        "kjettinger_sett": 2,
+        "kjettinger_godkjent": true,
+        "tilstand": "optimal"
+      },
+      "utstyr_status": {
+        "sertifisert_kranwire": true,
+        "kranwire_kontroll_utloper": "2027-03-20",
+        "elbil_skates": false,
+        "oljesaneringssett": false,
+        "batak_og_stropper": true
+      }
     },
     {
       "id": "4X4-05",
@@ -144,7 +236,30 @@
       "modell": "Toyota Land Cruiser HD",
       "utstyr": "Kraftig Warn vinsj foran og bak, snøkjettinger, 12V/24V boosterpakke, nødåpningsutstyr",
       "stasjonert": "Grimstad / Arendal",
-      "status": "beredskap"
+      "status": "beredskap",
+      "sjafor": "Espen R.",
+      "drivstoff": {
+        "type": "diesel",
+        "prosent": 91,
+        "tank_liter": 90,
+        "rekkevidde_km": 680,
+        "lav_drivstoff_advarsel": false
+      },
+      "dekk": {
+        "monsterdybde_mm": 11.0,
+        "minstekrav_mm": 3.0,
+        "piggdekk": true,
+        "kjettinger_sett": 2,
+        "kjettinger_godkjent": true,
+        "tilstand": "optimal_vinter"
+      },
+      "utstyr_status": {
+        "sertifisert_kranwire": false,
+        "elbil_skates": false,
+        "oljesaneringssett": false,
+        "vinsj_foran_bak": true,
+        "booster_12v_24v": true
+      }
     }
   ],
   "dekningsomraade": {
