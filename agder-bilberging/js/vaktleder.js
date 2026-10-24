@@ -404,31 +404,59 @@
 
     const assignedCar = fleet.find((b) => b.id === targetVehicleId) || fleet[0];
     const isFuelLow = assignedCar.drivstoff.prosent < 35;
-    const roundTripKm = locInfo.km * 2;
+    const roundTripKm = Math.round(locInfo.km * 2);
     const fuelAdequate = assignedCar.drivstoff.rekkevidde_km >= roundTripKm + 25;
 
+    // Finn eventuell alternativ/reservebil hvis primærbil har utilstrekkelig drivstoff
+    let alternativeCar = null;
+    if (!fuelAdequate) {
+      alternativeCar = fleet.find((b) => b.id !== assignedCar.id && (b.status === 'beredskap' || b.status === 'aktiv_patrulje') && b.drivstoff.rekkevidde_km >= roundTripKm + 25);
+    }
+
+    let fuelAlertNote = '';
+    if (!fuelAdequate) {
+      fuelAlertNote = `⚠️ KRITISK DRIVSTOFFVARSEL: Rekkevidde ${assignedCar.drivstoff.rekkevidde_km} km er for kort for t/r ${roundTripKm} km! Må etterfylles før avreise! | `;
+    } else if (isFuelLow) {
+      fuelAlertNote = `⚠️ OBS: Lav reserve (${assignedCar.drivstoff.prosent}% / ${assignedCar.drivstoff.rekkevidde_km} km) | `;
+    }
+
     // Dispatch SMS til sjåfør
-    const driverSms = `[AGDER BILBERGING VAKT] ${prio}: ${category.toUpperCase()} | Til: ${assignedCar.id} (${assignedCar.sjafor}) | Sted: ${locInfo.name} (${locInfo.km} km, ETA: ca. ${locInfo.eta} min) | Kunde: ${caller} (tlf: ${phone}) | Regnr: ${regnr || 'Ukjent'} | Krav: ${reqEquipment.join(', ')} | Drivstoff: ${assignedCar.drivstoff.prosent}% (${assignedCar.drivstoff.rekkevidde_km} km) ${isE18 ? '| TMA PUTE-02 rykker ut i tospann!' : ''}`;
+    const driverSms = `[AGDER BILBERGING VAKT] ${prio}: ${category.toUpperCase()} | Til: ${assignedCar.id} (${assignedCar.sjafor}) | Sted: ${locInfo.name} (${locInfo.km} km, ETA: ca. ${locInfo.eta} min) | Kunde: ${caller} (tlf: ${phone}) | Regnr: ${regnr || 'Ukjent'} | Krav: ${reqEquipment.join(', ')} | Drivstoff: ${assignedCar.drivstoff.prosent}% (${assignedCar.drivstoff.rekkevidde_km} km) | ${fuelAlertNote}${isE18 ? 'TMA PUTE-02 rykker ut i tospann!' : 'Normal varsling.'}`;
 
     // Kunde SMS
     const customerSms = `Hei ${caller}, Jan Ove fra Agder Bilberging her. Vår redningsbil ${assignedCar.id} (${assignedCar.modell}) ${isE18 ? '+ TMA-støtputebil ' : ''}rykker nå ut til ${locInfo.name}. Estimert ankomst ca. ${locInfo.eta} minutter. HMS-PÅBUD: Ta på refleksvest og vent trygt bak autovernet! Tlf: 905 66 147.`;
+
+    // Lagre til aktiv tilstand for trygg eksekvering uten unescaped inline onclick
+    currentDispatchDraft = {
+      prio,
+      locName: locInfo.name,
+      desc: txt,
+      regnr: regnr || 'Ukjent',
+      carId: assignedCar.id,
+      carName: `${assignedCar.id} (${assignedCar.sjafor})`,
+      isTma: isE18,
+      caller,
+      phone,
+      driverSms,
+      customerSms
+    };
 
     resultPanel.innerHTML = `
       <div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
           <span style="font-size:0.75rem; font-family:var(--font-mono); color:var(--radar-cyan); font-weight:700;">AI BESLUTNINGSRAPPORT</span>
-          <span class="${prio.includes('P1') ? 'badge-p1' : 'badge-p2'}">${prio}</span>
+          <span class="${prio.includes('P1') ? 'badge-p1' : 'badge-p2'}">${escapeHtml(prio)}</span>
         </div>
 
         <div style="background:#050811; border:1px solid var(--border-color); border-radius:10px; padding:12px; margin-bottom:12px;">
           <div style="font-size:0.85rem; margin-bottom:4px;">
-            <strong>Allokert Hovedbil:</strong> <span style="color:#38bdf8; font-weight:800;">${assignedCar.id} (${assignedCar.modell})</span>
+            <strong>Allokert Hovedbil:</strong> <span style="color:#38bdf8; font-weight:800;">${escapeHtml(assignedCar.id)} (${escapeHtml(assignedCar.modell)})</span>
           </div>
           <div style="font-size:0.78rem; color:var(--text-secondary); margin-bottom:4px;">
-            Sjåfør: <strong>${assignedCar.sjafor}</strong> · Responstid ETA: <strong>ca. ${locInfo.eta} min</strong> (${locInfo.km} km fra Grimstad)
+            Sjåfør: <strong>${escapeHtml(assignedCar.sjafor)}</strong> · Responstid ETA: <strong>ca. ${locInfo.eta} min</strong> (${locInfo.km} km fra Grimstad)
           </div>
           <div style="font-size:0.78rem; color:var(--text-secondary);">
-            Kategori: <strong>${category}</strong>
+            Kategori: <strong>${escapeHtml(category)}</strong>
           </div>
         </div>
 
@@ -436,10 +464,14 @@
         <div style="font-size:0.8rem; margin-bottom:10px; line-height:1.5;">
           <div style="margin-bottom:4px;">
             <strong>Drivstoffvurdering:</strong> 
-            <span style="color:${isFuelLow ? '#ef4444' : '#10b981'}; font-weight:700;">
+            <span style="color:${!fuelAdequate ? '#ef4444' : isFuelLow ? 'var(--warning-amber)' : '#10b981'}; font-weight:700;">
               ${assignedCar.drivstoff.prosent}% (${assignedCar.drivstoff.rekkevidde_km} km).
             </span>
-            ${isFuelLow ? '<br><span style="color:var(--warning-amber);">⚠️ Bilen har lav reserve. Tilstrekkelig for dette oppdraget (' + roundTripKm + ' km tur/retur), men bør fylles umiddelbart etterpå.</span>' : ' Fullt tilstrekkelig for oppdraget.'}
+            ${!fuelAdequate
+              ? `<br><span style="color:#ef4444; font-weight:700;">🚨 KRITISK: Rekkevidden er mindre enn beregnet tur/retur (${roundTripKm} km + buffer). Bilen må etterfylles! ${alternativeCar ? 'Alternativ ressurs tilgjengelig: ' + escapeHtml(alternativeCar.id) + ' (' + escapeHtml(alternativeCar.modell) + ').' : ''}</span>`
+              : isFuelLow
+              ? '<br><span style="color:var(--warning-amber);">⚠️ Bilen har lav reserve (<35%). Tilstrekkelig for dette oppdraget (' + roundTripKm + ' km tur/retur), men bør etterfylles snarest.</span>'
+              : ' Fullt tilstrekkelig for oppdraget.'}
           </div>
 
           <div style="margin-bottom:4px;">
@@ -449,62 +481,96 @@
 
           <div>
             <strong>Påkrevd Utstyr Verifisert Ombord:</strong><br>
-            <span style="color:#10b981; font-family:var(--font-mono); font-size:0.75rem;">✓ ${reqEquipment.join(' · ')}</span>
+            <span style="color:#10b981; font-family:var(--font-mono); font-size:0.75rem;">✓ ${escapeHtml(reqEquipment.join(' · '))}</span>
           </div>
         </div>
 
         <!-- SMS Ordre Boks -->
         <div style="background:#05070d; border:1px solid #1e293b; border-radius:8px; padding:10px; font-family:var(--font-mono); font-size:0.75rem; color:#cbd5e1; word-break:break-all; margin-bottom:12px;">
-          ${driverSms}
+          ${escapeHtml(driverSms)}
         </div>
       </div>
 
       <div style="display:flex; flex-direction:column; gap:8px;">
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button class="btn-demo-photo" style="flex:1; border-color:#06b6d4; color:#06b6d4;" onclick="navigator.clipboard.writeText('${driverSms.replace(/'/g, "\\'")}').then(() => alert('SMS-ordre til sjåfør kopiert!'))">
+          <button class="btn-demo-photo" id="btnCopyDriverSms" style="flex:1; border-color:#06b6d4; color:#06b6d4;" type="button">
             📋 Kopier Sjåfør-SMS
           </button>
-          <a href="sms:${assignedCar.sjafor === 'Jan Ove Thygesen' ? '90566147' : ''}?body=${encodeURIComponent(driverSms)}" class="btn-emergency" style="font-size:0.78rem; padding:6px 12px; text-decoration:none;">
+          <a href="sms:${assignedCar.sjafor === 'Jan Ove Thygesen' ? '90566147' : '90566147'}?body=${encodeURIComponent(driverSms)}" class="btn-emergency" style="font-size:0.78rem; padding:6px 12px; text-decoration:none;">
             📲 Send til Sjåfør
           </a>
-          <a href="sms:${phone}?body=${encodeURIComponent(customerSms)}" class="btn-demo-photo" style="border-color:#10b981; color:#10b981; font-size:0.78rem; padding:6px 12px; text-decoration:none;">
+          <a href="sms:${phone ? encodeURIComponent(phone) : '90566147'}?body=${encodeURIComponent(customerSms)}" class="btn-demo-photo" style="border-color:#10b981; color:#10b981; font-size:0.78rem; padding:6px 12px; text-decoration:none;">
             📲 Send SMS til Bilist
           </a>
         </div>
 
-        <button class="btn-emergency" style="background:#10b981; border-color:#10b981; width:100%; justify-content:center;" onclick="addDispatchToQueue('${prio}', '${locInfo.name}', '${txt.replace(/'/g, "\\'")}', '${regnr}', '${assignedCar.id} (${assignedCar.sjafor})', ${isE18}, '${caller}', '${phone}')">
+        <button class="btn-emergency" id="btnAddCurrentDispatch" style="background:#10b981; border-color:#10b981; width:100%; justify-content:center;" type="button">
           ➕ Legg til Oppdrag i Operativ Kø
         </button>
       </div>
     `;
+
+    const copyBtn = document.getElementById('btnCopyDriverSms');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        if (!currentDispatchDraft) return;
+        navigator.clipboard.writeText(currentDispatchDraft.driverSms).then(() => {
+          copyBtn.textContent = '✓ SMS-ordre kopiert!';
+          setTimeout(() => { copyBtn.textContent = '📋 Kopier Sjåfør-SMS'; }, 2000);
+        }).catch(() => {
+          alert('SMS-ordre:\n' + currentDispatchDraft.driverSms);
+        });
+      });
+    }
+
+    const addBtn = document.getElementById('btnAddCurrentDispatch');
+    if (addBtn) {
+      addBtn.addEventListener('click', () => {
+        if (!currentDispatchDraft) return;
+        saveDraftToIncidentQueue(currentDispatchDraft);
+      });
+    }
   }
 
-  // Legg til oppdrag i kø
-  window.addDispatchToQueue = function (prio, loc, desc, regnr, car, isTma, caller, phone) {
+  // Sikker hjelpefunksjon for HTML-escaping
+  function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  let currentDispatchDraft = null;
+
+  // Lagre utkast til aktiv hendelseskø
+  function saveDraftToIncidentQueue(draft) {
     playAlertSound(false);
     const now = new Date();
     const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
     const newIncident = {
       tid: timeStr,
-      prioritet: prio.includes('P1') ? 'P1' : 'P2',
-      posisjon: loc,
-      beskrivelse: desc,
-      regnr: regnr || 'Ukjent',
-      bil: car,
-      tma: isTma ? 'PÅBUDT (PUTE-02)' : 'Vurderes',
-      navn: caller,
-      telefon: phone
+      prioritet: draft.prio.includes('P1') ? 'P1' : 'P2',
+      posisjon: draft.locName,
+      beskrivelse: draft.desc,
+      regnr: draft.regnr || 'Ukjent',
+      bil: draft.carName,
+      tma: draft.isTma ? 'PÅBUDT (PUTE-02)' : 'Vurderes',
+      navn: draft.caller,
+      telefon: draft.phone
     };
 
     try {
       const list = JSON.parse(localStorage.getItem('agder_incidents') || '[]');
       list.unshift(newIncident);
-      localStorage.setItem('agder_incidents', JSON.stringify(list));
+      localStorage.setItem('agder_incidents', JSON.stringify(list.slice(0, 30)));
     } catch (e) {}
 
     // Sett bilstatus til oppdrag hvis ikke allerede
-    const carId = car.split(' ')[0];
+    const carId = draft.carId;
     const fleet = getFleetData();
     const b = fleet.find((x) => x.id === carId);
     if (b) {
@@ -515,7 +581,7 @@
 
     loadIncidentsTable();
     alert(`Oppdrag lagt inn i aktiv kø for ${carId}!`);
-  };
+  }
 
   // Last inn hendelser fra localStorage eller standardoppsett
   function loadIncidentsTable() {
@@ -574,20 +640,43 @@
       const badgeClass = isP1 ? 'badge-p1' : isP2 ? 'badge-p2' : 'badge-p3';
       const prioLabel = isP1 ? 'P1 KRITISK' : isP2 ? 'P2 HASTER' : 'PLANLAGT';
 
+      const safeTid = escapeHtml(inc.tid);
+      const safePrio = escapeHtml(prioLabel);
+      const safePos = escapeHtml(inc.posisjon);
+      const safeNavn = escapeHtml(inc.navn || 'Bilist');
+      const safeTlf = escapeHtml(inc.telefon || '90566147');
+      const safeDesc = escapeHtml(inc.beskrivelse);
+      const safeRegnr = escapeHtml(inc.regnr || 'Ukjent');
+      const safeBil = escapeHtml(inc.bil || 'FLAK-03');
+      const safeTma = escapeHtml(inc.tma || 'Vurderes');
+
       row.innerHTML = `
-        <td style="font-family:var(--font-mono); color:var(--telemetry-green); font-weight:700;">${inc.tid}</td>
-        <td><span class="${badgeClass}">${prioLabel}</span></td>
-        <td><strong>${inc.posisjon}</strong><br><span style="font-size:0.75rem; color:#94a3b8;">${inc.navn} (tlf: ${inc.telefon})</span></td>
-        <td>${inc.beskrivelse}<br><span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--viking-yellow);">Regnr: ${inc.regnr}</span></td>
-        <td><strong style="color:#38bdf8;">${inc.bil || 'FLAK-03'}</strong></td>
-        <td>${inc.tma ? `<strong style="color:var(--viking-yellow);">${inc.tma}</strong>` : 'Vurderes'}</td>
+        <td style="font-family:var(--font-mono); color:var(--telemetry-green); font-weight:700;">${safeTid}</td>
+        <td><span class="${badgeClass}">${safePrio}</span></td>
+        <td><strong>${safePos}</strong><br><span style="font-size:0.75rem; color:#94a3b8;">${safeNavn} (tlf: ${safeTlf})</span></td>
+        <td>${safeDesc}<br><span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--viking-yellow);">Regnr: ${safeRegnr}</span></td>
+        <td><strong style="color:#38bdf8;">${safeBil}</strong></td>
+        <td><strong style="color:var(--viking-yellow);">${safeTma}</strong></td>
         <td>
-          <button class="btn-demo-photo" style="border-color:#10b981; color:#10b981; font-size:0.75rem; padding:4px 8px;" onclick="sendDriverSms('${inc.navn}', '${inc.telefon}')">
+          <button class="btn-demo-photo btn-send-incident-sms" style="border-color:#10b981; color:#10b981; font-size:0.75rem; padding:4px 8px;" type="button" data-navn="${safeNavn}" data-tlf="${safeTlf}">
             📲 SMS til bilist
           </button>
         </td>
       `;
       tableBody.appendChild(row);
+    });
+  }
+
+  // Hendelsesdelegering for SMS-knapper i tabellen
+  const incidentTableBody = document.getElementById('incidentTableBody');
+  if (incidentTableBody) {
+    incidentTableBody.addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn-send-incident-sms');
+      if (btn) {
+        const navn = btn.getAttribute('data-navn');
+        const tlf = btn.getAttribute('data-tlf');
+        sendDriverSms(navn, tlf);
+      }
     });
   }
 
@@ -610,6 +699,15 @@
       }
     });
   }
+
+  // Sanntidssynkronisering på tvers av nettleserfaner (StorageEvent)
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'agder_incidents' || e.key === 'agder_fleet_telemetry') {
+      renderFleetGrid();
+      loadIncidentsTable();
+      playAlertSound(true);
+    }
+  });
 
   // Initialiser ved lasting
   window.addEventListener('DOMContentLoaded', () => {

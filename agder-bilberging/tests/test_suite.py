@@ -231,7 +231,7 @@ class TestAgderBilbergingAI(unittest.TestCase):
         self.assertEqual(rapport["varsler"][0]["type"], "DEKKSLITASJE")
 
     def test_flate_beredskap_manglende_wire_edge_case(self):
-        """Edge case: Kranbil/tungbil uten sertifisert wire skal flagge KRANWIRE_KONTROLL."""
+        """Edge case: Kranbil/tungbil uten sertifisert wire skal flagge KRANWIRE_KONTROLL og settes som uoperativ."""
         usertifisert_flate = [
             {
                 "id": "TUNG-01",
@@ -245,6 +245,8 @@ class TestAgderBilbergingAI(unittest.TestCase):
         rapport = sjekk_flate_beredskap(flate=usertifisert_flate, fakta=self.fakta)
         self.assertEqual(rapport["antall_utstyrsvarsler"], 1)
         self.assertEqual(rapport["varsler"][0]["type"], "KRANWIRE_KONTROLL")
+        self.assertEqual(rapport["antall_operative"], 0)
+        self.assertFalse(rapport["biler"][0]["operativ"])
 
     def test_finn_optimal_bergingsressurs_e18_tungberging(self):
         """E18 uhell med vogntog skal allokere TUNG-01 + PUTE-02 TMA-støtpute og generere SMS."""
@@ -277,6 +279,76 @@ class TestAgderBilbergingAI(unittest.TestCase):
         self.assertTrue(res["lavt_drivstoff_advarsel"])
         self.assertIn("elbil-skates", res["utstyrskrav"][0])
         self.assertIn("EB99887", res["sjafor_sms"])
+
+    def test_finn_optimal_bergingsressurs_kritisk_drivstoffmangel(self):
+        """Edge case: Hvis primærbil har for lite drivstoff for turen, flagges kritisk varsel i SMS og alternativ vurderes."""
+        tom_flak_flate = [
+            {
+                "id": "FLAK-03",
+                "modell": "MAN TGL",
+                "status": "beredskap",
+                "sjafor": "Kjetil S.",
+                "drivstoff": {"prosent": 8, "tank_liter": 180, "rekkevidde_km": 35},
+                "dekk": {"monsterdybde_mm": 8.0, "minstekrav_mm": 5.0},
+                "utstyr_status": {"sertifisert_kranwire": False}
+            },
+            {
+                "id": "TUNG-01",
+                "modell": "Scania R580",
+                "status": "beredskap",
+                "sjafor": "Jan Ove Thygesen",
+                "drivstoff": {"prosent": 80, "tank_liter": 600, "rekkevidde_km": 750},
+                "dekk": {"monsterdybde_mm": 10.0, "minstekrav_mm": 5.0},
+                "utstyr_status": {"sertifisert_kranwire": True}
+            }
+        ]
+        # Oppdrag i Arendal / Harebakken krever tur/retur ca. 45-50 km + buffer
+        res = finn_optimal_bergingsressurs(
+            hendelse_tekst="Motorstopp personbil E18 Harebakken Arendal",
+            posisjon={"lat": 58.4812, "lng": 8.7612},
+            kundenavn="Petter Solberg",
+            telefon="90123456",
+            flate=tom_flak_flate,
+            fakta=self.fakta
+        )
+        self.assertEqual(res["primar_bil_id"], "FLAK-03")
+        self.assertFalse(res["drivstoff_tilstrekkelig"])
+        self.assertIn("KRITISK DRIVSTOFFVARSEL", res["sjafor_sms"])
+        self.assertIsNotNone(res["alternativ_bil"])
+        self.assertEqual(res["alternativ_bil"]["id"], "TUNG-01")
+
+    def test_finn_optimal_bergingsressurs_tom_flate(self):
+        """Edge case: Hvis flåtelisten er tom, skal systemet håndtere det trygt uten å kaste exception."""
+        res = finn_optimal_bergingsressurs(
+            hendelse_tekst="Utforkjøring personbil E18",
+            posisjon=None,
+            flate=[],
+            fakta=self.fakta
+        )
+        self.assertIsNone(res["primar_bil"])
+        self.assertFalse(res["bil_operativ"])
+        self.assertFalse(res["drivstoff_tilstrekkelig"])
+
+    def test_posisjonering_ugyldige_og_nan_koordinater(self):
+        """Edge case: Ugyldige tekststrenger, NaN eller Inf som koordinater skal gi mangler_posisjon."""
+        import math
+        pos1 = beregn_nodhjelp_posisjon("ugyldig_lat", 8.5, self.fakta)
+        self.assertEqual(pos1["status"], "mangler_posisjon")
+
+        pos2 = beregn_nodhjelp_posisjon(float("nan"), 8.5, self.fakta)
+        self.assertEqual(pos2["status"], "mangler_posisjon")
+
+        pos3 = beregn_nodhjelp_posisjon(58.3, float("inf"), self.fakta)
+        self.assertEqual(pos3["status"], "mangler_posisjon")
+
+    def test_batkalkulator_ugyldig_distanse(self):
+        """Edge case: Distanse <= 0 skal avvises som ugyldig."""
+        res_null = kalkuler_bat_og_spesialtransport(lengde_fot=20, vekt_tonn=1.5, distanse_km=0)
+        self.assertFalse(res_null["gyldig"])
+        self.assertIn("positive tall", res_null["feil"])
+
+        res_neg = kalkuler_bat_og_spesialtransport(lengde_fot=20, vekt_tonn=1.5, distanse_km=-15)
+        self.assertFalse(res_neg["gyldig"])
 
 
 if __name__ == "__main__":

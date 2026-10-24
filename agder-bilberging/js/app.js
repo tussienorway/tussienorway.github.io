@@ -402,7 +402,7 @@
       cvCtx.moveTo(w / 2 - 15, h / 2); cvCtx.lineTo(w / 2 + 15, h / 2);
       cvCtx.moveTo(w / 2, h / 2 - 15); cvCtx.lineTo(w / 2, h / 2 + 15);
       cvCtx.strokeStyle = '#38bdf8';
-      ctx.lineWidth = 1.5;
+      cvCtx.lineWidth = 1.5;
       cvCtx.stroke();
 
       // Skannede analysebrikker
@@ -604,12 +604,12 @@
     let bil = 'Iveco Eurocargo med båtvugge (KRAN-04)';
 
     // Klassifisering og dispensasjonskrav
-    if (fot > 36 || tonn > 8.0) {
+    if (fot > 36 || tonn > 10.0) {
       if (boatPriceOut) boatPriceOut.textContent = 'Spesialoppdrag';
       if (boatVehicleOut) boatVehicleOut.textContent = 'Scania R580 8x4 Lavbygd henger + Ledsagerbil (TUNG-01)';
       if (boatDispWarning) {
         boatDispWarning.style.display = 'block';
-        boatDispWarning.innerHTML = '<strong>⚠️ Statens vegvesen Dispensasjon kreves:</strong> Fartøyet overskrider 36 fot / 8 tonn. Krever manuell ruteplanlegging, dispensasjonssøknad og følgebil.';
+        boatDispWarning.innerHTML = '<strong>⚠️ Statens vegvesen Dispensasjon kreves:</strong> Fartøyet overskrider 36 fot / 10 tonn. Krever manuell ruteplanlegging, dispensasjonssøknad og følgebil.';
       }
       return;
     }

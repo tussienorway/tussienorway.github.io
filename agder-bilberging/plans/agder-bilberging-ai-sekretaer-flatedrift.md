@@ -127,6 +127,46 @@ For at en stresset bilist på motorveien skal oppleve samtalen som naturlig og t
    - **Latency:** 120 – 180 ms streaming.
    - **Akustisk profil:** Varm, rolig sørlending/østlandsk kvinnestemme ("Nora") som skaper umiddelbar ro hos paniske sjåfører.
 
+### 4.2 FastAPI Audio Bridge & Nora Streaming Implementasjon (Python)
+```python
+import asyncio
+import json
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+import websockets
+
+app = FastAPI(title="Agder Bilberging Nora Voice Bridge")
+
+HERMES_LLM_URL = "ws://127.0.0.1:8080/v1/stream"
+DEEPGRAM_WS_URL = "wss://api.deepgram.com/v1/listen?model=nova-2&language=no&punctuate=true"
+
+@app.websocket("/api/v1/voice/stream")
+async def voice_stream_endpoint(client_ws: WebSocket):
+    await client_ws.accept()
+    try:
+        # 1. Koble til Deepgram STT for sanntids transkribering
+        async with websockets.connect(DEEPGRAM_WS_URL, extra_headers={"Authorization": "Token DUMMY_OR_ENV"}) as stt_ws:
+            async def telco_to_stt():
+                while True:
+                    data = await client_ws.receive_bytes()
+                    await stt_ws.send(data)
+
+            async def stt_to_llm_and_tts():
+                async for msg in stt_ws:
+                    res = json.loads(msg)
+                    transcript = res.get("channel", {}).get("alternatives", [{}])[0].get("transcript", "")
+                    if transcript and res.get("is_final"):
+                        # Sjekk personskade (krisetriage)
+                        if any(w in transcript.lower() for w in ("blør", "skadet", "bevisstløs", "sitter fast")):
+                            await client_ws.send_text(json.dumps({"action": "sip_transfer", "target": "113"}))
+                            break
+                        # Generer sub-800ms svar fra Hermes / Qwen
+                        await client_ws.send_text(json.dumps({"action": "speak", "text": "Jeg oppfatter situasjonen. Stå bak autovernet, bil er på vei."}))
+
+            await asyncio.gather(telco_to_stt(), stt_to_llm_and_tts())
+    except (WebSocketDisconnect, Exception):
+        pass
+```
+
 ---
 
 ## 5. Talestyrt Krisetriage for Motorvei (HMS & 112/113)
@@ -176,6 +216,30 @@ For at AI-sekretæren skal kunne ta autonome, korrekte dirigeringsvalg, integrer
    - Årlig sakkyndig kontroll på kranwire (Scania TUNG-01 og Iveco KRAN-04).
    - Bekreftelse på at 4 stk GoJak elbil-skates er ombord i FLAK-03.
    - Oljesaneringspakke (50 kg bark, absorbenter og oljelenser).
+
+### 6.2 Teltonika FMC650 CANbus Telemetri-parser (Python)
+```python
+import struct
+
+def parse_fms_canbus_packet(raw_bytes: bytes) -> dict:
+    """Dekoder Teltonika Codec 8E / FMS CANbus telemetripakke fra lastebil."""
+    if len(raw_bytes) < 32:
+        return {"error": "Pakke for kort"}
+
+    # Ekstraher AVL-data: GPS, drivstoffprosent (AVL ID 84), dekktrykk (AVL ID 112)
+    lat, lng, speed = struct.unpack_from(">iih", raw_bytes, 10)
+    fuel_pct = raw_bytes[22]
+    total_km = struct.unpack_from(">I", raw_bytes, 24)[0]
+
+    return {
+        "gps": {"lat": lat / 10000000.0, "lng": lng / 10000000.0},
+        "hastighet_kmt": speed,
+        "drivstoff_prosent": fuel_pct,
+        "total_odometer_km": total_km,
+        "lav_drivstoff_advarsel": fuel_pct < 35,
+        "feilkoder_obd2": []
+    }
+```
 
 ---
 

@@ -139,6 +139,24 @@ def beregn_nodhjelp_posisjon(lat: float | None, lng: float | None, fakta: dict |
             "anbefalt_rute": "Posisjon mangler. Nødsentralen må innhente posisjon manuelt."
         }
 
+    try:
+        lat = float(lat)
+        lng = float(lng)
+        if math.isnan(lat) or math.isnan(lng) or math.isinf(lat) or math.isinf(lng):
+            raise ValueError("Ugyldige koordinater")
+    except (TypeError, ValueError):
+        return {
+            "status": "mangler_posisjon",
+            "lat": None,
+            "lng": None,
+            "avstand_base_km": None,
+            "eta_min": None,
+            "narmeste_e18_punkt": "Ukjent (GPS mangler)",
+            "avstand_e18_punkt_km": None,
+            "innenfor_dekningsomraade": False,
+            "anbefalt_rute": "Posisjon mangler. Nødsentralen må innhente posisjon manuelt."
+        }
+
     fakta = fakta or last_fakta()
     base = fakta["posisjon"]
     avstand_base = haversine_km(lat, lng, base["lat"], base["lng"])
@@ -169,10 +187,10 @@ def beregn_nodhjelp_posisjon(lat: float | None, lng: float | None, fakta: dict |
 
 def kalkuler_bat_og_spesialtransport(lengde_fot: float, vekt_tonn: float, distanse_km: float = 15.0) -> dict:
     """Beregner utstyrsvalg og prisanslag for båttransport i Agder-skjærgården."""
-    if lengde_fot <= 0 or vekt_tonn <= 0:
+    if lengde_fot <= 0 or vekt_tonn <= 0 or distanse_km <= 0:
         return {
             "gyldig": False,
-            "feil": "Båtlengde og vekt må være positive tall over 0."
+            "feil": "Båtlengde, vekt og distanse må være positive tall over 0."
         }
 
     if lengde_fot > 36 or vekt_tonn > 10.0:
@@ -224,12 +242,12 @@ def valider_telefon(tlf: str) -> bool:
     """Validerer norsk telefonnummer (8 siffer, eller +47/0047)."""
     if not tlf:
         return False
-    clean = re.sub(r"[\s\-\(\)]", "", tlf)
+    clean = re.sub(r"[\s\-\(\)\.]", "", str(tlf))
     if clean.startswith("+47"):
         clean = clean[3:]
     elif clean.startswith("0047"):
         clean = clean[4:]
-    return bool(re.match(r"^[49]\d{7}$", clean) or re.match(r"^\d{8}$", clean))
+    return bool(re.match(r"^[2-9]\d{7}$", clean))
 
 
 def opprett_nodanrop(
@@ -431,7 +449,7 @@ def sjekk_flate_beredskap(flate: list[dict] | None = None, fakta: dict | None = 
                 "melding": f"{bil_id} mangler gyldig sertifisering på kranwire/løfteutstyr!"
             })
 
-        er_operativ = status in ("beredskap", "aktiv_patrulje", "oppdrag") and (monster >= minstekrav)
+        er_operativ = status in ("beredskap", "aktiv_patrulje", "oppdrag") and (monster >= minstekrav) and utstyr_ok
         if er_operativ:
             rapport["antall_operative"] += 1
 
@@ -496,13 +514,48 @@ def finn_optimal_bergingsressurs(
         utstyrskrav = ["hydraulisk skyveflak", "løftebrille", "oljesaneringssett"]
 
     primar_bil = bil_kart.get(valgt_id)
-    drivstoff_info = primar_bil.get("drivstoff", {}) if primar_bil else {}
-    prosent = drivstoff_info.get("prosent", 100)
-    rekkevidde = drivstoff_info.get("rekkevidde_km", 400)
-    lavt_drivstoff = prosent < 35
+    if primar_bil:
+        drivstoff_info = primar_bil.get("drivstoff", {})
+        prosent = drivstoff_info.get("prosent", 100)
+        rekkevidde = drivstoff_info.get("rekkevidde_km", 400)
+        lavt_drivstoff = prosent < 35
+        dekk_info = primar_bil.get("dekk", {})
+        monster = dekk_info.get("monsterdybde_mm", 8.0)
+        minstekrav = dekk_info.get("minstekrav_mm", 5.0)
+        bil_status = primar_bil.get("status", "beredskap")
+        utstyr_status = primar_bil.get("utstyr_status", {})
+        wire_ok = True
+        if valgt_id in ("TUNG-01", "KRAN-04"):
+            wire_ok = utstyr_status.get("sertifisert_kranwire", True)
+        bil_operativ = (bil_status in ("beredskap", "aktiv_patrulje", "oppdrag")) and (monster >= minstekrav) and wire_ok
+    else:
+        prosent = 0
+        rekkevidde = 0
+        lavt_drivstoff = True
+        bil_operativ = False
 
     tur_retur_km = (pos_data["avstand_base_km"] or 15.0) * 2
-    drivstoff_tilstrekkelig = rekkevidde >= (tur_retur_km + 20)
+    drivstoff_tilstrekkelig = (rekkevidde >= (tur_retur_km + 20)) and (primar_bil is not None)
+
+    # Finn eventuell reservebil/alternativ dersom primærbil har for lite drivstoff eller ikke er operativ
+    alternativ_bil = None
+    if (not drivstoff_tilstrekkelig or not bil_operativ) and kjøretøy_liste:
+        for b in kjøretøy_liste:
+            if b.get("id") != valgt_id:
+                b_status = b.get("status", "")
+                b_drivstoff = b.get("drivstoff", {})
+                b_rekkevidde = b_drivstoff.get("rekkevidde_km", 0)
+                b_dekk = b.get("dekk", {})
+                if (b_status in ("beredskap", "aktiv_patrulje")) and (b_rekkevidde >= tur_retur_km + 20) and (b_dekk.get("monsterdybde_mm", 8.0) >= b_dekk.get("minstekrav_mm", 5.0)):
+                    alternativ_bil = b
+                    break
+
+    # Drivstoffadvarsel tekst for SMS
+    drivstoff_varsel_sms = ""
+    if not drivstoff_tilstrekkelig:
+        drivstoff_varsel_sms = f"⚠️ KRITISK DRIVSTOFFVARSEL: Rekkevidde {rekkevidde} km er for kort for t/r {round(tur_retur_km, 1)} km! Må etterfylles før avreise!"
+    elif lavt_drivstoff:
+        drivstoff_varsel_sms = f"⚠️ OBS: Lav reserve ({prosent}% / {rekkevidde} km), etterfyll snarest."
 
     # HMS & TMA Tilleggsbil
     tma_bil = bil_kart.get("PUTE-02") if krever_tma else None
@@ -516,6 +569,7 @@ def finn_optimal_bergingsressurs(
         f"Regnr: {regnr or 'Ukjent'}. "
         f"Utstyr bekreftet: {', '.join(utstyrskrav)}. "
         f"Drivstoff: {prosent}% ({rekkevidde} km). "
+        f"{drivstoff_varsel_sms + ' | ' if drivstoff_varsel_sms else ''}"
         f"{'TMA-PUTE (PUTE-02) rykker ut i tospann!' if krever_tma else 'Normal varsling.'}"
     )
 
@@ -532,6 +586,8 @@ def finn_optimal_bergingsressurs(
         "kategori": kat,
         "primar_bil_id": valgt_id,
         "primar_bil": primar_bil,
+        "bil_operativ": bil_operativ,
+        "alternativ_bil": alternativ_bil,
         "krever_tma": krever_tma,
         "tma_bil": tma_bil,
         "utstyrskrav": utstyrskrav,
