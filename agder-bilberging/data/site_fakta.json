@@ -1,0 +1,167 @@
+{
+  "hentet": "2026-10-24T02:30:00Z",
+  "kilde": "Proff.no, Enhetsregisteret, Facebook (Agderbilberging), Viking Redningstjeneste",
+  "firma": "Agder Bilberging AS",
+  "orgnr": "919 084 030",
+  "stiftet": 2017,
+  "daglig_leder": "Jan Ove Thygesen",
+  "adresse": "Industriveien 20, 4879 Grimstad",
+  "kommune": "Grimstad",
+  "fylke": "Agder",
+  "telefon_dognvakt": "+47 905 66 147",
+  "telefon_viking": "03290",
+  "epost": "post@agderbilberging.no",
+  "omsetning_nok": 11331594,
+  "ansatte": 10,
+  "posisjon": {
+    "lat": 58.3541,
+    "lng": 8.5772,
+    "navn": "Hovedbase Grimstad"
+  },
+  "samarbeid": [
+    "Viking Redningstjeneste",
+    "REDGO",
+    "SOS International",
+    "Statens vegvesen",
+    "Agder Politidistrikt"
+  ],
+  "forsikringsselskaper": [
+    "Gjensidige",
+    "If Skadeforsikring",
+    "Fremtind",
+    "Tryg Forsikring",
+    "Storebrand",
+    "KLP"
+  ],
+  "tjenester": [
+    {
+      "id": "akutt_berging",
+      "navn": "Akutt Veihjelp & Personbilberging",
+      "kategori": "veihjelp",
+      "dekker": [
+        "utforkjøring",
+        "motorhavari",
+        "kollisjon",
+        "flatt batteri",
+        "punktering",
+        "låst ute av bil",
+        "feilfylling drivstoff",
+        "elbil-berging med skates"
+      ],
+      "respons_maal_min": 25
+    },
+    {
+      "id": "tungberging",
+      "navn": "Tungberging & Vogntogredning",
+      "kategori": "tungtransport",
+      "dekker": [
+        "vogntoghavari",
+        "velteulykke",
+        "bussberging",
+        "anleggsmaskiner",
+        "akselløft",
+        "vinsjing med 25t vinsj",
+        "tungkran"
+      ],
+      "respons_maal_min": 35
+    },
+    {
+      "id": "tma_sikring",
+      "navn": "TMA Støtputebil & Trafikksikring",
+      "kategori": "sikring",
+      "dekker": [
+        "E18-stengning og varsling",
+        "støtpute mot påkjørsel",
+        "lyspil og dirigering",
+        "sikring ved bilberging på motorvei",
+        "veiarbeidssikring"
+      ],
+      "respons_maal_min": 20
+    },
+    {
+      "id": "bat_transport",
+      "navn": "Båttransport & Båtløft",
+      "kategori": "spesialtransport",
+      "dekker": [
+        "transport opptil 30 fot",
+        "båtløft med kran",
+        "flytting mellom marina og opplag",
+        "Grimstad Gjestehavn",
+        "Arendal Pollen",
+        "Lillesand Gjestehavn"
+      ],
+      "respons_maal_min": null
+    },
+    {
+      "id": "terreng_vinsj",
+      "navn": "4x4 Offroad Berging",
+      "kategori": "terreng",
+      "dekker": [
+        "grusveier og skogsbilveier",
+        "hyttefelt i Froland og Birkenes",
+        "snøfaste biler i innlandet",
+        "myr og terrengvinsjing"
+      ],
+      "respons_maal_min": 40
+    }
+  ],
+  "flate": [
+    {
+      "id": "TUNG-01",
+      "type": "Tungberger 8x4",
+      "modell": "Scania R580 V8",
+      "utstyr": "Omars kranaggregat, doble 25-tonns hydrauliske vinsjer, akselgafler, kraftuttak",
+      "stasjonert": "Grimstad Base",
+      "status": "beredskap"
+    },
+    {
+      "id": "PUTE-02",
+      "type": "TMA Støtputebil",
+      "modell": "Mercedes-Benz Atego",
+      "utstyr": "Verdegro TMA-støtpute, LED VMS-skilt, blitzbjelke, kollisjonsdemper godkjent Statens vegvesen",
+      "stasjonert": "E18 Beredskap Grimstad",
+      "status": "aktiv_patrulje"
+    },
+    {
+      "id": "FLAK-03",
+      "type": "Flakbil med brille",
+      "modell": "MAN TGL 12.250",
+      "utstyr": "6-tonns hydraulisk skyveflak, 2-tonns brille, elbil-skates, fjernstyring, oljesaneringssett",
+      "stasjonert": "Grimstad Base",
+      "status": "beredskap"
+    },
+    {
+      "id": "KRAN-04",
+      "type": "Flakbil med kran & båthenger",
+      "modell": "Iveco Eurocargo",
+      "utstyr": "HMF 14-tonnmeter kran med båtåk, hydraulisk flak, båtstøtter",
+      "stasjonert": "Grimstad Base",
+      "status": "oppdrag"
+    },
+    {
+      "id": "4X4-05",
+      "type": "Offroad Bergebil",
+      "modell": "Toyota Land Cruiser HD",
+      "utstyr": "Kraftig Warn vinsj foran og bak, snøkjettinger, 12V/24V boosterpakke, nødåpningsutstyr",
+      "stasjonert": "Grimstad / Arendal",
+      "status": "beredskap"
+    }
+  ],
+  "dekningsomraade": {
+    "e18_segment": "E18 Agder (Lillesand - Grimstad - Arendal - Tvedestrand)",
+    "kritiske_punkter": [
+      {"navn": "Bie-krysset Grimstad", "km_e18": 242, "lat": 58.3512, "lng": 8.5721},
+      {"navn": "Sørlandssenteret / Lillesand grense", "km_e18": 225, "lat": 58.2612, "lng": 8.3512},
+      {"navn": "Fevik krysset", "km_e18": 248, "lat": 58.3845, "lng": 8.6543},
+      {"navn": "Stoa Arendal", "km_e18": 257, "lat": 58.4612, "lng": 8.7212},
+      {"navn": "Harebakken Arendal", "km_e18": 262, "lat": 58.4812, "lng": 8.7612}
+    ]
+  },
+  "mangler_ved_dagens_losning": [
+    "Domenet agderbilberging.no mangler nettside og 301-redirecter til Facebook",
+    "Ingen 1-klikks GPS nødassistanse for bilister i nød på E18",
+    "Ingen interaktiv skade- og ulykkestriage før bergingsbil sendes",
+    "Ingen direkte anbudskalkulator for båttransport og maskinflytting",
+    "Ingen digital flåtevisning for forsikringsselskaper og politi"
+  ]
+}

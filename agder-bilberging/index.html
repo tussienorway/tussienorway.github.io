@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0e17">
+  <meta name="description" content="Agder Bilberging AS - Døgnkontinuerlig bilberging, tungberging og TMA-sikring langs E18 Agder (Grimstad, Arendal, Lillesand). Autorisert Viking-stasjon.">
+  <title>Agder Bilberging AS · 24/7 Døgnvakt & TMA-Sikring E18 Agder</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Topplinje -->
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="brand" aria-label="Hjemmeside Agder Bilberging">
+        <div class="brand-icon">AB</div>
+        <div>
+          <div class="brand-title">AGDER BILBERGING</div>
+          <div class="brand-sub">Grimstad · E18 Agder · Viking 03290</div>
+        </div>
+      </a>
+
+      <div class="nav-actions">
+        <a href="vaktleder.html" class="btn-vaktleder">Operasjonssentral</a>
+        <a href="tel:90566147" class="btn-emergency">
+          <span>🚨 DØGNVAKT: 905 66 147</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hovedseksjon (Hero) -->
+  <main>
+    <section class="hero-section">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <div class="hero-status-pill">
+            <span class="live-dot"></span>
+            <span>OPERATIV BEREDSKAP E18 AGDER: 5 BILER I FELT</span>
+          </div>
+          <h1>Lynrask bilberging, tungberging & <span class="hero-highlight">TMA-sikring</span> på E18.</h1>
+          <p class="hero-lead">
+            Stasjonert i Industriveien 20 i Grimstad med direkte aksess til E18. Vi rykker ut døgnet rundt for personbiler, vogntog, båter og anleggsmaskiner i Grimstad, Arendal og Lillesand.
+          </p>
+
+          <div class="hero-cta-group">
+            <button id="btnGpsNow" class="btn-gps-now" type="button">
+              <span>📍 Del min GPS-posisjon på E18 nå</span>
+            </button>
+            <a href="tel:90566147" class="btn-call-direct">
+              <span>📞 Ring Vaktleder (Jan Ove)</span>
+            </a>
+          </div>
+
+          <div class="fact-strip">
+            <div class="fact-item">
+              <strong>11,3 MNOK</strong>
+              <span>Årlig omsetning (Proff)</span>
+            </div>
+            <div class="fact-item">
+              <strong>10 Mann</strong>
+              <span>Lokale redningsfolk</span>
+            </div>
+            <div class="fact-item">
+              <strong>18 Min</strong>
+              <span>Snitt-ETA på E18</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- E18 Telemetri Radar -->
+        <div class="radar-card">
+          <div class="radar-header">
+            <div class="radar-title">
+              <span>📡 E18 AGDER TELEMETRI-RADAR</span>
+            </div>
+            <div class="radar-meta">SANNTIDS-POSISJON</div>
+          </div>
+
+          <div class="radar-canvas-container">
+            <canvas id="e18RadarCanvas"></canvas>
+          </div>
+
+          <div class="radar-legend">
+            <div class="legend-item"><span class="legend-dot tung"></span> TUNG-01 (Scania 8x4)</div>
+            <div class="legend-item"><span class="legend-dot tma"></span> PUTE-02 (TMA Støtpute)</div>
+            <div class="legend-item"><span class="legend-dot flak"></span> FLAK-03 (Elbil-skates)</div>
+            <div class="legend-item"><span class="legend-dot kran"></span> KRAN-04 (Båtkran)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seksjon 1: Computer Vision Skadetriage -->
+    <section class="section" id="triage-section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-tag">Klientside Computer Vision</span>
+          <h2>AI Skade- & Ulykkestriage</h2>
+          <p>
+            Står du fast på E18 eller i grøfta? Last opp eller ta bilde av kjøretøyet. Vår klientside skanner vurderer automatisk skadetype, trekkvinkel og flagger umiddelbart om TMA-støtputebil er påbudt.
+          </p>
+        </div>
+
+        <div class="triage-grid">
+          <div>
+            <div class="upload-zone" id="dropZone" tabindex="0" role="button" aria-label="Last opp eller ta bilde for AI-skadetriage">
+              <input type="file" id="cvFileInput" accept="image/*" capture="environment" style="display:none;" aria-hidden="true">
+              <div class="upload-icon">📷</div>
+              <div class="upload-lead">Ta eller velg bilde av havariet</div>
+              <div class="upload-sub">Bildet analyseres lokalt i nettleseren din (100% personvern, ingen skyopplasting før du bekrefter). Klikk eller dra bilde hit.</div>
+              <div id="uploadFeedback" style="font-size:0.78rem; font-family:var(--font-mono); color:var(--radar-cyan); margin-top:10px; display:none;"></div>
+            </div>
+
+            <div class="demo-photos">
+              <button class="btn-demo-photo" data-demo="e18_kollisjon" type="button">Scenario 1: Kollisjon E18 Motorvei</button>
+              <button class="btn-demo-photo" data-demo="groft_snofonn" type="button">Scenario 2: Fastkjørt i Snøfonn</button>
+              <button class="btn-demo-photo" data-demo="elbil_havari" type="button">Scenario 3: Elbil Låst Aksel</button>
+            </div>
+          </div>
+
+          <div class="triage-output">
+            <div class="cv-viewport">
+              <canvas id="cvCanvas"></canvas>
+            </div>
+
+            <div class="triage-card">
+              <div class="triage-row">
+                <span class="triage-label">Diagnose:</span>
+                <span class="triage-val" id="triageResTitle">Kollisjon E18 Motorvei</span>
+              </div>
+              <div class="triage-row">
+                <span class="triage-label">TMA-Støtputebil påkrevd:</span>
+                <span class="triage-val badge-alert" id="triageResTma">JA (Påbudt E18)</span>
+              </div>
+              <div class="triage-row">
+                <span class="triage-label">Allokert utstyr:</span>
+                <span class="triage-val" id="triageResCar">Scania 8x4 Tungberger + TMA Putebil</span>
+              </div>
+              <div class="triage-row">
+                <span class="triage-label">Sikkerhetsprotokoll:</span>
+                <span class="triage-val" style="color:#06b6d4;">Putebil skjermer ulykkessted mot bakre trafikk</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seksjon 2: Båt- og Spesialtransport Kalkulator -->
+    <section class="section" id="bat-kalkulator">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-tag">Skjærgård & Spesialoppdrag</span>
+          <h2>Båttransport & Båtløft Kalkulator</h2>
+          <p>
+            Agder Bilberging transporterer snekker, cabincruisere og skjærgårdsjeeper mellom Grimstad Gjestehavn, Arendal Pollen, Lillesand og vinteropplag. Beregn anslag umiddelbart:
+          </p>
+        </div>
+
+        <div class="calc-card">
+          <div class="calc-inputs">
+            <div class="control-group">
+              <div class="control-label">
+                <span>Båtlengde:</span>
+                <span id="lengthVal" style="color:var(--rescue-orange); font-family:var(--font-mono);">21 fot</span>
+              </div>
+              <input type="range" class="range-slider" id="boatLength" min="14" max="36" value="21">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Estimert vekt:</span>
+                <span id="weightVal" style="color:var(--rescue-orange); font-family:var(--font-mono);">1.8 tonn</span>
+              </div>
+              <input type="range" class="range-slider" id="boatWeight" min="0.5" max="8.0" step="0.1" value="1.8">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Transportavstand (km):</span>
+                <span id="distVal" style="color:var(--rescue-orange); font-family:var(--font-mono);">15 km</span>
+              </div>
+              <input type="range" class="range-slider" id="boatDistance" min="2" max="60" value="15">
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="portSelect">Hentehavn / Marina:</label>
+              <select class="select-box" id="portSelect">
+                <option value="grimstad">Grimstad Gjestehavn / Torskeholmen</option>
+                <option value="arendal">Arendal Gjestehavn (Pollen)</option>
+                <option value="lillesand">Lillesand Havn / Kokkenes</option>
+                <option value="fevik">Fevik Båtforening</option>
+                <option value="homborsund">Homborsund Brygge</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="calc-summary">
+            <div>
+              <span class="section-tag">Estimert totalpris</span>
+              <div class="calc-price" id="boatPriceOut">kr 4 675,-</div>
+              <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:18px;">Inkluderer kranløft, sikring i båtvugge, transport og godsansvarsforsikring.</p>
+              
+              <div style="font-family:var(--font-mono); font-size:0.85rem; color:var(--text-secondary); margin-bottom:12px;">
+                <strong>Anbefalt transportbil:</strong><br>
+                <span id="boatVehicleOut" style="color:#06b6d4;">Iveco Eurocargo med båtvugge (KRAN-04)</span>
+              </div>
+              <div id="boatDispWarning" style="display:none; margin-bottom:16px; padding:10px 14px; background:rgba(245,158,11,0.12); border:1px solid var(--warning-amber); border-radius:8px; font-size:0.82rem; color:var(--warning-amber);"></div>
+            </div>
+
+            <button id="btnReserveBoat" class="btn-emergency" style="width:100%; justify-content:center;" type="button">
+              Reserver Båttransport Nå
+            </button>
+            <div id="boatBookingFeedback" style="display:none; margin-top:12px; padding:12px; background:#090e17; border:1px solid #10b981; border-radius:8px; font-size:0.82rem;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seksjon 3: Maskinpark & Flåte -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-tag">Kapasitet & Maskinpark</span>
+          <h2>Eget tungt redningsmateriell</h2>
+          <p>
+            Vi investerer tungt i moderne redningskjøretøy for å håndtere enhver hendelse på Agders veier.
+          </p>
+        </div>
+
+        <div class="fleet-grid">
+          <div class="fleet-card">
+            <span class="fleet-id">TUNG-01</span>
+            <div class="fleet-name">Scania R580 8x4 Tungberger</div>
+            <p class="fleet-specs">Omars kranaggregat, doble 25-tonns hydrauliske vinsjer og akselløft. Berging av vogntog, busser og anleggsmaskiner.</p>
+            <span class="fleet-badge">Operativ på E18</span>
+          </div>
+
+          <div class="fleet-card">
+            <span class="fleet-id">PUTE-02</span>
+            <div class="fleet-name">Mercedes-Benz TMA Støtpute</div>
+            <p class="fleet-specs">Kollisjonsdemper og VMS-lyspil for sikring av ulykkessteder på motorvei. Beskytter personell og bilister mot påkjørsler bakfra.</p>
+            <span class="fleet-badge">E18 Sikringsvakt</span>
+          </div>
+
+          <div class="fleet-card">
+            <span class="fleet-id">FLAK-03</span>
+            <div class="fleet-name">MAN TGL Flakbil m/ Brille</div>
+            <p class="fleet-specs">6-tonns skyveflak og løftebrille. Utstyrt med spesial-skates for skånsom berging av elbiler med låst drivaksel.</p>
+            <span class="fleet-badge">Personbil & Elbil</span>
+          </div>
+
+          <div class="fleet-card">
+            <span class="fleet-id">KRAN-04</span>
+            <div class="fleet-name">Iveco Eurocargo m/ Båtkran</div>
+            <p class="fleet-specs">14-tonnmeter kran med båtåk og justerbar båtvugge for trygg transport av fritidsbåter og seilbåter opptil 30 fot.</p>
+            <span class="fleet-badge">Båt & Maskin</span>
+          </div>
+
+          <div class="fleet-card">
+            <span class="fleet-id">4X4-05</span>
+            <div class="fleet-name">Toyota Land Cruiser Offroad</div>
+            <p class="fleet-specs">Tung 4x4 terrengbil for bratte hyttefelt i Froland/Birkenes, snøfonner og trange skogsbilveier i innlandet.</p>
+            <span class="fleet-badge">Terreng & Hytte</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal for 1-Klikk Akutt Veihjelp -->
+  <div class="modal-overlay" id="emergencyModal">
+    <div class="modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3 style="font-size:1.3rem; font-weight:800; color:var(--emergency-red);">🚨 1-Klikk Nødassistanse E18</h3>
+        <button id="modalClose" style="background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer;" type="button">✕</button>
+      </div>
+
+      <div id="gpsCoordText" style="font-family:var(--font-mono); font-size:0.85rem; margin-bottom:16px; padding:12px; background:#090e17; border-radius:8px; border:1px solid #1e293b;">
+        Søker etter GPS-posisjon...
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="display:block; font-size:0.85rem; margin-bottom:4px;" for="dispatchName">Ditt Navn:</label>
+        <input type="text" id="dispatchName" class="select-box" placeholder="F.eks. Kari Nordmann">
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="display:block; font-size:0.85rem; margin-bottom:4px;" for="dispatchPhone">Ditt Telefonnummer:</label>
+        <input type="tel" id="dispatchPhone" class="select-box" placeholder="Ditt mobilnummer for SMS/oppringing">
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="display:block; font-size:0.85rem; margin-bottom:4px;" for="dispatchReg">Kjøretøyets Reg.nr:</label>
+        <input type="text" id="dispatchReg" class="select-box" placeholder="F.eks. EK 12345" style="text-transform:uppercase;">
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label style="display:block; font-size:0.85rem; margin-bottom:4px;" for="dispatchDesc">Hva har skjedd?</label>
+        <textarea id="dispatchDesc" class="select-box" rows="2" placeholder="F.eks. Kollisjon i høyre felt på E18 ved Fevik, kan ikke kjøre videre."></textarea>
+      </div>
+
+      <button id="btnSubmitDispatch" class="btn-emergency" style="width:100%; justify-content:center;" type="button">
+        Send Nødsignal til Jan Ove (Vaktleder)
+      </button>
+
+      <div id="dispatchResult" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- Bunntekst -->
+  <footer>
+    <div class="container footer-content">
+      <div>
+        <strong>Agder Bilberging AS</strong> · Org.nr: 919 084 030<br>
+        Industriveien 20, 4879 Grimstad · Døgnvakt: <a href="tel:90566147" style="color:var(--viking-yellow);">905 66 147</a> · Viking: 03290
+      </div>
+      <div>
+        Samarbeidspartner for <strong>Viking Redningstjeneste</strong>, REDGO, SOS International og forsikringsselskaper.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

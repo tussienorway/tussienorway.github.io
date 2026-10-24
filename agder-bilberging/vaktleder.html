@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0e17">
+  <title>Operasjonssentral & Flåtestatus · Agder Bilberging AI</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .vakt-header {
+      background: #0f172a;
+      border-bottom: 2px solid var(--radar-cyan);
+      padding: 16px 0;
+    }
+    .vakt-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 24px;
+      margin-top: 28px;
+    }
+    .vakt-sidebar {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .incident-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .incident-table th, .incident-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .incident-table th {
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+    .badge-p1 {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--emergency-red);
+      border: 1px solid var(--emergency-red);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 800;
+      font-size: 0.72rem;
+    }
+    .badge-p2 {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--warning-amber);
+      border: 1px solid var(--warning-amber);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 800;
+      font-size: 0.72rem;
+    }
+    @media (max-width: 900px) {
+      .vakt-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="vakt-header">
+    <div class="container navbar">
+      <a href="index.html" class="brand">
+        <div class="brand-icon" style="background:var(--radar-cyan);">AB</div>
+        <div>
+          <div class="brand-title">AGDER BILBERGING AI // DISPATCH</div>
+          <div class="brand-sub">Operasjonssentral · Vaktleder: Jan Ove Thygesen</div>
+        </div>
+      </a>
+      <div class="nav-actions">
+        <span class="hero-status-pill" style="margin:0;">
+          <span class="live-dot"></span>
+          <span>DØGNVAKT AKTIV: 905 66 147</span>
+        </span>
+        <a href="index.html" class="btn-vaktleder">← Tilbake til Kundesiden</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="vakt-grid">
+      <!-- Venstre kolonne: Flåtestatus i sanntid -->
+      <aside class="vakt-sidebar">
+        <h3 style="font-size:1rem; font-family:var(--font-mono); color:var(--radar-cyan); margin-bottom:16px;">
+          REKVISISJON & FLÅTE
+        </h3>
+
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="background:#090e17; padding:12px; border-radius:10px; border-left:4px solid var(--emergency-red);">
+            <div style="display:flex; justify-content:space-between; font-weight:800; font-size:0.85rem;">
+              <span>TUNG-01 Scania 8x4</span>
+              <span style="color:#10b981;">KLAR</span>
+            </div>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Kran + 25t vinsj · Grimstad Base</div>
+          </div>
+
+          <div style="background:#090e17; padding:12px; border-radius:10px; border-left:4px solid var(--viking-yellow);">
+            <div style="display:flex; justify-content:space-between; font-weight:800; font-size:0.85rem;">
+              <span>PUTE-02 TMA Atego</span>
+              <span style="color:var(--viking-yellow);">PATRULJE</span>
+            </div>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Støtpute & VMS · E18 Grimstad-Fevik</div>
+          </div>
+
+          <div style="background:#090e17; padding:12px; border-radius:10px; border-left:4px solid var(--radar-cyan);">
+            <div style="display:flex; justify-content:space-between; font-weight:800; font-size:0.85rem;">
+              <span>FLAK-03 MAN TGL</span>
+              <span style="color:#10b981;">KLAR</span>
+            </div>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Elbil-skates · Fevik stasjon</div>
+          </div>
+
+          <div style="background:#090e17; padding:12px; border-radius:10px; border-left:4px solid var(--telemetry-green);">
+            <div style="display:flex; justify-content:space-between; font-weight:800; font-size:0.85rem;">
+              <span>KRAN-04 Iveco Båt</span>
+              <span style="color:#38bdf8;">OPPDRAG</span>
+            </div>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Båtløft 24ft · Grimstad Gjestehavn</div>
+          </div>
+
+          <div style="background:#090e17; padding:12px; border-radius:10px; border-left:4px solid #a855f7;">
+            <div style="display:flex; justify-content:space-between; font-weight:800; font-size:0.85rem;">
+              <span>4X4-05 Land Cruiser</span>
+              <span style="color:#10b981;">KLAR</span>
+            </div>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Offroad/Vinsj · Beredskap innland</div>
+          </div>
+        </div>
+
+        <div style="margin-top:24px; padding-top:16px; border-top:1px solid var(--border-color); font-size:0.82rem; color:var(--text-muted);">
+          <strong>Vakthavende Leder:</strong> Jan Ove Thygesen<br>
+          <strong>Sentral:</strong> Industriveien 20, Grimstad<br>
+          <strong>Politi / VTS Direkte:</strong> 03290 (Viking)
+        </div>
+      </aside>
+
+      <!-- Høyre kolonne: Aktive oppdrag og AI-analyse -->
+      <section>
+        <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:16px; padding:24px; margin-bottom:24px;">
+          <h2 style="font-size:1.3rem; font-weight:800; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
+            <span>🚨 Aktive Nødanrop & Oppdragskø (E18 Agder)</span>
+            <span style="font-size:0.8rem; font-family:var(--font-mono); color:var(--telemetry-green);">● SANNTIDS-SYNKR</span>
+          </h2>
+
+          <div style="overflow-x:auto;">
+            <table class="incident-table">
+              <thead>
+                <tr>
+                  <th>Tid</th>
+                  <th>Prio</th>
+                  <th>Sted / E18</th>
+                  <th>Hendelse</th>
+                  <th>Kjøretøy</th>
+                  <th>TMA Pute</th>
+                  <th>Handling</th>
+                </tr>
+              </thead>
+              <tbody id="incidentTableBody">
+                <tr>
+                  <td style="font-family:var(--font-mono);">02:35</td>
+                  <td><span class="badge-p1">P1 KRITISK</span></td>
+                  <td>E18 Fevik-krysset (km 248)</td>
+                  <td>Kollisjon 2 biler, sperrer v. felt</td>
+                  <td>Scania TUNG-01 + MAN FLAK-03</td>
+                  <td><strong style="color:var(--viking-yellow);">PÅBUDT (PUTE-02)</strong></td>
+                  <td><button class="btn-demo-photo" onclick="alert('Dispatch SMS sendt til mannskap på PUTE-02 og TUNG-01')">Send SMS-ordre</button></td>
+                </tr>
+                <tr>
+                  <td style="font-family:var(--font-mono);">02:18</td>
+                  <td><span class="badge-p2">P2 HASTER</span></td>
+                  <td>E18 Bie-krysset Grimstad</td>
+                  <td>Elbil flatt 12V batteri & låst aksel</td>
+                  <td>MAN FLAK-03 (Elbil-skates)</td>
+                  <td>Varsellys nok</td>
+                  <td><button class="btn-demo-photo" onclick="alert('FLAK-03 er på skadestedet')">Vis status</button></td>
+                </tr>
+                <tr>
+                  <td style="font-family:var(--font-mono);">01:45</td>
+                  <td><span class="badge-p2">PLANLAGT</span></td>
+                  <td>Grimstad Gjestehavn</td>
+                  <td>Båttransport 24 fot snekke til opplag</td>
+                  <td>Iveco KRAN-04</td>
+                  <td>Ikke påkrevd</td>
+                  <td><button class="btn-demo-photo" onclick="alert('Oppdrag fullføres ca. kl 03:15')">Fullfør oppdrag</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- AI Vaktleder Triage Assistent -->
+        <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:16px; padding:24px;">
+          <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:10px; color:var(--radar-cyan);">
+            ⚡ AI Hurtigtriage for Meldinger fra Politi / VTS / Kunde
+          </h3>
+          <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:16px;">
+            Lim inn oppdragsbeskrivelse. Modulen klassifiserer automatisk om TMA-støtpute kreves, hvilken bergingsbil som må rykke ut, og genererer en ferdig SMS-ordre.
+          </p>
+
+          <div style="display:flex; gap:12px; margin-bottom:14px;">
+            <input type="text" id="quickTriageInput" class="select-box" placeholder="F.eks. Lastebil sakset på E18 mellom Grimstad og Lillesand, snø og glatt">
+            <button id="btnQuickTriage" class="btn-emergency" type="button" style="white-space:nowrap;">Kjør AI-Triage</button>
+          </div>
+
+          <div id="quickTriageResult" style="display:none; background:#090e17; border:1px solid var(--border-bright); border-radius:12px; padding:16px; font-family:var(--font-mono); font-size:0.85rem;"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="js/vaktleder.js"></script>
+</body>
+</html>
