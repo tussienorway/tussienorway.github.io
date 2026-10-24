@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "catalog_version": "2026-10-23.1",
+  "checked_at": "2026-10-23",
+  "items": [
+    {
+      "name": "Tussies lov om ingen antakelser",
+      "description": "Verifiser fakta og tydeliggjør hva som er kjent, utledet og fortsatt åpent før du handler.",
+      "version": "0.1.0",
+      "kind": "Hermes-skill",
+      "status": "ready",
+      "slug": "tussie-no-assumption",
+      "icon": "✓",
+      "download": "./downloads/tussie-no-assumption/SKILL.md"
+    },
+    {
+      "name": "Majere Memory Recall Hybrid",
+      "description": "Installerens -Apply slår på aktiv modus, og pluginen logger hasher og avkortede utdrag av spørringer. Aktivering og lagring må gjennomgås.",
+      "version": null,
+      "kind": "Hermes-plugin",
+      "status": "review",
+      "slug": "majere-memory-recall-hybrid",
+      "icon": "⌕",
+      "download": null
+    },
+    {
+      "name": "Majere Memory Shadow",
+      "description": "Shadow-modus lagrer rolle og opptil 240 tegn av brukerinnhold i lokal ledger. Oppbevaring, sletting og installervalg må gjennomgås.",
+      "version": null,
+      "kind": "Hermes-plugin",
+      "status": "review",
+      "slug": "majere-memory-shadow",
+      "icon": "◌",
+      "download": null
+    }
+  ]
+}
