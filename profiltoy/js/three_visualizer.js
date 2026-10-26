@@ -21,6 +21,7 @@
     model: 'jacket',
     colorHex: '#0f172a',
     logoText: 'PROFILTØY AS',
+    customLogoImage: null,
     logoPlacement: 'chest-left',
     method: 'embroidery', // 'embroidery', 'transfer', 'reflective'
     reflectiveStrips: true,
@@ -31,7 +32,7 @@
   /**
    * Initialize procedural 2D Canvas for logo dynamic decal texture
    */
-  function createDecalTexture(text, placement, method) {
+  function createDecalTexture(text, placement, method, customImg) {
     const canvas = document.createElement('canvas');
     canvas.width = 1024;
     canvas.height = 1024;
@@ -66,6 +67,37 @@
       posX = 780;
       posY = 420;
       fontSize = 28;
+    }
+
+    // If a custom image was uploaded, draw it onto the decal canvas
+    if (customImg && customImg.complete && customImg.naturalWidth > 0) {
+      const imgTargetW = placement === 'back-large' ? 240 : 160;
+      const aspect = customImg.naturalHeight / customImg.naturalWidth;
+      const imgTargetH = imgTargetW * aspect;
+
+      ctx.save();
+      if (method === 'embroidery') {
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+        ctx.shadowBlur = 6;
+        ctx.shadowOffsetX = 3;
+        ctx.shadowOffsetY = 3;
+      } else if (method === 'reflective') {
+        ctx.shadowColor = 'rgba(255, 255, 255, 0.85)';
+        ctx.shadowBlur = 14;
+      }
+      ctx.drawImage(customImg, posX - (imgTargetW / 2), posY - (imgTargetH / 2), imgTargetW, imgTargetH);
+      ctx.restore();
+
+      // If text is also present, draw it below the image
+      if (text) {
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillStyle = method === 'embroidery' ? '#facc15' : (method === 'reflective' ? '#e2e8f0' : '#ffffff');
+        ctx.font = `bold ${Math.round(fontSize * 0.7)}px "Inter", sans-serif`;
+        ctx.fillText(text, posX, posY + (imgTargetH / 2) + 6);
+      }
+
+      return new THREE.CanvasTexture(canvas);
     }
 
     ctx.textAlign = 'center';
@@ -480,7 +512,8 @@
     const decal = createDecalTexture(
       customizerState.logoText || 'PROFILTØY AS',
       customizerState.logoPlacement,
-      customizerState.method
+      customizerState.method,
+      customizerState.customLogoImage
     );
 
     studioMeshGroup = buildGarmentMesh(
@@ -508,6 +541,10 @@
     },
     setLogoText: function (text) {
       customizerState.logoText = text;
+      updateStudioModel();
+    },
+    setLogoImage: function (imgElement) {
+      customizerState.customLogoImage = imgElement;
       updateStudioModel();
     },
     setPlacement: function (pos) {

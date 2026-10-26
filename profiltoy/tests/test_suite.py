@@ -66,22 +66,35 @@ class TestProfiltoyPlatform(unittest.TestCase):
         self.assertIn("utdanning ved universiteter og høyskoler er foreldet", html)
 
     def test_css_responsive_and_modern(self):
-        """Sjekk at CSS inneholder moderne glassmorphism, variabler og responsivitet."""
+        """Sjekk at CSS inneholder moderne glassmorphism, variabler, responsivitet og utskriftsoptimalisering."""
         css = self.css_path.read_text(encoding="utf-8")
         self.assertIn("--hivis-yellow:", css)
         self.assertIn("@media (max-width:", css)
+        self.assertIn("@media print", css)
+        self.assertIn(".mobile-nav-toggle", css)
+        self.assertIn(".logo-upload-box", css)
         self.assertIn("backdrop-filter:", css)
 
     def test_threejs_script_capabilities(self):
-        """Sjekk at 3D-motoren støtter jakke, hettegenser, vest, flaske og dekaler."""
+        """Sjekk at 3D-motoren støtter jakke, hettegenser, vest, flaske, dekaler og bildeopplasting."""
         js = self.three_js_path.read_text(encoding="utf-8")
         self.assertIn("buildGarmentMesh", js)
         self.assertIn("createDecalTexture", js)
+        self.assertIn("setLogoImage", js)
         self.assertIn("jacket", js)
         self.assertIn("hoodie", js)
         self.assertIn("vest", js)
         self.assertIn("bottle", js)
         self.assertIn("THREE.CanvasTexture", js)
+
+    def test_interactive_logo_upload_and_mobile_menu(self):
+        """Sjekk at HTML inneholder mobile-nav-toggle og logo-opplastingsboks."""
+        html = self.html_path.read_text(encoding="utf-8")
+        self.assertIn("mobileNavToggle", html)
+        self.assertIn("toggleMobileNav", html)
+        self.assertIn("customLogoFileInput", html)
+        self.assertIn("handleLogoFileUpload", html)
+        self.assertIn("logoDropzone", html)
 
 if __name__ == "__main__":
     unittest.main()

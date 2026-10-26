@@ -1069,7 +1069,25 @@ body::before {
   font-size: 0.8rem;
 }
 
-/* Responsive adjustments */
+/* Responsive adjustments & Mobile Navigation */
+.mobile-nav-toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--border-bright);
+  color: #fff;
+  font-size: 1.3rem;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-nav-toggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--hivis-yellow);
+}
+
 @media (max-width: 992px) {
   .hero-grid,
   .studio-layout,
@@ -1079,11 +1097,120 @@ body::before {
     grid-template-columns: 1fr;
   }
   
+  .mobile-nav-toggle {
+    display: inline-flex;
+  }
+
   .nav-links {
     display: none;
+    position: absolute;
+    top: 74px;
+    left: 0;
+    right: 0;
+    background: rgba(10, 14, 20, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-bright);
+    flex-direction: column;
+    padding: 20px 24px;
+    gap: 16px;
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.8);
+  }
+
+  .nav-links.open {
+    display: flex;
   }
   
   .studio-3d-box {
     height: 380px;
+  }
+}
+
+/* Custom Logo Upload Dropzone UI */
+.logo-upload-box {
+  margin-top: 10px;
+  border: 2px dashed rgba(250, 204, 21, 0.4);
+  background: rgba(250, 204, 21, 0.03);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logo-upload-box:hover,
+.logo-upload-box.drag-over {
+  border-color: var(--hivis-yellow);
+  background: rgba(250, 204, 21, 0.1);
+}
+
+.logo-upload-box input[type="file"] {
+  display: none;
+}
+
+/* Print & PDF Export Optimization */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  body::before,
+  .site-header,
+  .top-notice-bar,
+  .hero-section,
+  #3d-studio,
+  #arbitrage-catalog,
+  #ai-assistant,
+  #benchmark,
+  #jerv-partnership,
+  .site-footer,
+  .calc-control-group,
+  .nav-actions {
+    display: none !important;
+  }
+
+  #tilbud-kalkulator {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .calculator-box {
+    background: #ffffff !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  .calc-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .quote-summary-card {
+    background: #ffffff !important;
+    border: 2px solid #000000 !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    padding: 24px !important;
+  }
+
+  .quote-summary-card h4,
+  .quote-summary-card strong,
+  .quote-summary-card span {
+    color: #000000 !important;
+  }
+
+  .quote-summary-card .summary-row {
+    border-bottom: 1px solid #cccccc !important;
+  }
+
+  .quote-summary-card .summary-row.total {
+    border-top: 2px solid #000000 !important;
+    color: #000000 !important;
+  }
+
+  .quote-summary-card button,
+  .quote-summary-card a {
+    display: none !important;
   }
 }

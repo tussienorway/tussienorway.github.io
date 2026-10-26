@@ -59,6 +59,7 @@
 
       <div class="nav-actions">
         <a href="#tilbud-kalkulator" class="btn btn-primary">Få B2B Tilbud</a>
+        <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Åpne meny" onclick="toggleMobileNav()">☰</button>
       </div>
     </div>
   </header>
@@ -200,6 +201,17 @@
                 <span class="preset-chip" onclick="applyLogoPreset('AGDER BYGG AS')">Agder Bygg</span>
                 <span class="preset-chip" onclick="applyLogoPreset('LILLESAND ENERGI')">Lillesand</span>
                 <span class="preset-chip" onclick="applyLogoPreset('NORDIC ARCTIC PRO')">Nordic Pro</span>
+              </div>
+
+              <!-- Upload Custom Logo File -->
+              <div class="logo-upload-box" id="logoDropzone" onclick="document.getElementById('customLogoFileInput').click()">
+                <input type="file" id="customLogoFileInput" accept="image/*" onchange="handleLogoFileUpload(event)">
+                <span style="font-size: 0.82rem; color: var(--hivis-yellow); font-weight: 700; display: block;">
+                  📁 Last opp egen logo (PNG / SVG / JPG)
+                </span>
+                <span style="font-size: 0.74rem; color: var(--text-muted); display: block; margin-top: 4px;" id="logoUploadStatus">
+                  Eller dra og slipp bildefil her for sanntids 3D-plassering
+                </span>
               </div>
             </div>
 
@@ -601,6 +613,81 @@
       alert(`Spesialdesign (${state.model}, logo: "${state.logoText}") er overført til tilbudskalkulatoren!`);
       const calcSec = document.getElementById('tilbud-kalkulator');
       if (calcSec) calcSec.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function toggleMobileNav() {
+      const navLinks = document.querySelector('.nav-links');
+      if (navLinks) {
+        navLinks.classList.toggle('open');
+      }
+    }
+
+    // Close mobile nav when clicking a link
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.nav-links a').forEach(a => {
+        a.addEventListener('click', () => {
+          const navLinks = document.querySelector('.nav-links');
+          if (navLinks) navLinks.classList.remove('open');
+        });
+      });
+
+      // Drag and drop setup for logo
+      const dropzone = document.getElementById('logoDropzone');
+      if (dropzone) {
+        ['dragenter', 'dragover'].forEach(eventName => {
+          dropzone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropzone.classList.add('drag-over');
+          }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+          dropzone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropzone.classList.remove('drag-over');
+          }, false);
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+          const dt = e.dataTransfer;
+          const files = dt.files;
+          if (files && files.length > 0) {
+            processLogoFile(files[0]);
+          }
+        }, false);
+      }
+    });
+
+    function handleLogoFileUpload(event) {
+      const file = event.target.files && event.target.files[0];
+      if (file) {
+        processLogoFile(file);
+      }
+    }
+
+    function processLogoFile(file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Vennligst last opp en bildefil (PNG, JPG, SVG eller WebP).');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = new Image();
+        img.onload = function () {
+          if (window.Profiltoy3D) {
+            window.Profiltoy3D.setLogoImage(img);
+          }
+          const status = document.getElementById('logoUploadStatus');
+          if (status) {
+            status.textContent = `✓ Aktiv logo: ${file.name} (${img.naturalWidth}x${img.naturalHeight}px)`;
+            status.style.color = '#34d399';
+          }
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
     }
 
     function promptApiKey() {
