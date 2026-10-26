@@ -1,0 +1,156 @@
+{
+  "bedrift": {
+    "navn": "Profiltøy AS",
+    "orgnr": "923 564 721",
+    "etablert": 2019,
+    "daglig_leder": "Arne Hoffmann Sletten",
+    "styreleder": "Øystein Salvesen",
+    "adresse": "Møglestuveien 35, 4790 Lillesand",
+    "kommune": "Lillesand (Agder)",
+    "telefon": "+47 40 60 70 96",
+    "epost": "post@profiltoy.no",
+    "offisiell_representant_utad": "Arne Austenå",
+    "arkitekt": "Tussie",
+    "partnere": [
+      {
+        "navn": "FK Jerv",
+        "rolle": "Offisiell Nettverkspartner & Leverandør av samband, vaktklær og beredskap på Levermyr Stadion",
+        "ikon": "⚽"
+      },
+      {
+        "navn": "Babysteps.no",
+        "rolle": "Søster- og familieselskap (baby- & barneutstyr)",
+        "ikon": "👶"
+      },
+      {
+        "navn": "Agder Næringsallianse",
+        "rolle": "B2B-leverandør for entreprenører og håndverkere på Sørlandet",
+        "ikon": "⚓"
+      }
+    ]
+  },
+  "konkurrent_analyse": {
+    "benchmark": [
+      {
+        "navn": "Engelbert Strauss (Tyskland/EU)",
+        "styrke": "Enormt utvalg, CI Configurator MY DESIGN, industriell kvalitet",
+        "svakhet": "Høy frakt/toll til Norge, ingen lokal Agder-tilstedeværelse eller personlig tilpasning på dagen"
+      },
+      {
+        "navn": "Blåkläder / Snickers Workwear",
+        "styrke": "Ekstrem slitestyrke, livstidsgaranti på sømmer",
+        "svakhet": "Tungrodd B2B-prosess, mangler rask interaktiv 3D-bestilling for små/mellomstore team"
+      },
+      {
+        "navn": "Printful / Vistaprint",
+        "styrke": "Smidig nettbasert mockup-generator",
+        "svakhet": "Kun promotering og tynne tekstiler, uegnet for EN ISO-sertifisert verneutstyr og nordisk vinter"
+      },
+      {
+        "navn": "Profiltøy AS Advantage (Denne plattformen)",
+        "styrke": "Lokal forankring i Lillesand + Levermyr/FK Jerv, sanntids 3D-studio for proffplagg, AI-rådgiver, arbitrage/dropshipping på marginsterke nisjeprodukter, lynrask B2B PDF-tilbudsgenerator"
+      }
+    ]
+  },
+  "katalog_arbitrage_dropship": [
+    {
+      "id": "smart-heat-jacket",
+      "tittel": "NordicShield™ Smart Karbon-Oppvarmet Vinterjakke",
+      "kategori": "Høy-Margin Arbitrage",
+      "beskrivelse": "3-soners grafén-varmepaneler drevet av 10 000 mAh USB-C PD. Vanntett (20 000 mm), pustende, perfekt for kaldt kystklima på Sørlandet.",
+      "innkjop_nok": 590,
+      "utsalgspris_nok": 1890,
+      "margin_prosent": 68.8,
+      "bilde_stil": "matte black, led temperature indicator button, rugged cordura shoulders",
+      "lagerstatus": "På lager hos sentrallager (2 dager levering)",
+      "badge": "Toppselger · Høy Margin"
+    },
+    {
+      "id": "titanium-bottle-laser",
+      "tittel": "AeroTitanium™ 750ml Vakuumisolert Termoflaske",
+      "kategori": "Premium B2B Merch",
+      "beskrivelse": "Ren grad-1 titan med permanent dyp fiberlasergravering av bedriftslogo. Holder kaffe varm i 18t, uknuselig på byggeplass.",
+      "innkjop_nok": 135,
+      "utsalgspris_nok": 490,
+      "margin_prosent": 72.4,
+      "bilde_stil": "brushed titanium, laser etched vector logo, tactical paracord loop",
+      "lagerstatus": "Lagerført (350+ stk i Lillesand)",
+      "badge": "Eksklusiv Profil"
+    },
+    {
+      "id": "poc-radio-vest",
+      "tittel": "TacticalComm™ POC Sambandsvest / Arrangørsele",
+      "kategori": "Samband & Sikkerhet",
+      "beskrivelse": "Spesialutviklet for arrangementsvakter og stadionpersonell (som på Levermyr for FK Jerv). Rommer Hytera/Motorola POC, mobil og førstehjelp.",
+      "innkjop_nok": 240,
+      "utsalgspris_nok": 790,
+      "margin_prosent": 69.6,
+      "bilde_stil": "hi-vis neon yellow / tactical black with MOLLE webbing and mic loop",
+      "lagerstatus": "På lager i Møglestuveien",
+      "badge": "FK Jerv Spesial"
+    },
+    {
+      "id": "recycled-pro-hoodie",
+      "tittel": "OceanFiber™ 380g Resirkulert Pro-Hettegenser",
+      "kategori": "Bærekraftig Profil",
+      "beskrivelse": "65% økologisk kjemmet bomull, 35% resirkulert havplast fra Skagerrak. Forsterkede albuer og dobbel kengerulomme med skjult glidelås.",
+      "innkjop_nok": 175,
+      "utsalgspris_nok": 540,
+      "margin_prosent": 67.6,
+      "bilde_stil": "deep navy melange, heavy ribbed cuffs, embroidery ready chest",
+      "lagerstatus": "Tilgjengelig for hurtigtrykk (1-2 dager)",
+      "badge": "Miljøvalg"
+    },
+    {
+      "id": "hi-vis-iso-shell",
+      "tittel": "SafeGuard™ ISO 20471 Klasse 3 Allvær Pro Skalljakke",
+      "kategori": "Sertifisert Verneutstyr",
+      "beskrivelse": "Klasse 3 varseltøy med 3M Scotchlite segmenterte reflekser for maksimal fleksibilitet. Testet for stormforhold og tøff kystentreprenør-bruk.",
+      "innkjop_nok": 480,
+      "utsalgspris_nok": 1490,
+      "margin_prosent": 67.8,
+      "bilde_stil": "hi-vis orange/navy, taped seams, reinforced forearm",
+      "lagerstatus": "På lager i alle størrelser (XS-5XL)",
+      "badge": "ISO Sertifisert"
+    },
+    {
+      "id": "merino-thermal-set",
+      "tittel": "ArcticBase™ 260g 100% Merinoull Undertøysett",
+      "kategori": "Arbeidstøy Innerlag",
+      "beskrivelse": "Kløfri merinoull for helårsarbeid. Leveres med diskret lasergravert lær-patch med bedriftslogo på bryst og lår.",
+      "innkjop_nok": 280,
+      "utsalgspris_nok": 890,
+      "margin_prosent": 68.5,
+      "bilde_stil": "anthracite charcoal, flatlock orange seams, genuine leather badge",
+      "lagerstatus": "Sesongfavoritt",
+      "badge": "100% Merino"
+    }
+  ],
+  "volum_rabatter": [
+    { "min_antall": 10, "rabatt_prosent": 0, "trykkrabatt": "Ordinær sats" },
+    { "min_antall": 25, "rabatt_prosent": 12, "trykkrabatt": "Gratis klisjé / oppsett" },
+    { "min_antall": 50, "rabatt_prosent": 22, "trykkrabatt": "Gratis oppsett + 20% trykkrabatt" },
+    { "min_antall": 100, "rabatt_prosent": 32, "trykkrabatt": "Gratis oppsett + gratis brysttrykk" },
+    { "min_antall": 250, "rabatt_prosent": 42, "trykkrabatt": "Full VIP Partnerpris & fri levering Agder" }
+  ],
+  "ai_anbefalinger": [
+    {
+      "bransje": "Bygg & Anlegg",
+      "plagg": ["SafeGuard™ ISO 20471 Klasse 3 Skalljakke", "NordicShield™ Smart Vinterjakke", "AeroTitanium™ Termoflaske"],
+      "trykkmetode": "Reflekstransfer og forsterket broderi for ekstrem slitasje",
+      "tips": "Husk at logoer på varseltøy ikke kan dekke mer enn 100 cm² for å opprettholde EN ISO 20471 Klasse 3."
+    },
+    {
+      "bransje": "Idrett & Klubb / Event",
+      "plagg": ["TacticalComm™ Sambandsvest", "OceanFiber™ Resirkulert Pro-Hettegenser", "AeroTitanium™ Termoflaske"],
+      "trykkmetode": "Høyoppløselig silketrykk / myk transfer for maksimal komfort",
+      "tips": "Levermyr-standard: Kampdagsverter trenger sambandslomme med mic-feste på venstre skulder."
+    },
+    {
+      "bransje": "Kontor & Salgsteam / B2B Representasjon",
+      "plagg": ["OceanFiber™ 380g Resirkulert Pro-Hettegenser", "AeroTitanium™ 750ml Termoflaske", "ArcticBase™ Merinosett"],
+      "trykkmetode": "Toned-in-toned eksklusivt brystbroderi eller lasergravert skinnpatch",
+      "tips": "Minimalistisk branding gir 4x høyere sannsynlighet for at de ansatte bruker plagget også på fritiden."
+    }
+  ]
+}

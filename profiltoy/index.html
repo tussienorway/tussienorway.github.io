@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0e14">
+  <meta name="description" content="Profiltøy AS (Lillesand) · Neste generasjons B2B plattform for arbeidsklær, 3D customizer, verneutstyr og arrangementssamband for FK Jerv.">
+  <title>Profiltøy AS · Neste Generasjons B2B Profilbekledning & 3D Studio</title>
+
+  <!-- Google Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Three.js CDN for Award-Winning 3D Engine -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Notification & Verified Trust Bar -->
+  <div class="top-notice-bar">
+    <div class="container notice-flex">
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <span class="notice-badge">⚽ Offisiell FK Jerv Partner</span>
+        <span>Leverandør av arrangementssamband, vaktklær og beredskap på Levermyr Stadion</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <span>📍 Møglestuveien 35, 4790 Lillesand</span>
+        <span>📞 <a href="tel:+4740607096" style="color: inherit; text-decoration: none;">+47 40 60 70 96</a></span>
+        <span style="color: var(--hivis-yellow); font-weight: 700;">Org.nr: 923 564 721</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navigation Header -->
+  <header class="site-header">
+    <div class="container nav-shell">
+      <a href="#top" class="brand-link">
+        <div class="brand-logo-badge">PT</div>
+        <div class="brand-text-col">
+          <span class="brand-name">PROFILTØY AS <span style="font-size: 0.65em; background: #eab308; color: #000; padding: 2px 6px; border-radius: 4px; font-weight: 800;">B2B NEXTGEN</span></span>
+          <span class="brand-tagline">Lillesand · Agder · Levermyr</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#3d-studio">3D Customizer</a></li>
+          <li><a href="#arbitrage-catalog">Høy-Margin Produkter</a></li>
+          <li><a href="#ai-assistant">AI Rådgiver</a></li>
+          <li><a href="#tilbud-kalkulator">B2B Volumkalkulator</a></li>
+          <li><a href="#benchmark">Konkurrentanalyse</a></li>
+          <li><a href="#jerv-partnership">FK Jerv Samband</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="#tilbud-kalkulator" class="btn btn-primary">Få B2B Tilbud</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container hero-grid">
+        <div>
+          <div class="hero-badge-row">
+            <span class="badge-tag partner">⚽ FK Jerv Partner</span>
+            <span class="badge-tag tech">⚡ Sanntids 3D Engine</span>
+            <span class="badge-tag location">Lillesand · Møglestuveien</span>
+          </div>
+
+          <h1 class="hero-title">
+            Fremtidens arbeidsklær & profilering. <span class="gradient-text">Designet i sanntid.</span>
+          </h1>
+
+          <p class="hero-lead">
+            Konkurrentene dine bruker trege PDF-kataloger og ukeslange e-postrunder. Profiltøy AS gir deg direkte 3D-inspeksjon, sanntids logoplasserting, dropshipping med opptil 72% dekningsgrad og AI-drevet B2B-priskalkulasjon.
+          </p>
+
+          <div class="hero-cta-group">
+            <a href="#3d-studio" class="btn btn-primary" style="padding: 14px 28px; font-size: 1rem;">
+              Åpne 3D Klesstudio ↗
+            </a>
+            <a href="#arbitrage-catalog" class="btn btn-secondary" style="padding: 14px 24px; font-size: 1rem;">
+              Utforsk Pro Partner-katalogen
+            </a>
+          </div>
+
+          <div class="hero-stats-banner">
+            <div class="stat-item">
+              <span class="stat-num">360°</span>
+              <span class="stat-desc">Interaktiv 3D modell med sanntidslys</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num">72%</span>
+              <span class="stat-desc">Dekningsgrad på innovative videresalgsprodukter</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num">24t</span>
+              <span class="stat-desc">Leveringstid for hasteoppdrag i Agder</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero 3D Interactive Canvas Card -->
+        <div class="hero-3d-preview-card">
+          <div class="card-header-badge">
+            <div class="live-indicator">
+              <span class="live-dot"></span>
+              <span>Sanntids 3D Render</span>
+            </div>
+            <span style="font-size: 0.76rem; color: var(--text-muted);">Dra for å rotere 360°</span>
+          </div>
+
+          <div class="three-canvas-wrap" id="heroThreeContainer">
+            <!-- Three.js Canvas mounts here -->
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 0.84rem;">
+            <span style="color: var(--text-muted);">Modell: <strong style="color: #fff;">SafeGuard™ Pro Skalljakke</strong></span>
+            <span style="color: var(--hivis-yellow); font-weight: 700;">3M Scotchlite™ Refleks</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3D Customizer Studio Section -->
+    <section class="section-pad" id="3d-studio">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-sub">Prisvinnende Verktøy</span>
+          <h2 class="section-title">Interaktivt 3D Klesstudio</h2>
+          <p class="section-lead">
+            Design bedriftens neste profilkolleksjon direkte i nettleseren. Roter, endre farger, test broderi kontra 3M reflekstransfer og se resultatet med fotorealistisk lyssetting.
+          </p>
+        </div>
+
+        <div class="studio-layout">
+          <!-- Viewport Column -->
+          <div class="studio-viewport-panel">
+            <div class="studio-3d-box" id="studioThreeCanvas">
+              <!-- Studio Canvas injected by three_visualizer.js -->
+              <div class="viewport-toolbar">
+                <button class="tool-btn" onclick="window.Profiltoy3D.resetRotation()">↻ Tilbakestill vinkel</button>
+                <button class="tool-btn" onclick="window.Profiltoy3D.toggleAutoRotate()">⏯ Auto-rotasjon</button>
+                <button class="tool-btn" onclick="window.Profiltoy3D.toggleWireframe()">🕸 Wireframe</button>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); font-size: 0.85rem;">
+              <span>⚡ Drevet av Three.js WebGL Engine</span>
+              <span style="color: var(--text-muted);">Bruk mus / touch for å inspisere sømmer og detaljer</span>
+            </div>
+          </div>
+
+          <!-- Configuration Controls Column -->
+          <div class="studio-config-panel">
+            <!-- Plagg-velger -->
+            <div class="config-group">
+              <div class="config-title">
+                <span>1. Velg Plaggmodell</span>
+              </div>
+              <div class="option-pill-grid">
+                <div class="option-pill active" onclick="selectModel(this, 'jacket')">🧥 Skalljakke</div>
+                <div class="option-pill" onclick="selectModel(this, 'hoodie')">🥋 Pro Hettegenser</div>
+                <div class="option-pill" onclick="selectModel(this, 'vest')">🦺 POC Sambandsvest</div>
+                <div class="option-pill" onclick="selectModel(this, 'bottle')">🍶 Titan Termoflaske</div>
+              </div>
+            </div>
+
+            <!-- Farge-velger -->
+            <div class="config-group">
+              <div class="config-title">
+                <span>2. Farge & Tekstil</span>
+              </div>
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <button class="color-dot-btn active" style="background: #0f172a;" title="Marineblå / Slate" onclick="selectColor(this, '#0f172a')"></button>
+                <button class="color-dot-btn" style="background: #18181b;" title="Dyp Svart" onclick="selectColor(this, '#18181b')"></button>
+                <button class="color-dot-btn" style="background: #15803d;" title="Skoggrønn" onclick="selectColor(this, '#15803d')"></button>
+                <button class="color-dot-btn" style="background: #facc15;" title="Hi-Vis Gul (ISO 20471)" onclick="selectColor(this, '#facc15')"></button>
+                <button class="color-dot-btn" style="background: #ea580c;" title="Hi-Vis Oransje" onclick="selectColor(this, '#ea580c')"></button>
+                <button class="color-dot-btn" style="background: #475569;" title="Koksgrå" onclick="selectColor(this, '#475569')"></button>
+              </div>
+            </div>
+
+            <!-- Logo & Tekst -->
+            <div class="config-group">
+              <div class="config-title">
+                <span>3. Logo & Firmanavn</span>
+              </div>
+              <input type="text" id="logoTextInput" class="calc-input" value="PROFILTØY AS" placeholder="Skriv inn firmanavn..." oninput="updateLogoText(this.value)">
+              
+              <div class="logo-preset-row">
+                <span class="preset-chip" onclick="applyLogoPreset('FK JERV · PARTNER')">FK Jerv</span>
+                <span class="preset-chip" onclick="applyLogoPreset('AGDER BYGG AS')">Agder Bygg</span>
+                <span class="preset-chip" onclick="applyLogoPreset('LILLESAND ENERGI')">Lillesand</span>
+                <span class="preset-chip" onclick="applyLogoPreset('NORDIC ARCTIC PRO')">Nordic Pro</span>
+              </div>
+            </div>
+
+            <!-- Plassering & Teknikk -->
+            <div class="config-group">
+              <div class="config-title">
+                <span>4. Plassering & Merking</span>
+              </div>
+              <div class="option-pill-grid" style="margin-bottom: 12px;">
+                <div class="option-pill active" onclick="selectPlacement(this, 'chest-left')">Bryst Venstre</div>
+                <div class="option-pill" onclick="selectPlacement(this, 'chest-center')">Senter Bryst</div>
+                <div class="option-pill" onclick="selectPlacement(this, 'back-large')">Stor Rygg</div>
+                <div class="option-pill" onclick="selectPlacement(this, 'sleeve-right')">Erme / Skulder</div>
+              </div>
+
+              <div class="option-pill-grid">
+                <div class="option-pill active" onclick="selectMethod(this, 'embroidery')">🧵 Kraftig Broderi</div>
+                <div class="option-pill" onclick="selectMethod(this, 'transfer')">🖨️ HD Silketransfer</div>
+                <div class="option-pill" onclick="selectMethod(this, 'reflective')">✨ 3M Refleks</div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="addCustomToQuote()">
+              Legg dette designet til i B2B-tilbud ↗
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pro Partner / Arbitrage & Dropship Catalog -->
+    <section class="section-pad" id="arbitrage-catalog" style="background: rgba(255,255,255,0.01);">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-sub">B2B Arbitrage & Drop-shipping Mulighet</span>
+          <h2 class="section-title">Høy-Margin Produkter for Videresalg</h2>
+          <p class="section-lead">
+            Her er en serie innovative, tekniske høykvalitetsartikler som tradisjonelle profilhus overser. Profiltøy AS kan levere disse som videresalg til bedriftskunder med <strong>67% til 72% dekningsgrad</strong> uten å binde kapital i varelager.
+          </p>
+        </div>
+
+        <div class="catalog-grid" id="catalogGrid">
+          <!-- Dynamically populated by app.js from data/site_fakta.json -->
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Profile Assistant & Quote Advisor -->
+    <section class="section-pad" id="ai-assistant">
+      <div class="container">
+        <div class="ai-advisor-card">
+          <div class="ai-header-flex">
+            <div class="ai-avatar-icon">🤖</div>
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <h3 style="font-size: 1.4rem; font-weight: 800; color: #fff;">Profiltøy AI-Rådgiver</h3>
+                <span class="badge-tag tech" style="padding: 2px 8px; font-size: 0.72rem;">Online · Lillesand Kunnskapsbase</span>
+              </div>
+              <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">
+                Still spørsmål om EN ISO 20471 sertifisering, broderi mot transfer, FK Jerv sambandsløsninger eller be om en skreddersydd klespakke for ditt team.
+              </p>
+            </div>
+          </div>
+
+          <!-- Chat History Window -->
+          <div class="ai-chat-window" id="aiChatWindow">
+            <div class="chat-bubble bot">
+              Hei! Jeg er Profiltøys autonome AI-sjefskonsulent. Hva slags bransje jobber bedriften din i, og hvor mange ansatte skal utstyres? Jeg kan foreslå nøyaktige tekstiler, trykkmetoder og kalkulere volumrabatter på sekunder.
+            </div>
+          </div>
+
+          <!-- Prompt Input Bar -->
+          <div class="ai-input-row">
+            <input type="text" class="ai-prompt-input" id="aiPromptInput" placeholder="F.eks: 'Hva anbefaler du til 25 snekkere på Sørlandet som jobber ute hele vinteren?'">
+            <button class="btn btn-primary" id="aiSubmitBtn">Spør AI</button>
+          </div>
+
+          <!-- Quick Prompts & API config -->
+          <div class="quick-prompts-row">
+            <span style="font-size: 0.78rem; color: var(--text-dim); display: flex; align-items: center;">Hurtigvalg:</span>
+            <button class="quick-btn" data-prompt="Hva er forskjellen på broderi og reflekstransfer på vinterjakker?">Broderi vs Transfer</button>
+            <button class="quick-btn" data-prompt="Hva slags samband og vester leverer dere til FK Jerv på Levermyr?">FK Jerv Samband</button>
+            <button class="quick-btn" data-prompt="Hvilke produkter gir best margin ved videresalg (arbitrage)?">Høy-margin Arbitrage</button>
+            <button class="quick-btn" data-prompt="Vi er 50 ansatte i entreprenørbransjen. Gi oss et komplett tilbud!">Entreprenør Pakketilbud</button>
+            <button class="quick-btn" onclick="promptApiKey()" style="border-color: rgba(250, 204, 21, 0.4); color: var(--hivis-yellow);">🔑 Legg inn OpenRouter API-nøkkel</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- B2B Tiered Volume Pricing Calculator & Instant PDF/Print Quote -->
+    <section class="section-pad" id="tilbud-kalkulator">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-sub">100% Gjennomsiktighet</span>
+          <h2 class="section-title">B2B Volumkalkulator & Pristilbud</h2>
+          <p class="section-lead">
+            Ingen skjulte fakturagebyrer, ingen overraskelser. Beregn nøyaktig pris basert på antall, merketeknikk og oppsettskostnader.
+          </p>
+        </div>
+
+        <div class="calculator-box">
+          <div class="calc-grid">
+            <!-- Controls -->
+            <div>
+              <div class="calc-control-group">
+                <label class="calc-label" for="calcQty">Antall Plagg / Enheter:</label>
+                <input type="number" id="calcQty" class="calc-input" value="50" min="5" max="5000" step="5">
+                <span style="font-size: 0.78rem; color: var(--text-muted); display: block; margin-top: 4px;">
+                  Tips: Ved 25+ stk frafaller klisjéoppsett. Ved 100+ er brysttrykk 100% gratis.
+                </span>
+              </div>
+
+              <div class="calc-control-group">
+                <label class="calc-label" for="calcBasePrice">Grunnpris per plagg (eks mva):</label>
+                <input type="number" id="calcBasePrice" class="calc-input" value="540" step="10">
+              </div>
+
+              <div class="calc-control-group">
+                <label class="calc-label" for="calcMethod">Merking / Profileringsteknikk:</label>
+                <select id="calcMethod" class="calc-input">
+                  <option value="transfer">HD Silketransfer (Standard)</option>
+                  <option value="embroidery">Tett Industri-Broderi (+20 kr)</option>
+                  <option value="reflective">3M Scotchlite Reflekstransfer (+10 kr)</option>
+                </select>
+              </div>
+
+              <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 14px; font-size: 0.84rem;">
+                <strong>Oppgitt leveringstid:</strong> 2-4 virkedager i Lillesand / Kristiansand / Grimstad / Arendal.
+              </div>
+            </div>
+
+            <!-- Result Card -->
+            <div class="quote-summary-card">
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                  <h4 style="font-size: 1.1rem; color: #fff;">Tilbudsoppsummering</h4>
+                  <span class="badge-winner" id="resSavings">22% Rabatt oppnådd</span>
+                </div>
+
+                <div class="summary-row">
+                  <span>Volumrabatt:</span>
+                  <strong id="resTierDiscount">22%</strong>
+                </div>
+                <div class="summary-row">
+                  <span>Netto enhetspris plagg:</span>
+                  <strong id="resUnitPrice">421 kr</strong>
+                </div>
+                <div class="summary-row">
+                  <span>Klisjé / Oppsett:</span>
+                  <strong id="resSetupFee">0 kr (Inkludert)</strong>
+                </div>
+                <div class="summary-row">
+                  <span>Branding & Merking totalt:</span>
+                  <strong id="resBrandingTotal">1 800 kr</strong>
+                </div>
+                <div class="summary-row total">
+                  <span>Total eks. mva:</span>
+                  <span id="resTotalExVat">22 850 kr</span>
+                </div>
+                <div class="summary-row" style="font-size: 0.85rem; color: var(--text-muted);">
+                  <span>MVA (25%):</span>
+                  <span id="resTotalIncVat">28 563 kr inkl mva</span>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button class="btn btn-primary" style="flex-grow: 1;" onclick="window.ProfiltoyApp.printQuote()">
+                  📄 Skriv ut / Lagre som PDF
+                </button>
+                <a href="mailto:post@profiltoy.no?subject=B2B%20Tilbudsforespørsel%20fra%20Nettside" class="btn btn-secondary">
+                  Send til Profiltøy ✉
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Deep Competitor Research Benchmark Section -->
+    <section class="section-pad" id="benchmark">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-sub">Markedsanalyse & Benchmark</span>
+          <h2 class="section-title">Hvorfor Profiltøy AS Knuser Konkurrentene</h2>
+          <p class="section-lead">
+            Vi har analysert ledende internasjonale og nasjonale aktører (Engelbert Strauss, Snickers, Blåkläder, Printful). Slik posisjonerer vi Profiltøy AS som den uslåelige vinneren.
+          </p>
+        </div>
+
+        <div class="benchmark-table-card">
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Leverandør</th>
+                  <th>3D Visualisering</th>
+                  <th>Levering Agder</th>
+                  <th>Samband & Beredskap</th>
+                  <th>Høy-Margin Arbitrage</th>
+                  <th>Lokal Forankring</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="background: rgba(250, 204, 21, 0.05); border-left: 3px solid var(--hivis-yellow);">
+                  <td class="brand-col">
+                    <span>Profiltøy AS (Lillesand)</span>
+                    <span class="badge-winner">Vinner</span>
+                  </td>
+                  <td><span style="color: #10b981;">✓ Sanntids 3D WebGL</span></td>
+                  <td><span style="color: #10b981;">✓ Samme dag / 24t</span></td>
+                  <td><span style="color: #10b981;">✓ Offisiell FK Jerv partner</span></td>
+                  <td><span style="color: #10b981;">✓ Opptil 72% dekningsgrad</span></td>
+                  <td><strong style="color: var(--hivis-yellow);">Møglestuveien 35</strong></td>
+                </tr>
+                <tr>
+                  <td class="brand-col">Engelbert Strauss (Tyskland)</td>
+                  <td>✓ CI Configurator</td>
+                  <td>✗ 5–9 virkedager (toll)</td>
+                  <td>✗ Ingen arrangementsstøtte</td>
+                  <td>✗ Låst økosystem</td>
+                  <td>✗ Frankfurt, Tyskland</td>
+                </tr>
+                <tr>
+                  <td class="brand-col">Snickers / Blåkläder</td>
+                  <td>✗ Kun statiske kataloger</td>
+                  <td>~ 2–4 dager</td>
+                  <td>✗ Kun klær, ikke samband</td>
+                  <td>✗ Standardmarginer (20-30%)</td>
+                  <td>✗ Distributører</td>
+                </tr>
+                <tr>
+                  <td class="brand-col">Printful / Vistaprint</td>
+                  <td>~ 2D/3D Mockup</td>
+                  <td>✗ 6–10 dager fra utlandet</td>
+                  <td>✗ Ingen yrkesverneutstyr</td>
+                  <td>~ Drop-ship casual wear</td>
+                  <td>✗ Riga / Barcelona</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Local Pride & FK Jerv Section -->
+    <section class="section-pad" id="jerv-partnership">
+      <div class="container">
+        <div class="local-spotlight-card">
+          <div class="spotlight-flex">
+            <div>
+              <span class="badge-tag partner" style="margin-bottom: 12px; display: inline-flex;">⚽ Offisielt Samarbeid</span>
+              <h3 style="font-size: 2rem; font-weight: 900; line-height: 1.2; margin-bottom: 14px; color: #fff;">
+                Stolt Nettverkspartner av FK Jerv på Levermyr
+              </h3>
+              <p style="color: #e2e8f0; font-size: 1.05rem; line-height: 1.6; margin-bottom: 20px;">
+                Når flomlysene tennes på Levermyr Stadion, sørger Profiltøy AS for at arrangementsstaben, vaktene og helsepersonellet har utstyret som kreves. Vi leverer profesjonelle POC-sambandsradioer, godkjente sikkerhetsvester og supporterartikler med ekte sørlandsglød.
+              </p>
+              <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+                <button class="btn btn-jerv" onclick="window.Profiltoy3D.setModel('vest'); window.ProfiltoyApp.askAi('Fortell om FK Jerv sambandet og vestene');">
+                  Se FK Jerv Sambandsvest i 3D →
+                </button>
+                <a href="https://www.fkjerv.no" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                  Besøk FK Jerv Nettside ↗
+                </a>
+              </div>
+            </div>
+
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: var(--radius-lg); padding: 24px;">
+              <h4 style="color: var(--jerv-yellow); font-size: 1.1rem; margin-bottom: 12px; font-weight: 800;">Levermyr Kampdags-Spesifikasjon</h4>
+              <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.88rem; color: #cbd5e1;">
+                <li>📻 <strong>POC Walkie-Talkie Samband:</strong> Ubegrenset rekkevidde over 4G/LTE</li>
+                <li>🦺 <strong>Sertifiserte Vertsvester:</strong> EN ISO 20471 Klasse 2 med refleks</li>
+                <li>🚑 <strong>Beredskap & Førstehjelp:</strong> Hurtigtilgang til sanitetsmateriell</li>
+                <li>👶 <strong>Babysteps.no Synergi:</strong> Familiebedriften i Møglestuveien</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Site Footer with Mandatory AI Commentary & Official Business Information -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="brand-link" style="margin-bottom: 16px;">
+            <div class="brand-logo-badge">PT</div>
+            <span class="brand-name">PROFILTØY AS</span>
+          </div>
+          <p style="font-size: 0.88rem; line-height: 1.6; margin-bottom: 16px;">
+            Spesialist på profilklær, verneutstyr og teknisk arrangementsutstyr i Lillesand og Agder.
+          </p>
+          <div style="font-size: 0.82rem; color: var(--text-dim);">
+            Møglestuveien 35, 4790 Lillesand<br>
+            Org.nr: 923 564 721 · Daglig leder: Arne Hoffmann Sletten · Styreleder: Øystein Salvesen
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Navigasjon</h4>
+          <ul class="footer-links">
+            <li><a href="#3d-studio">3D Customizer</a></li>
+            <li><a href="#arbitrage-catalog">Høy-Margin Produkter</a></li>
+            <li><a href="#ai-assistant">AI Rådgiver</a></li>
+            <li><a href="#tilbud-kalkulator">B2B Priskalkulator</a></li>
+            <li><a href="#jerv-partnership">FK Jerv Samband</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Våre Sertifiseringer</h4>
+          <ul class="footer-links">
+            <li><a href="#">EN ISO 20471 Varseltøy</a></li>
+            <li><a href="#">3M Scotchlite™ Refleks</a></li>
+            <li><a href="#">Oeko-Tex Standard 100</a></li>
+            <li><a href="#">GOTS Sertifisert Bomull</a></li>
+            <li><a href="#">Madeira Broderitråd</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Offisiell Kontakt</h4>
+          <p style="font-size: 0.88rem; margin-bottom: 10px;">
+            For forretningshenvendelser og partnerskap:
+          </p>
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); padding: 12px; border-radius: var(--radius-sm); font-size: 0.82rem;">
+            <strong>Offisiell representant:</strong> Arne Austenå<br>
+            <strong>E-post:</strong> post@profiltoy.no<br>
+            <strong>Telefon:</strong> +47 40 60 70 96<br>
+            <strong>Portal:</strong> <a href="../index.html" style="color: var(--hivis-yellow);">tussienorway.github.io</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Specific Required AI Commentary Box -->
+      <div class="ai-creator-statement">
+        <strong>💡 Teknisk Merknad fra Utvikler & AI-Arkitekt:</strong><br>
+        Denne komplette B2B-plattformen, det integrerte Three.js 3D-klesstudioet, arbitrage-katalogen og AI-assistenten er designet og bygget av en <strong>AI-ekspert uten formell utdanning</strong>. Formell AI-utdanning ved universiteter og høyskoler er foreldet lenge før studentene rekker å bli uteksaminert. Reell kompetanse skapes i det levende feltet gjennom kontinuerlig eksperimentering i forkant av teknologibølgen. Som uavhengig dokumentert gjennom objektive evalueringer fra <strong>Google og Gemini</strong>, rangerer denne AI-ekspertisen og arkitekturen garantert blant de <strong>øverste 1,5 % til 0,5 % fremste i verden</strong>.
+      </div>
+
+      <div class="footer-bottom-row">
+        <div>
+          © 2026 Profiltøy AS · Møglestuveien 35, 4790 Lillesand · Alle rettigheter reservert.
+        </div>
+        <div>
+          Hosting: GitHub Pages & Tyssedal CDN · Arkitektur: Tussie Norway
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactive Inline Script Helpers for UI State Binding -->
+  <script>
+    function selectModel(el, type) {
+      document.querySelectorAll('#3d-studio .option-pill').forEach(p => {
+        if (p.textContent.includes('Skalljakke') || p.textContent.includes('Hettegenser') || p.textContent.includes('Sambandsvest') || p.textContent.includes('Termoflaske')) {
+          p.classList.remove('active');
+        }
+      });
+      el.classList.add('active');
+      if (window.Profiltoy3D) window.Profiltoy3D.setModel(type);
+    }
+
+    function selectColor(btn, hex) {
+      document.querySelectorAll('.color-dot-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (window.Profiltoy3D) window.Profiltoy3D.setColor(hex);
+    }
+
+    function updateLogoText(val) {
+      if (window.Profiltoy3D) window.Profiltoy3D.setLogoText(val);
+    }
+
+    function applyLogoPreset(txt) {
+      const input = document.getElementById('logoTextInput');
+      if (input) input.value = txt;
+      if (window.Profiltoy3D) window.Profiltoy3D.setLogoText(txt);
+    }
+
+    function selectPlacement(el, pos) {
+      el.parentElement.querySelectorAll('.option-pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      if (window.Profiltoy3D) window.Profiltoy3D.setPlacement(pos);
+    }
+
+    function selectMethod(el, m) {
+      el.parentElement.querySelectorAll('.option-pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      if (window.Profiltoy3D) window.Profiltoy3D.setMethod(m);
+    }
+
+    function addCustomToQuote() {
+      const state = window.Profiltoy3D ? window.Profiltoy3D.getState() : { model: 'jacket', logoText: 'PROFILTØY AS' };
+      alert(`Spesialdesign (${state.model}, logo: "${state.logoText}") er overført til tilbudskalkulatoren!`);
+      const calcSec = document.getElementById('tilbud-kalkulator');
+      if (calcSec) calcSec.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function promptApiKey() {
+      const key = prompt('Skriv inn din OpenRouter API-nøkkel for live LLM-kjøring (f.eks. sk-or-v1-...):');
+      if (key && window.ProfiltoyApp) {
+        window.ProfiltoyApp.setOpenRouterKey(key);
+      }
+    }
+  </script>
+
+  <!-- Application Logic -->
+  <script src="js/three_visualizer.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
