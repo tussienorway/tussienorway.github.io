@@ -65,11 +65,19 @@ const Data = (() => {
 
   /* nabobygg + veier fra OpenStreetMap */
   async function surroundings(lat, lon, radius = 140) {
-    const q = `[out:json][timeout:25];(way["building"](around:${radius},${lat},${lon});way["highway"]["highway"!~"footway|path|steps|cycleway|track"](around:${radius},${lat},${lon}););out geom;`;
+    const q = `[out:json][timeout:10];(way["building"](around:${radius},${lat},${lon});way["highway"]["highway"!~"footway|path|steps|cycleway|track"](around:${radius},${lat},${lon}););out geom;`;
     const endpoints = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter'];
     for (const ep of endpoints) {
       try {
-        const j = await json(ep, { method: 'POST', body: 'data=' + encodeURIComponent(q), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+        const controller = new AbortController();
+        const tid = setTimeout(() => controller.abort(), 6000);
+        const j = await json(ep, {
+          method: 'POST',
+          body: 'data=' + encodeURIComponent(q),
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          signal: controller.signal
+        });
+        clearTimeout(tid);
         const buildings = [], roads = [];
         for (const el of j.elements || []) {
           if (!el.geometry) continue;

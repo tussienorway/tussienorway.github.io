@@ -81,5 +81,13 @@
       const body = `Navn: ${f.get('navn')}\nFirma: ${f.get('firma') || '-'}\nE-post: ${f.get('epost')}\nTelefon: ${f.get('tlf') || '-'}\nType: ${f.get('type')}\nHvor: ${f.get('hvor')}\n\n${f.get('beskrivelse')}\n\n--- Henvendelse via Lindal Modul AI ---\nOffisiell representant: Arne Austenå\n\n--- Tomteanalyse (JSON) ---\n${JSON.stringify(Planner.context(), null, 1)}`;
       location.href = `mailto:post@lindalgruppen.no?subject=${encodeURIComponent('Arkitekthjelp (Att: Arne Austenå) – ' + (f.get('hvor') || f.get('type')))}&body=${encodeURIComponent(body)}`;
     });
+
+    // Forhåndslast Lindal Modul sitt eget fabrikkområde (Vennevannsveien 5, Tvedestrand)
+    // slik at tomteplanleggeren, 3D-viseren og AI-assistenten er 100% operative og levende fra første sekund
+    setTimeout(() => {
+      if (!Planner.state.plot) {
+        pick({ text: 'Vennevannsveien 5', sted: '4900 Tvedestrand', kommune: 'Tvedestrand', lat: 58.6128, lon: 8.901 });
+      }
+    }, 400);
   });
 })();
