@@ -464,6 +464,8 @@ const Planner = (() => {
   function context() {
     if (!S.plot) return null;
     const c = S.current || fullEval(S.house.cx, S.house.cy, S.house.facing), h = c.h;
+    const existing = $('clearPlot').checked ? 0 : S.env.buildings.filter(b => b.onPlot).reduce((s, b) => s + b.area, 0);
+    const byaTot = h.footprint + 36 + existing;
     return {
       adresse: S.address ? `${S.address.text}${S.address.sted ? ', ' + S.address.sted : ''}` : null,
       kommune: S.address && S.address.kommune, gnrbnr: S.plot.props.matrikkelnummertekst,
@@ -471,7 +473,7 @@ const Planner = (() => {
       eksisterende_bygg_paa_tomta: S.env.buildings.filter(b => b.onPlot).length, nabobygg: S.env.buildings.filter(b => !b.onPlot).length,
       hus: { type: LEVELS[h.level].name, moduler: h.modules, etasjer: h.floors, tak: h.roof, fotavtrykk: `${h.W.toFixed(1)} x ${h.D.toFixed(1)} m`, BYA_m2: Math.round(h.footprint), BRA_m2: Math.round(h.bra), gesims_m: +h.gesims.toFixed(1), mone_m: +h.mone.toFixed(1) },
       plassering: { hovedfasade_mot: `${Math.round(c.facing)}° (${compassName(c.facing)})`, min_avstand_nabogrense_m: +c.minDist.toFixed(1), krav_avstand_m: +c.req.toFixed(1), hage_foran_m: Math.round(c.garden), terrengfall_under_hus_m: +c.terrainDiff.toFixed(1), vei_avstand_m: c.roadDist != null ? Math.round(c.roadDist) : null, soltimer_jevndogn: c.eq.hours, soltimer_sankthans: c.su.hours, sol_kl15_jevndogn: c.sun15, ai_score: Math.round(c.score), gyldig: c.valid },
-      bya_prosent_inkl_parkering: +(100 * (h.footprint + 36) / S.plot.area).toFixed(1), maks_bya: +$('maxBya').value
+      bya_prosent_inkl_parkering: +(100 * byaTot / S.plot.area).toFixed(1), maks_bya: +$('maxBya').value
     };
   }
 
@@ -535,8 +537,11 @@ const Planner = (() => {
       document.querySelectorAll('.preset').forEach(b => b.classList.toggle('active', b === btn));
       S.suggestions = []; $('suggestions').innerHTML = ''; refresh();
     });
-    document.querySelector('.preset[data-id="enebolig"]').classList.add('active');
-    ['modCount', 'modLen', 'modWidth', 'floors', 'roof', 'level', 'setback', 'maxBya'].forEach(id => $(id).addEventListener('input', refresh));
+    document.querySelector('.preset[data-id="enebolig"]')?.classList.add('active');
+    ['modCount', 'modLen', 'modWidth', 'floors', 'roof', 'level', 'setback', 'maxBya'].forEach(id => {
+      $(id).addEventListener('input', refresh);
+      $(id).addEventListener('change', refresh);
+    });
     $('clearPlot').addEventListener('change', () => { drawEnv(); refresh(); });
     document.querySelectorAll('.step').forEach(s => s.onclick = () => goStep(+s.dataset.step));
     $('btnOptimize').onclick = optimize;

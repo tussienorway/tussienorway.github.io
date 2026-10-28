@@ -171,12 +171,15 @@ input[type=range]{accent-color:var(--red);width:100%}
 .viewer-3d-box{margin:14px 0;background:linear-gradient(180deg,#fcfbf9,#f2f0eb);border:1px solid var(--line);border-radius:10px;padding:12px;position:relative}
 .viewer-3d-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .viewer-3d-head span{font:600 .82rem "Roboto Slab";color:var(--dark);letter-spacing:.5px}
-.viewer-3d-canvas{width:100%;height:220px;border-radius:6px;cursor:grab;display:block;background:#f9f9f8}
+.viewer-3d-canvas{width:100%;height:220px;border-radius:6px;cursor:grab;display:block;background:#f9f9f8;touch-action:none}
 .viewer-3d-canvas:active{cursor:grabbing}
 .viewer-3d-controls{display:flex;justify-content:space-between;align-items:center;margin-top:8px;gap:6px;flex-wrap:wrap}
+.mat-group{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .mat-btns{display:flex;gap:4px}
 .mat-btn{border:1px solid var(--line);background:#fff;border-radius:4px;padding:3px 8px;font-size:.72rem;cursor:pointer;font-weight:600}
 .mat-btn.active{border-color:var(--red);color:var(--red);background:#fef6f6}
+.bim-export-btns{display:flex;gap:4px}
+.bim-export-btns .btn{padding:3px 8px;font-size:.72rem}
 
 /* Eco badge & stats */
 .eco-box{background:linear-gradient(135deg,#eaf5ed,#f6fbf7);border:1px solid #c0dfca;border-radius:8px;padding:12px 14px;margin:12px 0;font-size:.85rem;color:#1e4b2d}

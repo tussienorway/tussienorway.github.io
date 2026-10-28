@@ -48,6 +48,8 @@
     if (typeof Viewer3D !== 'undefined' && $('module3D')) {
       Viewer3D.init('module3D');
       if ($('btnReset3D')) $('btnReset3D').onclick = () => Viewer3D.resetView();
+      if ($('btnExportIFC')) $('btnExportIFC').onclick = () => Viewer3D.exportIFC();
+      if ($('btnExportOBJ')) $('btnExportOBJ').onclick = () => Viewer3D.exportOBJ();
       document.querySelectorAll('.mat-btn').forEach(btn => {
         btn.onclick = () => {
           document.querySelectorAll('.mat-btn').forEach(b => b.classList.remove('active'));

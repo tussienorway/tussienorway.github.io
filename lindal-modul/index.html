@@ -89,12 +89,18 @@
             </div>
             <canvas id="module3D" class="viewer-3d-canvas"></canvas>
             <div class="viewer-3d-controls">
-              <span class="hint" style="margin:0">Kledning:</span>
-              <div class="mat-btns">
-                <button type="button" class="mat-btn active" data-mat="furu">🌲 Malmfuru</button>
-                <button type="button" class="mat-btn" data-mat="mork">🖤 Brent tre</button>
-                <button type="button" class="mat-btn" data-mat="rod">🔴 Falu Rød</button>
-                <button type="button" class="mat-btn" data-mat="eik">🪵 Lys Eik</button>
+              <div class="mat-group">
+                <span class="hint" style="margin:0">Kledning:</span>
+                <div class="mat-btns">
+                  <button type="button" class="mat-btn active" data-mat="furu">🌲 Malmfuru</button>
+                  <button type="button" class="mat-btn" data-mat="mork">🖤 Brent tre</button>
+                  <button type="button" class="mat-btn" data-mat="rod">🔴 Falu Rød</button>
+                  <button type="button" class="mat-btn" data-mat="eik">🪵 Lys Eik</button>
+                </div>
+              </div>
+              <div class="bim-export-btns">
+                <button type="button" class="btn btn-ghost small" id="btnExportIFC" title="Last ned IFC 2x3 BIM-modell for Archicad, Revit og Vectorworks">📥 IFC (BIM)</button>
+                <button type="button" class="btn btn-ghost small" id="btnExportOBJ" title="Last ned 3D Wavefront OBJ-modell">📦 3D (.OBJ)</button>
               </div>
             </div>
           </div>
