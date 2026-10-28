@@ -329,6 +329,48 @@
         </a>
       </section>
 
+      <!-- Utvalgt Prosjekt Showroom: Ødegarden Planteskole & Anleggsgartner AI -->
+      <section aria-label="Utvalgt prosjekt: Ødegarden Planteskole" style="margin-bottom: 28px;">
+        <div style="background: linear-gradient(135deg, #0e1e12 0%, #17381e 50%, #0d2818 100%); color: #fff; padding: 24px; border-radius: 22px; box-shadow: var(--shadow); border: 2px solid rgba(74, 222, 128, 0.4);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; margin-bottom: 16px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap;">
+                <span style="background: rgba(74, 222, 128, 0.2); border: 1px solid #4ade80; color: #86efac; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.06em;">Gartneri & Vinterdrift</span>
+                <span style="background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; color: #bbf7d0; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 9999px;">Bergemoen · Grimstad</span>
+              </div>
+              <strong style="font-size: 1.35rem; letter-spacing: -0.02em; display: block; color: #ffffff;">Ødegården Planteskole & Anleggsgartner · SmartDrift KI & Sci-Fi Lab</strong>
+              <span style="color: #cbd5e1; font-size: 0.92rem; display: block; margin-top: 4px; max-width: 680px; line-height: 1.5;">
+                Omfattende webløsning for Ødegården med 11 spesialiserte sider: SmartDrift KI-partistyring, HoloGarden 3D, NeuroScan pikselanalyse, interaktive kalkulatorer for hekk, stein og brøyting, samt komplett løsvekt- og anleggsoversikt.
+              </span>
+            </div>
+          </div>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <a href="https://tussienorway.github.io/odegarden/" style="display: inline-flex; align-items: center; gap: 8px; background: #22c55e; color: #052e16; font-weight: 800; font-size: 0.88rem; padding: 10px 18px; border-radius: 12px; text-decoration: none;">
+              🌱 Åpne Ødegården Hovedportal →
+            </a>
+            <a href="https://tussienorway.github.io/odegarden/scifi-lab.html" style="display: inline-flex; align-items: center; gap: 8px; background: #14532d; color: #86efac; font-weight: 700; font-size: 0.88rem; padding: 10px 18px; border-radius: 12px; text-decoration: none; border: 1px solid rgba(74, 222, 128, 0.5);">
+              🔬 Åpne Sci-Fi Lab (HoloGarden & NeuroScan) →
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Utvalgt Prosjekt Showroom: Cloudroom Briefing -->
+      <section aria-label="Utvalgt prosjekt: Cloudroom Briefing" style="margin-bottom: 28px;">
+        <a href="cloudroom/" style="display: flex; justify-content: space-between; align-items: center; gap: 16px; background: linear-gradient(135deg, #06101e 0%, #0c2340 100%); color: #fff; padding: 20px 24px; border-radius: 20px; text-decoration: none; box-shadow: var(--shadow); border: 1px solid rgba(0, 243, 255, 0.35); transition: transform 0.16s, box-shadow 0.16s;">
+          <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+            <div style="background: rgba(0, 243, 255, 0.15); border: 1px solid #00f3ff; color: #67e8f9; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.06em;">Agent Distro · Video Briefing</div>
+            <div>
+              <strong style="font-size: 1.15rem; letter-spacing: -0.02em; display: block;">Cloudroom · Autonom Agent-Arkitektur & Briefing</strong>
+              <span style="color: #94a3b8; font-size: 0.88rem;">60s video-briefing, lokal silisium-sikkerhet (RTX 5060 Ti) og autonom koordinering</span>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.92rem; color: #00f3ff; white-space: nowrap;">
+            Åpne briefing <span style="font-size: 1.2em;">→</span>
+          </div>
+        </a>
+      </section>
+
       <section aria-labelledby="projects-title">
         <div class="section-heading">
           <div><h2 id="projects-title">Utforsk prosjektene</h2><p class="section-copy">Søk, sorter og finn en nettside eller et repo.</p></div>
@@ -437,12 +479,30 @@
     function saveCache() {
       try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: state.fetchedAt, repos: state.repos })); } catch {}
     }
+    const FALLBACK_REPOS = [
+      { name: "odegarden", description: "Ødegården Planteskole og Anleggsgartner – Hagesenter, anleggsgartner, brøyting, løsvekt og SmartDrift KI", html_url: "https://github.com/tussienorway/odegarden", has_pages: true, archived: false, language: "HTML", topics: ["gartner", "grimstad", "landscaping"], updated_at: "2026-10-28T23:29:21Z", homepage: "https://tussienorway.github.io/odegarden/", stars: 0 },
+      { name: "tussienorway.github.io", description: "Oversikt over alle nettsidene og AI-showroomene mine", html_url: "https://github.com/tussienorway/tussienorway.github.io", has_pages: true, archived: false, language: "HTML", topics: ["portfolio", "showrooms"], updated_at: "2026-10-28T23:04:29Z", homepage: "https://tussienorway.github.io/", stars: 0 },
+      { name: "anbud-brett", description: "Offentlig anbudsbrett for KI-oppgaver (Hermes legger ut, alle kan levere)", html_url: "https://github.com/tussienorway/anbud-brett", has_pages: true, archived: false, language: "Python", topics: ["ai", "anbud"], updated_at: "2026-10-28T17:15:04Z", homepage: "https://tussienorway.github.io/anbud-brett/", stars: 0 },
+      { name: "tussienorway", description: "tussienorway: local AI agents, memory integrity and documented open-source work", html_url: "https://github.com/tussienorway/tussienorway", has_pages: false, archived: false, language: "Markdown", topics: ["profile", "documentation"], updated_at: "2026-10-28T15:14:30Z", homepage: null, stars: 0 },
+      { name: "odysseus", description: "Self-hosted AI workspace (dokumentert minneintegritet PR #6955)", html_url: "https://github.com/tussienorway/odysseus", has_pages: false, archived: false, language: "TypeScript", topics: ["ai-workspace", "memory"], updated_at: "2026-10-28T14:56:22Z", homepage: "https://odysseus-dev.github.io/odysseus", stars: 0 },
+      { name: "godteri-kupp", description: "Godteritilbud under 120 kr fra norske kundeaviser. Virker på mobil og kan brukes fra andre nettsteder.", html_url: "https://github.com/tussienorway/godteri-kupp", has_pages: true, archived: false, language: "Python", topics: ["tilbud", "kundeaviser"], updated_at: "2026-10-21T00:36:07Z", homepage: "https://tussienorway.github.io/godteri-kupp/", stars: 0 },
+      { name: "steinli", description: "Steinli: Eiendoms- og anleggstjenester", html_url: "https://github.com/tussienorway/steinli", has_pages: true, archived: false, language: "JavaScript", topics: ["anlegg", "eiendom"], updated_at: "2026-10-20T00:04:46Z", homepage: "https://tussienorway.github.io/steinli/", stars: 0 },
+      { name: "majere-research", description: "Open research: Norwegian (Bokmål/Nynorsk) LLMs with reliable tool calling on a 16 GB GPU", html_url: "https://github.com/tussienorway/majere-research", has_pages: false, archived: false, language: "Python", topics: ["llm", "norwegian", "research"], updated_at: "2026-10-14T04:29:56Z", homepage: "https://majere.thomasaustenaa.no", stars: 0 },
+      { name: "majere-site", description: "Majere project site (majere.thomasaustenaa.no)", html_url: "https://github.com/tussienorway/majere-site", has_pages: true, archived: false, language: "HTML", topics: ["majere", "research-site"], updated_at: "2026-10-14T04:29:37Z", homepage: "https://majere.thomasaustenaa.no", stars: 0 },
+      { name: "majere-nofc", description: "NO-FC: Norwegian (Bokmål/Nynorsk) function-calling benchmark + QLoRA pilot for 16 GB GPUs", html_url: "https://github.com/tussienorway/majere-nofc", has_pages: false, archived: false, language: "Python", topics: ["benchmark", "function-calling"], updated_at: "2026-10-13T19:38:44Z", homepage: "https://majere.thomasaustenaa.no", stars: 0 },
+      { name: "TussieCars", description: "TussieCars: arcade combat racer in 3D med VR, Android og WiFi multiplayer.", html_url: "https://github.com/tussienorway/TussieCars", has_pages: true, archived: false, language: "GDScript", topics: ["godot", "vr", "game"], updated_at: "2026-10-12T22:22:26Z", homepage: "https://tussienorway.github.io/TussieCars/", stars: 0 },
+      { name: "status", description: "Offisiell drift- og systemstatus for tussienorway", html_url: "https://github.com/tussienorway/status", has_pages: true, archived: false, language: "HTML", topics: ["status", "monitoring"], updated_at: "2026-10-12T20:31:19Z", homepage: "https://tussienorway.github.io/status/", stars: 0 },
+      { name: "huggingface", description: "Lokale LLM-er for Hermes Agent på RTX 5060 Ti 16 GB", html_url: "https://github.com/tussienorway/huggingface", has_pages: true, archived: false, language: "JavaScript", topics: ["llm", "huggingface"], updated_at: "2026-10-12T20:26:54Z", homepage: "https://tussienorway.github.io/huggingface/", stars: 0 },
+      { name: "mortal-shell", description: "Mortal Shell interaktiv guide og database", html_url: "https://github.com/tussienorway/mortal-shell", has_pages: true, archived: false, language: "HTML", topics: ["gaming", "guide"], updated_at: "2026-10-12T13:15:43Z", homepage: "https://tussienorway.github.io/mortal-shell/", stars: 0 },
+      { name: "bg3-guide", description: "Spoilervennlig nybegynnerguide for Baldur's Gate 3", html_url: "https://github.com/tussienorway/bg3-guide", has_pages: true, archived: false, language: "HTML", topics: ["gaming", "guide"], updated_at: "2026-10-10T16:29:44Z", homepage: "https://tussienorway.github.io/bg3-guide/", stars: 0 },
+      { name: "3d-printer", description: "Mitt 3D-printerprosjekt (Creality Ender-3 V3 KE)", html_url: "https://github.com/tussienorway/3d-printer", has_pages: true, archived: false, language: "HTML", topics: ["3d-printing"], updated_at: "2026-10-26T00:25:36Z", homepage: "https://tussienorway.github.io/3d-printer/", stars: 0 }
+    ];
     function loadCache() {
       try {
         const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
         if (cached && Array.isArray(cached.repos) && cached.repos.every(repo => repo && typeof repo.name === 'string')) return cached;
       } catch {}
-      return null;
+      return { t: '2026-10-28T23:30:00Z', repos: FALLBACK_REPOS };
     }
     function setMessage(kind, text) {
       const message = $('#message');
