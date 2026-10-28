@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arkitekter | AI-tomteplanlegger | Lindal Modul</title>
+<meta name="description" content="Lindal Modul arkitekter – se hvor huset ditt bør stå på tomta. AI-plassering, sol- og skyggestudie, regelsjekk og modulkonfigurator.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Roboto+Slab:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a href="#" class="logo"><img src="https://www.lindalmodul.no/wp-content/uploads/2021/01/lindal-modul-300x88.png" alt="Lindal Modul" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'logo-text',textContent:'LINDAL MODUL'}))"></a>
+    <nav class="mainnav">
+      <a href="#planlegger">Tomteplanlegger <span class="pill">AI</span></a>
+      <a href="#tjenester">Tjenester</a>
+      <a href="#referanser">Referanser</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+    <a href="#kontakt" class="btn btn-red">Be om tilbud</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="wrap hero-inner">
+    <p class="eyebrow">Lindal Modul Arkitekter</p>
+    <h1>Se hvor huset ditt bør stå – før du tegner en eneste strek</h1>
+    <p class="lead">Skriv inn adressen din. Vår AI henter tomtegrensen fra Kartverket, finner den beste plasseringen for sol, hage og terreng, og sjekker avstander og høyder mot plan- og bygningsloven.</p>
+    <form class="hero-search" id="heroSearch" autocomplete="off">
+      <input type="text" id="heroAddress" placeholder="Skriv adresse, f.eks. Vennevannsveien 5, Tvedestrand">
+      <button class="btn btn-red" type="submit">Analyser tomta</button>
+    </form>
+    <div class="hero-stats">
+      <div><b>1 min</b><span>tomteanalyse</span></div>
+      <div><b>365 dager</b><span>sol- og skyggestudie</span></div>
+      <div><b>PBL §29-4</b><span>automatisk regelsjekk</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PLANNER ================= -->
+<section id="planlegger" class="planner-section">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">AI-tomteplanlegger</p>
+      <h2>Hvor skal huset stå?</h2>
+      <p>Fire steg: finn tomta, velg huset, la AI-en plassere det, og finjuster med sol- og skyggesimulering.</p>
+    </div>
+
+    <div class="planner">
+      <aside class="panel">
+        <div class="steps">
+          <button class="step active" data-step="1"><span>1</span>Tomt</button>
+          <button class="step" data-step="2"><span>2</span>Hus</button>
+          <button class="step" data-step="3"><span>3</span>AI-plassering</button>
+          <button class="step" data-step="4"><span>4</span>Sol & regler</button>
+        </div>
+
+        <!-- STEP 1 -->
+        <div class="step-body" data-body="1">
+          <label class="lbl">Adresse eller gnr/bnr</label>
+          <div class="search-box">
+            <input type="text" id="address" placeholder="Søk adresse…" autocomplete="off">
+            <div id="suggest" class="suggest"></div>
+          </div>
+          <p class="hint">Eller klikk direkte på kartet for å velge en tomt.</p>
+          <div id="plotInfo" class="info-card hidden"></div>
+          <div class="row-btns">
+            <button class="btn btn-ghost small" id="btnDrawPlot">Tegn tomt selv</button>
+            <button class="btn btn-ghost small hidden" id="btnFinishDraw">Ferdig tegnet</button>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step-body hidden" data-body="2">
+          <label class="lbl">Hustype</label>
+          <div class="presets" id="presets"></div>
+
+          <!-- 3D Modulmodell Visualisator -->
+          <div class="viewer-3d-box">
+            <div class="viewer-3d-head">
+              <span>🏠 3D Modulviser (dra for å rotere, rull for zoom)</span>
+              <button type="button" class="btn btn-ghost small" id="btnReset3D" style="padding:2px 8px;font-size:.7rem">Nullstill visning</button>
+            </div>
+            <canvas id="module3D" class="viewer-3d-canvas"></canvas>
+            <div class="viewer-3d-controls">
+              <span class="hint" style="margin:0">Kledning:</span>
+              <div class="mat-btns">
+                <button type="button" class="mat-btn active" data-mat="furu">🌲 Malmfuru</button>
+                <button type="button" class="mat-btn" data-mat="mork">🖤 Brent tre</button>
+                <button type="button" class="mat-btn" data-mat="rod">🔴 Falu Rød</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid2">
+            <label>Moduler per etasje<input type="number" id="modCount" min="1" max="8" value="3"></label>
+            <label>Modullengde (m)<input type="number" id="modLen" min="6" max="14" step="0.1" value="10.2"></label>
+            <label>Modulbredde (m)<input type="number" id="modWidth" min="3" max="4.5" step="0.1" value="3.9"></label>
+            <label>Etasjer<input type="number" id="floors" min="1" max="3" value="2"></label>
+            <label>Tak<select id="roof"><option value="saltak">Saltak</option><option value="pult">Pulttak</option><option value="flatt">Flatt tak</option></select></label>
+            <label>Leveranse<select id="level"><option value="modul">Komplette moduler</option><option value="kledd">Elementer ferdig kledd</option><option value="ukledd">Elementer uten kledning</option><option value="precut">Prekapp kjerne</option></select></label>
+          </div>
+          <div id="houseSummary" class="info-card"></div>
+
+          <div id="ecoSummary" class="eco-box">
+            <h4>🌱 Bærekraft & Miljøfyrtårn 2026</h4>
+            <div id="ecoStats">Beregner karbonlagring i trevirke...</div>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step-body hidden" data-body="3">
+          <label class="lbl">Hva er viktigst for deg?</label>
+          <div class="weights">
+            <label>☀️ Sol på terrassen <input type="range" id="wSun" min="0" max="10" value="8"></label>
+            <label>🌳 Stor hage foran huset <input type="range" id="wGarden" min="0" max="10" value="6"></label>
+            <label>⛰️ Flatt terreng (lite graving) <input type="range" id="wTerrain" min="0" max="10" value="6"></label>
+            <label>🚗 Kort innkjørsel <input type="range" id="wAccess" min="0" max="10" value="4"></label>
+            <label>🏔️ Høyt og utsikt <input type="range" id="wView" min="0" max="10" value="3"></label>
+          </div>
+          <div class="grid2">
+            <label>Avstand nabogrense (m)<input type="number" id="setback" min="0" max="15" step="0.5" value="4"></label>
+            <label>Maks BYA (%)<input type="number" id="maxBya" min="5" max="100" value="30"></label>
+          </div>
+          <label class="chk"><input type="checkbox" id="clearPlot"> Eksisterende bygg på tomta skal rives</label>
+          <button class="btn btn-red full" id="btnOptimize">🤖 Finn beste plassering med AI</button>
+          <div id="optProgress" class="progress hidden"><div></div></div>
+          <div id="suggestions"></div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="step-body hidden" data-body="4">
+          <label class="lbl">Dato</label>
+          <div class="date-presets">
+            <button data-date="03-20" class="chip active">Vårjevndøgn</button>
+            <button data-date="06-21" class="chip">Sankthans</button>
+            <button data-date="09-22" class="chip">Høst</button>
+            <button data-date="12-21" class="chip">Vinter</button>
+            <input type="date" id="dateInput">
+          </div>
+          <label class="lbl">Klokkeslett: <b id="timeLbl">15:00</b></label>
+          <input type="range" id="timeSlider" min="4" max="23" step="0.25" value="15">
+          <button class="btn btn-ghost small" id="btnPlay">▶ Spill av dagen</button>
+          <div id="sunInfo" class="info-card"></div>
+          <label class="lbl">Manuell justering</label>
+          <label>Rotasjon (hovedfasade mot): <b id="rotLbl">180°</b><input type="range" id="rotSlider" min="0" max="359" value="180"></label>
+          <p class="hint">Dra den røde markøren for å flytte huset.</p>
+          <div id="checks"></div>
+          <div class="row-btns">
+            <button class="btn btn-red small" id="btnToContact">Send til arkitekt</button>
+            <button class="btn btn-ghost small" id="btnReport">Skriv ut tomterapport</button>
+          </div>
+        </div>
+      </aside>
+
+      <div class="map-wrap">
+        <div id="map"></div>
+        <div class="map-tools">
+          <button id="layerTopo" class="active">Kart</button>
+          <button id="layerSat">Flyfoto</button>
+        </div>
+        <div class="compass" id="compass"><div class="needle"></div><span>N</span></div>
+        <div class="legend">
+          <span><i style="background:#75151E"></i>Ditt hus</span>
+          <span><i style="border:2px dashed #4D87BD;background:transparent"></i>Tomtegrense</span>
+          <span><i style="background:rgba(77,135,189,.25)"></i>Byggegrense</span>
+          <span><i style="background:rgba(0,0,0,.35)"></i>Skygge</span>
+        </div>
+        <div id="toast" class="toast hidden"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= AI ASSISTANT ================= -->
+<section class="assistant-section">
+  <div class="wrap assistant-grid">
+    <div>
+      <p class="eyebrow">AI-arkitektassistent</p>
+      <h2>Spør om tomta, byggesøknaden eller modulene</h2>
+      <p>Assistenten kjenner tomteanalysen din, Lindals produkter og de viktigste reglene i plan- og bygningsloven. Den kan skrive prosjektbeskrivelsen til arkitekten for deg.</p>
+      <div class="quick">
+        <button data-q="Oppsummer tomteanalysen min">Oppsummer tomta</button>
+        <button data-q="Beregn CO2-besparelse i tre">🌱 CO2 & Bærekraft</button>
+        <button data-q="Hva koster et modulbygg?">Kostnadsestimat</button>
+        <button data-q="Trenger jeg å søke om byggetillatelse?">Må jeg søke?</button>
+        <button data-q="Hvilken leveranse fra Lindal passer meg?">Hvilken leveranse?</button>
+        <button data-q="Lag en sjekkliste for byggesøknad">Sjekkliste byggesøknad</button>
+        <button data-q="Hvor lang tid tar det å bygge?">Byggetid</button>
+        <button data-q="Skriv prosjektbeskrivelse til arkitekten">Skriv prosjektbeskrivelse</button>
+      </div>
+      <details class="ai-settings">
+        <summary>⚙️ AI-motor og innstillinger</summary>
+        <p class="hint">Som standard brukes innebygd sanntidsmotor samt automatisk oppkobling mot lokal Llama-server (127.0.0.1:8080). Du kan også koble til Google Gemini.</p>
+        <label style="font-size:.78rem;font-weight:600;display:block;margin:6px 0 2px">Velg motor:</label>
+        <select id="aiProvider" style="width:100%;padding:6px;margin-bottom:6px">
+          <option value="auto">Automatisk (Lokal Llama 8080 / Sanntid)</option>
+          <option value="llama">Lokal Llama-Server (127.0.0.1:8080)</option>
+          <option value="gemini">Google Gemini API</option>
+        </select>
+        <input type="password" id="apiKey" placeholder="Gemini API-nøkkel (valgfritt)">
+        <input type="text" id="apiModel" value="gemini-2.5-flash">
+        <button class="btn btn-ghost small" id="btnSaveKey">Lagre innstillinger</button>
+      </details>
+    </div>
+    <div class="chat">
+      <div class="chat-head"><span class="dot"></span>Lindal AI <small id="aiMode">lokal modus</small></div>
+      <div class="chat-log" id="chatLog"></div>
+      <form class="chat-input" id="chatForm">
+        <input type="text" id="chatText" placeholder="Skriv et spørsmål…" autocomplete="off">
+        <button class="btn btn-red" type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SERVICES ================= -->
+<section id="tjenester" class="services">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Arkitektkontor med røtter i Halvorsen Arkitekter i Grimstad</p>
+      <h2>Vi tilbyr arkitekttjenester for alle typer prosjekter</h2>
+    </div>
+    <div class="cards">
+      <article><h3>Bolig og fritidsbygg</h3><p>Arkitekttegninger og prosjektering for eneboliger, tomannsboliger, rekkehus og fritidseiendommer – skreddersydd for deg og din tomt.</p></article>
+      <article><h3>Nærings- og offentlige bygg</h3><p>Funksjonelle og representative bygg for næringsliv, kommuner og organisasjoner, tilpasset universell utforming.</p></article>
+      <article><h3>Byggesøknad og regulering</h3><p>Vi håndterer søknadsprosessen mot kommunen, utarbeider situasjonskart, tegninger og nabovarsler.</p></article>
+      <article><h3>Tilbygg og rehabilitering</h3><p>Utvid eller pusse opp med en løsning som ivaretar helheten og tilfører ny verdi.</p></article>
+      <article><h3>Modulbygg med arkitektur</h3><p>Arkitekttjenestene integreres direkte i elementproduksjonen – funksjonelt design og industriell presisjon i én leveranse.</p></article>
+      <article class="ai-card"><h3>AI-tomteanalyse <span class="pill">NY</span></h3><p>Tomtegrense, terreng, sol, skygge og regelsjekk på ett minutt – grunnlaget for konseptutvikling og gjennomførbarhet.</p><a href="#planlegger">Prøv nå →</a></article>
+    </div>
+    <div class="strength">
+      <img src="https://www.lindalmodul.no/wp-content/uploads/2023/11/Lindalgruppen_sept_2023-77-2-1024x683.jpg" alt="Produksjon hos Lindal Modul" loading="lazy">
+      <div>
+        <h2>Arkitektur og produksjon under ett tak</h2>
+        <p>Våre arkitekter jobber tett med produksjonsteamet fra dag én. Det gir raskere prosess, færre endringer i byggefasen og bedre kostnadsstyring. Nå starter samarbeidet enda tidligere: AI-analysen av tomta di går rett inn i arkitektens arbeidsgrunnlag.</p>
+        <a href="#kontakt" class="btn btn-red">Ta kontakt med oss</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= REFERENCES ================= -->
+<section id="referanser" class="refs">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Referanser</p>
+      <h2>Arkitektur og modulbygg i praksis</h2>
+    </div>
+    <div class="ref-grid" id="refGrid"></div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="kontakt" class="contact">
+  <div class="wrap contact-grid">
+    <div>
+      <h2>Ta kontakt med oss</h2>
+      <div class="person lead-contact">
+        <span class="badge">DAGLIG LEDER & OFFISIELL REPRESENTANT</span>
+        <b>Arne Austenå</b>
+        <span>Daglig leder / Selskapets representant for AI- og modulsatsingen</span>
+        <a href="mailto:post@lindalgruppen.no">post@lindalgruppen.no</a>
+        <a href="tel:+4790170100">901 70 100</a>
+      </div>
+      <div class="person"><b>Morten Birkedal</b><span>Bygningsingeniør og arkitekt</span><a href="mailto:morten.birkedal@lindalgruppen.no">morten.birkedal@lindalgruppen.no</a><a href="tel:+4791791577">917 91 577</a></div>
+      <div class="person"><b>Ole Einar Johnsen</b><span>Sivilarkitekt og tømrer</span><a href="mailto:ole.einar@lindalgruppen.no">ole.einar@lindalgruppen.no</a><a href="tel:+4792889083">928 89 083</a></div>
+    </div>
+    <form class="contact-form" id="contactForm">
+      <h3>Ønsker du arkitekthjelp til ditt prosjekt?</h3>
+      <div class="grid2">
+        <input name="navn" placeholder="Navn" required>
+        <input name="firma" placeholder="Firmanavn">
+        <input name="epost" type="email" placeholder="E-postadresse" required>
+        <input name="tlf" placeholder="Telefonnummer">
+      </div>
+      <select name="type">
+        <option>Bolig</option><option>Fritidsbolig</option><option>Leiligheter</option><option>Næringsbygg</option><option>Offentlig bygg</option><option>Tilbygg og rehabilitering</option><option>Annet / usikker</option>
+      </select>
+      <input name="hvor" id="cfWhere" placeholder="Hvor skal det bygges?">
+      <textarea name="beskrivelse" id="cfDesc" rows="7" placeholder="Kort beskrivelse av prosjektet"></textarea>
+      <button type="button" class="btn btn-ghost small" id="btnAutoDesc">🤖 Fyll ut fra tomteanalysen</button>
+      <button class="btn btn-red full" type="submit">Send forespørsel til Arne Austenå</button>
+      <p class="hint">All informasjon behandles konfidensielt, og henvendelsen er helt uforpliktende.</p>
+    </form>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap footer-grid">
+    <div><b>LINDAL MODUL AS</b><p>Vennevannsveien 5, 4900 Tvedestrand<br>Telefon 901 70 100<br>post@lindalgruppen.no<br>Offisiell representant: Arne Austenå</p></div>
+    <div><b>Selskapene i gruppen</b><p>Lindal Gruppen · Lindal Hus · Lindal Eiendom · Ljøstad Maskinutleie · Husfjell</p></div>
+    <div><b>Datakilder</b><p>© Kartverket / Geonorge (adresse, eiendom, høydedata, kart) · © OpenStreetMap-bidragsytere. Analysen er veiledende og erstatter ikke reguleringsplan eller kommunens vurdering.</p></div>
+  </div>
+</footer>
+
+<div id="report" class="report"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/geo.js"></script>
+<script src="js/sun.js"></script>
+<script src="js/data.js"></script>
+<script src="js/viewer3d.js"></script>
+<script src="js/planner.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
