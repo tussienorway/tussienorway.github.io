@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tussienorway.github.io/sitemap.xml

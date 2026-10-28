@@ -1,0 +1,10 @@
+{
+  "author": "tussienorway",
+  "checked_on": "2026-10-28",
+  "pull_request": "https://github.com/odysseus-dev/odysseus/pull/6955",
+  "commit": "2b2c3ae290a7e975d7557c7fa80dfccb4b72ec23",
+  "pr_status_at_check": "open, not merged",
+  "local_tests": {"passed": 44, "warnings": 6, "xfail": 0, "scope": "seven relevant test files, not the full project suite or upstream CI"},
+  "runtime": {"app_root_http": 200, "model_endpoints": 0, "synthetic_facts_after": 2, "status": "skipped", "result": "scanned 2 memories, no duplicates", "error": null, "scope": "isolated local HTTP API check using synthetic data", "additional_attempt": "aborted by scheduling; not counted as successful validation"},
+  "development": "AI-assisted; automated diff review is not human maintainer review"
+}
