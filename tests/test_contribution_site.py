@@ -61,6 +61,7 @@ class ContributionSiteTests(unittest.TestCase):
                     self.assertTrue(path.is_file(), f"Broken internal link: {filename}: {href}")
 
     def test_sitemap_and_robots(self):
+        # Trusted, version-controlled sitemap only; no downloaded XML or user input.
         tree = ElementTree.parse(ROOT / "sitemap.xml")
         urls = [e.text for e in tree.findall("{*}url/{*}loc")]
         self.assertEqual(set(urls), {BASE + p for p in PAGES})
