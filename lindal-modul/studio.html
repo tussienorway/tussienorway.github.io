@@ -1,0 +1,3583 @@
+<!DOCTYPE html>
+<html lang="nb" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lindal Modul — Studio | Arkitektur- og konfigurasjonsprototype</title>
+  <meta name="description" content="Uavhengig konseptutkast og interaktivt arkitekturstudio for modulbasert boligbygging, elementleveranse og precut.">
+  <style>
+    /* ==========================================================================
+       1. DESIGN TOKENS & NORDISK ARKITEKTURMAGASIN-TYPografi
+       ========================================================================== */
+    :root {
+      --bg-chalk: #F4F1EA;
+      --bg-chalk-alt: #EFECE4;
+      --bg-panel: #FAF8F3;
+      --ink-black: #141615;
+      --ink-muted: #4A4F4C;
+      --ink-subtle: #6E7370;
+      --forest-deep: #1B3024;
+      --forest-mid: #233E2E;
+      --forest-tint: #E4EBE7;
+      --copper: #B86B43;
+      --copper-dark: #944F2B;
+      --copper-tint: #F5E9E2;
+      --hairline: #D6D1C4;
+      --hairline-dark: #B5AFA0;
+      --status-warn-bg: #F9EFE6;
+      --status-warn-fg: #8A4215;
+      --status-err-bg: #F9E6E6;
+      --status-err-fg: #8A1C1C;
+      --status-ok-bg: #E6EFE9;
+      --status-ok-fg: #1B432C;
+
+      --font-serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+
+      --touch-min: 44px;
+      --max-w: 1480px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      background-color: var(--bg-chalk);
+      color: var(--ink-black);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-color: var(--bg-chalk);
+    }
+
+    /* Tilgjengelighet & Tastaturfokus */
+    :focus-visible {
+      outline: 3px solid var(--copper-dark);
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* ==========================================================================
+       2. TYPOGRAFI & REDAKSJONELLE ELEMENTER
+       ========================================================================== */
+    .serif-display {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.08;
+    }
+
+    .mono-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+    }
+
+    .mono-val {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ==========================================================================
+       3. LAYOUT & TEKNISK RUTENETT
+       ========================================================================== */
+    .container-grid {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      border-left: 1px solid var(--hairline);
+      border-right: 1px solid var(--hairline);
+    }
+
+    .concept-banner {
+      background-color: var(--ink-black);
+      color: var(--bg-chalk);
+      padding: 0.5rem 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 1px solid #2C302E;
+    }
+
+    .concept-badge {
+      background-color: var(--copper);
+      color: #FFFFFF;
+      padding: 0.15rem 0.5rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background-color: rgba(244, 241, 234, 0.96);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--hairline-dark);
+    }
+
+    .header-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.25rem;
+      gap: 1rem;
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--ink-black);
+    }
+
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: 1.45rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-sub {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--copper-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .main-nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+      padding: 0.5rem 0.85rem;
+      color: var(--ink-black);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: 1px solid transparent;
+      transition: background-color 0.15s, border-color 0.15s;
+    }
+
+    .nav-link:hover {
+      background-color: var(--bg-chalk-alt);
+      border-color: var(--hairline-dark);
+    }
+
+    .nav-link .num {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--copper-dark);
+      margin-right: 0.4rem;
+    }
+
+    /* Knapper - Minst 44x44px */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: 0.6rem 1.15rem;
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid var(--ink-black);
+      background-color: transparent;
+      color: var(--ink-black);
+      transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+    }
+
+    .btn:hover {
+      background-color: var(--bg-chalk-alt);
+    }
+
+    .btn-primary {
+      background-color: var(--forest-deep);
+      border-color: var(--forest-deep);
+      color: #FFFFFF;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--forest-mid);
+      border-color: var(--forest-mid);
+    }
+
+    .btn-copper {
+      background-color: var(--copper-dark);
+      border-color: var(--copper-dark);
+      color: #FFFFFF;
+    }
+
+    .btn-copper:hover {
+      background-color: var(--copper);
+      border-color: var(--copper);
+    }
+
+    .btn-sm {
+      min-height: var(--touch-min);
+      padding: 0.4rem 0.85rem;
+      font-size: 0.8125rem;
+    }
+
+    .btn-active {
+      background-color: var(--ink-black);
+      color: var(--bg-chalk);
+    }
+
+    .btn-active:hover {
+      background-color: #2A2E2C;
+      color: var(--bg-chalk);
+    }
+
+    /* ==========================================================================
+       4. SEKSJON 01: HERO (ASYMMETRISK REDAKSJONELL KOMPOSISJON)
+       ========================================================================== */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      border-bottom: 1px solid var(--hairline-dark);
+    }
+
+    @media (min-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 7fr 5fr;
+      }
+    }
+
+    .hero-editorial {
+      padding: 2.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    @media (min-width: 1024px) {
+      .hero-editorial {
+        padding: 4rem 3rem;
+        border-bottom: none;
+        border-right: 1px solid var(--hairline-dark);
+      }
+    }
+
+    .hero-title {
+      font-size: clamp(2.2rem, 4.2vw, 3.85rem);
+      margin: 1rem 0 1.5rem 0;
+      color: var(--ink-black);
+    }
+
+    .hero-lead {
+      font-size: 1.125rem;
+      color: var(--ink-muted);
+      max-width: 62ch;
+      margin-bottom: 2rem;
+      line-height: 1.65;
+    }
+
+    .facts-ledger {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--hairline);
+      margin-top: 2rem;
+    }
+
+    @media (min-width: 640px) {
+      .facts-ledger {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .fact-item {
+      padding-right: 0.75rem;
+    }
+
+    .fact-item dt {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      color: var(--copper-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .fact-item dd {
+      font-size: 0.9rem;
+      color: var(--ink-black);
+      font-weight: 500;
+    }
+
+    .hero-technical {
+      background-color: var(--bg-chalk-alt);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    @media (min-width: 1024px) {
+      .hero-technical {
+        padding: 2.5rem;
+      }
+    }
+
+    .tech-viewport {
+      background-color: var(--bg-panel);
+      border: 1px solid var(--hairline-dark);
+      padding: 1rem;
+      margin: 1rem 0;
+      position: relative;
+    }
+
+    .layer-toggles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    /* ==========================================================================
+       5. SEKSJON 02: FIRE LEVERANSENIVÅER (ARKITEKTONISK SPESIFIKASJON)
+       ========================================================================== */
+    .section-header-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 1.25rem 1.5rem;
+      background-color: var(--bg-chalk-alt);
+      border-bottom: 1px solid var(--hairline-dark);
+      gap: 1rem;
+    }
+
+    .delivery-matrix {
+      display: grid;
+      grid-template-columns: 1fr;
+      border-bottom: 1px solid var(--hairline-dark);
+    }
+
+    .delivery-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      border-bottom: 1px solid var(--hairline);
+      background-color: var(--bg-chalk);
+      transition: background-color 0.15s;
+    }
+
+    .delivery-row:last-child {
+      border-bottom: none;
+    }
+
+    .delivery-row:hover {
+      background-color: var(--bg-panel);
+    }
+
+    @media (min-width: 960px) {
+      .delivery-row {
+        grid-template-columns: 110px 3fr 4fr 2.5fr 220px;
+        align-items: stretch;
+      }
+    }
+
+    .delivery-cell {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--hairline);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    @media (min-width: 960px) {
+      .delivery-cell {
+        border-bottom: none;
+        border-right: 1px solid var(--hairline);
+      }
+      .delivery-cell:last-child {
+        border-right: none;
+      }
+    }
+
+    .level-roman {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      color: var(--forest-deep);
+    }
+
+    /* ==========================================================================
+       6. SEKSJON 03: INTERAKTIVT STUDIO (CONFIGURE / EXPLORE)
+       ========================================================================== */
+    .studio-wrapper {
+      background-color: var(--bg-panel);
+      border-bottom: 1px solid var(--hairline-dark);
+    }
+
+    .studio-top-bar {
+      padding: 1.25rem 1.5rem;
+      background-color: var(--forest-deep);
+      color: var(--bg-chalk);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .studio-toolbar {
+      padding: 1rem 1.5rem;
+      background-color: var(--bg-chalk-alt);
+      border-bottom: 1px solid var(--hairline-dark);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .toolbar-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* 3-kolonne Studio Workspace */
+    .studio-workspace {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 1200px) {
+      .studio-workspace {
+        grid-template-columns: 390px 1fr 370px;
+        align-items: start;
+      }
+    }
+
+    .studio-col-left {
+      border-bottom: 1px solid var(--hairline-dark);
+      background-color: var(--bg-chalk);
+    }
+
+    .studio-col-center {
+      border-bottom: 1px solid var(--hairline-dark);
+      background-color: var(--bg-panel);
+    }
+
+    .studio-col-right {
+      background-color: var(--bg-chalk);
+    }
+
+    @media (min-width: 1200px) {
+      .studio-col-left {
+        border-bottom: none;
+        border-right: 1px solid var(--hairline-dark);
+      }
+      .studio-col-center {
+        border-bottom: none;
+        border-right: 1px solid var(--hairline-dark);
+      }
+    }
+
+    .config-section {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .config-section-title {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--forest-deep);
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .field-group {
+      margin-bottom: 1rem;
+    }
+
+    .field-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .field-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      color: var(--ink-black);
+    }
+
+    .field-hint {
+      font-size: 0.76rem;
+      color: var(--ink-muted);
+      margin-top: 0.25rem;
+    }
+
+    .input-control, .select-control {
+      width: 100%;
+      min-height: var(--touch-min);
+      padding: 0.5rem 0.75rem;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      color: var(--ink-black);
+      background-color: #FFFFFF;
+      border: 1px solid var(--hairline-dark);
+      border-radius: 0;
+    }
+
+    .input-control:focus, .select-control:focus {
+      border-color: var(--forest-deep);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      min-height: var(--touch-min);
+      accent-color: var(--forest-deep);
+      cursor: pointer;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    /* Konseptsammenligning */
+    .concepts-drawer {
+      background-color: var(--bg-chalk);
+      border-bottom: 1px solid var(--hairline-dark);
+      padding: 1.5rem;
+    }
+
+    .concept-table-wrap {
+      overflow-x: auto;
+      margin-top: 1rem;
+      border: 1px solid var(--hairline-dark);
+      background-color: var(--bg-panel);
+    }
+
+    .concept-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      text-align: left;
+    }
+
+    .concept-table th, .concept-table td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--hairline);
+      border-right: 1px solid var(--hairline);
+    }
+
+    .concept-table th {
+      background-color: var(--bg-chalk-alt);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+
+    /* Canvas & 2D Skisse Visningsflate */
+    .viewport-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--hairline);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      background-color: var(--bg-chalk);
+    }
+
+    .canvas-stage {
+      position: relative;
+      width: 100%;
+      background-color: #F7F4ED;
+      border-bottom: 1px solid var(--hairline);
+      overflow: hidden;
+    }
+
+    #isoCanvas {
+      display: block;
+      width: 100%;
+      height: 460px;
+      cursor: grab;
+      touch-action: pan-y;
+    }
+
+    #isoCanvas:active {
+      cursor: grabbing;
+    }
+
+    .canvas-controls-bar {
+      padding: 1rem 1.5rem;
+      background-color: var(--bg-chalk-alt);
+      border-bottom: 1px solid var(--hairline);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .canvas-controls-bar {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .plan-stage {
+      padding: 1.5rem;
+      background-color: var(--bg-panel);
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .early-stage-stamp {
+      display: inline-block;
+      padding: 0.25rem 0.65rem;
+      background-color: var(--status-warn-bg);
+      color: var(--status-warn-fg);
+      border: 1px solid var(--copper);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    /* nøkkeltall & Metrikk-kort i Studio */
+    .metrics-strip {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      border-bottom: 1px solid var(--hairline-dark);
+      background-color: var(--bg-chalk);
+    }
+
+    @media (min-width: 768px) {
+      .metrics-strip {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .metric-box {
+      padding: 1.1rem 1.25rem;
+      border-right: 1px solid var(--hairline);
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .metric-box:last-child {
+      border-right: none;
+    }
+
+    .metric-title {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .metric-number {
+      font-family: var(--font-mono);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--ink-black);
+    }
+
+    .metric-sub {
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* Romprogram-liste */
+    .room-list {
+      list-style: none;
+      border: 1px solid var(--hairline-dark);
+      background-color: #FFFFFF;
+      margin-bottom: 0.75rem;
+      max-height: 310px;
+      overflow-y: auto;
+    }
+
+    .room-item {
+      display: grid;
+      grid-template-columns: 1fr 78px 68px 44px;
+      gap: 0.4rem;
+      align-items: center;
+      padding: 0.45rem 0.6rem;
+      border-bottom: 1px solid var(--hairline);
+      font-size: 0.82rem;
+    }
+
+    .room-item:last-child {
+      border-bottom: none;
+    }
+
+    /* Prosjektveileder & Regulatorisk Status */
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.55rem;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .pill-unchecked {
+      background-color: var(--status-warn-bg);
+      color: var(--status-warn-fg);
+      border: 1px solid #DFB99B;
+    }
+
+    .pill-offline {
+      background-color: #E8E6DF;
+      color: var(--ink-black);
+      border: 1px solid var(--hairline-dark);
+    }
+
+    .pill-ok {
+      background-color: var(--status-ok-bg);
+      color: var(--status-ok-fg);
+      border: 1px solid #9DC2AB;
+    }
+
+    .pill-err {
+      background-color: var(--status-err-bg);
+      color: var(--status-err-fg);
+      border: 1px solid #D99B9B;
+    }
+
+    .advisor-log {
+      background-color: #FFFFFF;
+      border: 1px solid var(--hairline-dark);
+      padding: 1rem;
+      height: 290px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .advisor-msg {
+      padding: 0.75rem 0.9rem;
+      border-left: 3px solid var(--forest-deep);
+      background-color: var(--bg-panel);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .advisor-msg-user {
+      border-left-color: var(--copper-dark);
+      background-color: var(--copper-tint);
+    }
+
+    .advisor-msg-meta {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .reg-list {
+      list-style: none;
+      border: 1px solid var(--hairline-dark);
+      background-color: #FFFFFF;
+    }
+
+    .reg-item {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--hairline);
+      font-size: 0.82rem;
+    }
+
+    .reg-item:last-child {
+      border-bottom: none;
+    }
+
+    .reg-item-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    /* Meldinger og Bekreftelsespanel (Ingen alert/confirm) */
+    .inline-notice {
+      padding: 0.85rem 1.25rem;
+      border: 1px solid var(--hairline-dark);
+      margin: 0.75rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ==========================================================================
+       7. UTSKRIFTSVENNLIG RAPPORT (@media print)
+       ========================================================================== */
+    @media print {
+      .site-header, .concept-banner, .studio-toolbar, .canvas-controls-bar, .no-print {
+        display: none !important;
+      }
+      body, html, .container-grid, .studio-wrapper {
+        background: #FFFFFF !important;
+        color: #000000 !important;
+        border: none !important;
+      }
+      .studio-workspace {
+        display: block !important;
+      }
+      .studio-col-left, .studio-col-center, .studio-col-right {
+        border: 1px solid #CCCCCC !important;
+        margin-bottom: 1.5rem !important;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPPBANNER: TYDELIG KONSEPTUTKAST-MERKING -->
+  <div class="concept-banner" role="region" aria-label="Konseptinformasjon">
+    <div>
+      <span class="concept-badge">Konseptutkast</span>
+      <span style="margin-left: 0.5rem;">Separat arkitektur- og konfigurasjonsprototype — ikke den offisielle nettsiden til Lindal Modul AS.</span>
+    </div>
+    <div>
+      <span>Verifisert mot lindalmodul.no: Prefabrikkerte boligmoduler, elementer &amp; precut | Halvorsen Arkitekter | Grenstøl, Tvedestrand</span>
+    </div>
+  </div>
+
+  <!-- HOVEDNAVIGASJON -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="#topp" class="brand-block">
+        <span class="brand-title">Lindal Modul</span>
+        <span class="brand-sub">Studio // Arkitektur &amp; System</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Hovedmeny">
+        <a href="#seksjon-arkitektur" class="nav-link"><span class="num">01</span>Arkitektur &amp; System</a>
+        <a href="#seksjon-leveranse" class="nav-link"><span class="num">02</span>Fire Leveransenivåer</a>
+        <a href="#seksjon-studio" class="nav-link"><span class="num">03</span>Interaktivt Studio</a>
+        <a href="#seksjon-verifikasjon" class="nav-link"><span class="num">04</span>Verifikasjon &amp; Test</a>
+        <a href="index.html" class="nav-link" style="color: var(--copper); font-weight: 700;"><span class="num">📍</span>AI-Tomteplanlegger ↗</a>
+        <button type="button" id="btnJumpStudio" class="btn btn-primary">Åpne Studio</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="topp" class="container-grid">
+
+    <!-- ========================================================================
+         SEKSJON 01: HERO (DECIDE / LEARN)
+         ======================================================================== -->
+    <section id="seksjon-arkitektur" class="hero-grid" aria-labelledby="heroHeading">
+      <div class="hero-editorial">
+        <div>
+          <div class="mono-label">01 // ARKITEKTUR, PREFABRIKKERING OG KONSTRUKTIV PRESISJON</div>
+          <h1 id="heroHeading" class="serif-display hero-title">
+            Fra arkitekttegnet skisse til industriell trepresisjon på Grenstøl.
+          </h1>
+          <p class="hero-lead">
+            Lindal Modul forener egen arkitektavdeling — etablert gjennom fusjonen med Halvorsen Arkitekter — med rasjonell innendørs produksjon av boligmoduler, bygningselementer og precut i Tvedestrand. Dette uavhengige studie- og konfigurasjonsverktøyet lar deg utforske romprogram, modulgeometri og konstruksjonsprinsipp i tidligfase.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+            <button type="button" id="btnHeroOpenStudio" class="btn btn-primary">Konfigurer prosjekt i Studio</button>
+            <a href="#seksjon-leveranse" class="btn">Utforsk de fire leveransenivåene</a>
+          </div>
+        </div>
+
+        <dl class="facts-ledger" aria-label="Verifiserte fakta om Lindal Modul">
+          <div class="fact-item">
+            <dt>Byggesystemer</dt>
+            <dd>Prefabrikkerte boligmoduler, bygningselementer og maskinell precut.</dd>
+          </div>
+          <div class="fact-item">
+            <dt>Arkitekturfaglig ledelse</dt>
+            <dd>Egen arkitektavdeling etter fusjon med Halvorsen Arkitekter.</dd>
+          </div>
+          <div class="fact-item">
+            <dt>Produksjonssted</dt>
+            <dd>Egne produksjonslokaler på Grenstøl i Tvedestrand kommune.</dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- HØYRE HERO: INTERAKTIV KONSTRUKTIV MODULANALYSE (INGEN STOCK-FOTO) -->
+      <div class="hero-technical">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <span class="mono-label">SYSTEMSNITT // MODULAKSONOMETRI</span>
+            <span id="heroActiveLayerLabel" class="mono-label" style="color: var(--forest-deep); font-weight: 700;">VISER: KOMPLETT SYSTEM</span>
+          </div>
+
+          <div class="tech-viewport">
+            <svg id="heroSystemSvg" viewBox="0 0 520 360" width="100%" height="auto" role="img" aria-label="Teknisk snitt av Lindal Modul konstruksjonssystem med precut-ramme, bygningselementer og rommodul">
+              <defs>
+                <pattern id="techGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#E5E0D4" stroke-width="0.7"/>
+                </pattern>
+              </defs>
+              <rect width="520" height="360" fill="url(#techGrid)" />
+
+              <!-- Koordinat- og mållinjer -->
+              <line x1="40" y1="320" x2="480" y2="320" stroke="#9A9486" stroke-width="1" stroke-dasharray="3,3"/>
+              <text x="45" y="338" font-family="monospace" font-size="10" fill="#4A4F4C">AKSE A-B // PREFABRIKKERT VOLUMGEOMETRI (IKKE TEK17 BRA)</text>
+
+              <!-- LAG 1: Bærende Precut Konstruksjonsramme -->
+              <g id="svgLayerPrecut" transition="opacity 0.25s">
+                <!-- Bunnramme / Bjelkelag -->
+                <polygon points="260,295 110,225 260,155 410,225" fill="#EFECE4" stroke="#141615" stroke-width="1.8"/>
+                <!-- Stendere og bæreramme -->
+                <line x1="110" y1="225" x2="110" y2="120" stroke="#944F2B" stroke-width="2.5"/>
+                <line x1="260" y1="295" x2="260" y2="190" stroke="#944F2B" stroke-width="2.5"/>
+                <line x1="410" y1="225" x2="410" y2="120" stroke="#944F2B" stroke-width="2.5"/>
+                <line x1="260" y1="155" x2="260" y2="50" stroke="#944F2B" stroke-width="2"/>
+                <!-- Mellomstendere precut -->
+                <line x1="160" y1="248" x2="160" y2="143" stroke="#B86B43" stroke-width="1.4" stroke-dasharray="4,2"/>
+                <line x1="210" y1="272" x2="210" y2="167" stroke="#B86B43" stroke-width="1.4" stroke-dasharray="4,2"/>
+                <line x1="310" y1="272" x2="310" y2="167" stroke="#B86B43" stroke-width="1.4" stroke-dasharray="4,2"/>
+                <line x1="360" y1="248" x2="360" y2="143" stroke="#B86B43" stroke-width="1.4" stroke-dasharray="4,2"/>
+                <!-- Toppsvill -->
+                <polygon points="260,190 110,120 260,50 410,120" fill="none" stroke="#944F2B" stroke-width="2"/>
+              </g>
+
+              <!-- LAG 2: Lukkede Bygningselementer (Veggskiver) -->
+              <g id="svgLayerElements" transition="opacity 0.25s">
+                <!-- Venstre yttervegg-element -->
+                <polygon points="260,295 110,225 110,120 260,190" fill="rgba(27, 48, 36, 0.16)" stroke="#1B3024" stroke-width="1.8"/>
+                <!-- Høyre yttervegg-element -->
+                <polygon points="260,295 410,225 410,120 260,190" fill="rgba(27, 48, 36, 0.26)" stroke="#1B3024" stroke-width="1.8"/>
+                <!-- Vindusåpning i element -->
+                <polygon points="150,218 220,250 220,200 150,168" fill="#FAF8F3" stroke="#1B3024" stroke-width="1.5"/>
+                <polygon points="295,252 375,215 375,165 295,202" fill="#FAF8F3" stroke="#1B3024" stroke-width="1.5"/>
+              </g>
+
+              <!-- LAG 3: Komplett Rommodul & Takoppbygging -->
+              <g id="svgLayerModule" transition="opacity 0.25s">
+                <!-- Saltaksform / Takkassett løftet litt for presisjon -->
+                <polygon points="260,165 100,95 180,35 340,105" fill="rgba(184, 107, 67, 0.22)" stroke="#141615" stroke-width="1.6"/>
+                <polygon points="260,165 420,95 340,35 180,35" fill="rgba(20, 22, 21, 0.12)" stroke="#141615" stroke-width="1.6"/>
+                <!-- Løftepunkter / Modulknutepunkter -->
+                <circle cx="110" cy="120" r="5" fill="#B86B43" stroke="#141615" stroke-width="1.5"/>
+                <circle cx="260" cy="190" r="5" fill="#B86B43" stroke="#141615" stroke-width="1.5"/>
+                <circle cx="410" cy="120" r="5" fill="#B86B43" stroke="#141615" stroke-width="1.5"/>
+                <circle cx="260" cy="50" r="5" fill="#B86B43" stroke="#141615" stroke-width="1.5"/>
+              </g>
+
+              <!-- Tekniske callouts -->
+              <g font-family="monospace" font-size="10" fill="#141615">
+                <rect x="18" y="18" width="175" height="24" fill="#FAF8F3" stroke="#B5AFA0"/>
+                <text x="26" y="34">01 PRECUT KAPP &amp; MERKING</text>
+
+                <rect x="315" y="18" width="185" height="24" fill="#FAF8F3" stroke="#B5AFA0"/>
+                <text x="323" y="34">02 ELEMENT &amp; ROMMODUL</text>
+              </g>
+            </svg>
+          </div>
+
+          <div>
+            <div class="mono-label">INSPEKSJON AV KONSTRUKSJONSLAG:</div>
+            <div class="layer-toggles" role="group" aria-label="Velg konstruksjonslag i teknisk figur">
+              <button type="button" class="btn btn-sm btn-active hero-layer-btn" data-layer="all">Komplett system</button>
+              <button type="button" class="btn btn-sm hero-layer-btn" data-layer="precut">Kun Precut-ramme</button>
+              <button type="button" class="btn btn-sm hero-layer-btn" data-layer="element">Bygningselementer</button>
+              <button type="button" class="btn btn-sm hero-layer-btn" data-layer="module">Rommodul &amp; løftepunkt</button>
+            </div>
+          </div>
+        </div>
+
+        <p style="font-size: 0.8rem; color: var(--ink-muted); margin-top: 1.25rem; border-top: 1px solid var(--hairline); padding-top: 0.75rem;">
+          Illustrasjonen viser prinsipiell oppbygging mellom precut-stavverk, prefabrikkerte veggskiver og ferdige rommoduler fra produksjonen på Grenstøl.
+        </p>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SEKSJON 02: FIRE LEVERANSENIVÅER
+         ======================================================================== -->
+    <section id="seksjon-leveranse" aria-labelledby="deliveryHeading">
+      <div class="section-header-bar">
+        <div>
+          <span class="mono-label">02 // LEVERANSESTRUKTUR &amp; VERDIKJEDE</span>
+          <h2 id="deliveryHeading" class="serif-display" style="font-size: 2rem; margin-top: 0.25rem;">
+            Fire definerte leveransenivåer
+          </h2>
+        </div>
+        <p style="max-width: 54ch; font-size: 0.9rem; color: var(--ink-muted);">
+          Hvert prosjekt kan tilpasses tomteforhold, tilkomst og entreprisemodell. Velg et leveransenivå under for å konfigurere det direkte i Studio.
+        </p>
+      </div>
+
+      <div class="delivery-matrix" role="list">
+        <!-- Nivå I -->
+        <article class="delivery-row" role="listitem">
+          <div class="delivery-cell">
+            <span class="mono-label">NIVÅ</span>
+            <span class="level-roman">I</span>
+          </div>
+          <div class="delivery-cell">
+            <span class="mono-label">FASE &amp; FAGMILJØ</span>
+            <h3 class="serif-display" style="font-size: 1.4rem; margin-top: 0.2rem;">Arkitektur &amp; Forprosjekt</h3>
+          </div>
+          <div class="delivery-cell">
+            <p style="font-size: 0.9rem; color: var(--ink-muted);">
+              Utvikles av egen arkitektavdeling (etter fusjonen med Halvorsen Arkitekter). Omfatter mulighetsstudie, romprogram, volumoppbygging og tilpasning til rasjonell produksjon uten å gå på akkord med stedlig arkitektur.
+            </p>
+          </div>
+          <div class="delivery-cell">
+            <span class="mono-label">GREnsesnitt</span>
+            <p style="font-size: 0.85rem; margin-top: 0.25rem;">Skisseprosjekt, tegningsgrunnlag og valg av optimal prefabrikkeringsgrad.</p>
+          </div>
+          <div class="delivery-cell">
+            <button type="button" class="btn btn-sm select-delivery-btn" data-delivery="Kombinert arkitektur og modul">Velg i Studio</button>
+          </div>
+        </article>
+
+        <!-- Nivå II -->
+        <article class="delivery-row" role="listitem">
+          <div class="delivery-cell">
+            <span class="mono-label">NIVÅ</span>
+            <span class="level-roman">II</span>
+          </div>
+          <div class="delivery-cell">
+            <span class="mono-label">KONSTRUKSJON</span>
+            <h3 class="serif-display" style="font-size: 1.4rem; margin-top: 0.2rem;">Precut</h3>
+          </div>
+          <div class="delivery-cell">
+            <p style="font-size: 0.9rem; color: var(--ink-muted);">
+              Maskinelt ferdigkappede og nummererte konstruksjonsdeler produsert på Grenstøl i Tvedestrand. Egnet ved krevende adkomst der kranbil med store moduler ikke kommer frem, eller for byggmestere som reiser råbygget selv.
+            </p>
+          </div>
+          <div class="delivery-cell">
+            <span class="mono-label">GRENSESNITT</span>
+            <p style="font-size: 0.85rem; margin-top: 0.25rem;">Levert som merkede trepakker med monteringsunderlag til byggeplass.</p>
+          </div>
+          <div class="delivery-cell">
+            <button type="button" class="btn btn-sm select-delivery-btn" data-delivery="Precut konstruksjonspakke">Velg i Studio</button>
+          </div>
+        </article>
+
+        <!-- Nivå III -->
+        <article class="delivery-row" role="listitem">
+          <div class="delivery-cell">
+            <span class="mono-label">NIVÅ</span>
+            <span class="level-roman">III</span>
+          </div>
+          <div class="delivery-cell">
+            <span class="mono-label">FLATESYSTEM</span>
+            <h3 class="serif-display" style="font-size: 1.4rem; margin-top: 0.2rem;">Bygningselementer</h3>
+          </div>
+          <div class="delivery-cell">
+            <p style="font-size: 0.9rem; color: var(--ink-muted);">
+              Prefabrikkerte vegg-, gulv- og takelementer bygget i tørre produksjonslokaler på Grenstøl. Gir rask lukking av råbygg på byggeplass og høy fleksibilitet i spennvidder og romhøyder.
+            </p>
+          </div>
+          <div class="delivery-cell">
+            <span class="mono-label">GRENSESNITT</span>
+            <p style="font-size: 0.85rem; margin-top: 0.25rem;">Lukkede eller halvlukkede planelementer for kranmontering på klart fundament.</p>
+          </div>
+          <div class="delivery-cell">
+            <button type="button" class="btn btn-sm select-delivery-btn" data-delivery="Prefabrikkerte bygningselementer">Velg i Studio</button>
+          </div>
+        </article>
+
+        <!-- Nivå IV -->
+        <article class="delivery-row" role="listitem">
+          <div class="delivery-cell">
+            <span class="mono-label">NIVÅ</span>
+            <span class="level-roman">IV</span>
+          </div>
+          <div class="delivery-cell">
+            <span class="mono-label">VOLUMSYSTEM</span>
+            <h3 class="serif-display" style="font-size: 1.4rem; margin-top: 0.2rem;">Prefabrikkerte Boligmoduler</h3>
+          </div>
+          <div class="delivery-cell">
+            <p style="font-size: 0.9rem; color: var(--ink-muted);">
+              Komplette tredimensjonale bygningsvolumer produsert innendørs hos Lindal Modul på Grenstøl i Tvedestrand. Reduserer byggetid og væieksponering på byggeplass ved at ferdige romvolumer heises på plass.
+            </p>
+          </div>
+          <div class="delivery-cell">
+            <span class="mono-label">GRENSESNITT</span>
+            <p style="font-size: 0.85rem; margin-top: 0.25rem;">Volummoduler (M1–Mn) sammensatt på fundament med påfølgende komplettering av skjøter og tak.</p>
+          </div>
+          <div class="delivery-cell">
+            <button type="button" class="btn btn-sm select-delivery-btn" data-delivery="Prefabrikkerte boligmoduler">Velg i Studio</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SEKSJON 03: INTERAKTIVT STUDIO (CONFIGURE / EXPLORE)
+         ======================================================================== -->
+    <section id="seksjon-studio" class="studio-wrapper" aria-labelledby="studioMainHeading">
+      <div class="studio-top-bar">
+        <div>
+          <span class="mono-label" style="color: #D6D1C4;">03 // INTERAKTIVT KONFIGURASJONS- OG ARKITEKTURVERKTØY</span>
+          <h2 id="studioMainHeading" class="serif-display" style="font-size: 1.85rem; color: #FAF8F3; margin-top: 0.2rem;">
+            Lindal Modul — Studio
+          </h2>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center;">
+          <span id="activeDeliveryBadge" class="status-pill pill-ok" style="background-color: #233E2E; color: #FAF8F3; border-color: #4D6B58;">
+            Leveranse: Prefabrikkerte boligmoduler
+          </span>
+          <span id="aiConnectionBadge" class="status-pill pill-offline">
+            AI ikke tilkoblet // Lokal regelmotor
+          </span>
+        </div>
+      </div>
+
+      <!-- SYSTEMVERKTØYLINJE: KONSEPTER, LAGRING, EKSPORT, RAPPORT, RESET -->
+      <div class="studio-toolbar no-print" role="toolbar" aria-label="Prosjektverktøy">
+        <div class="toolbar-group">
+          <span class="mono-label" style="margin-right: 0.25rem;">Konseptmaler:</span>
+          <button type="button" class="btn btn-sm concept-load-btn" data-concept="skogsbrynet">1. Skogsbrynet — Kompakt</button>
+          <button type="button" class="btn btn-sm concept-load-btn" data-concept="grenstol">2. Grenstøl — Familie</button>
+          <button type="button" class="btn btn-sm concept-load-btn" data-concept="kystlinjen">3. Kystlinjen — Generasjon</button>
+          <button type="button" id="btnToggleCompare" class="btn btn-sm" aria-expanded="false">Sammenlign konsepter</button>
+        </div>
+
+        <div class="toolbar-group">
+          <button type="button" id="btnSaveLocal" class="btn btn-sm btn-primary">Lagre lokalt</button>
+          <button type="button" id="btnExportJson" class="btn btn-sm">Eksporter JSON</button>
+          <label for="inputImportJson" class="btn btn-sm" style="margin: 0;">
+            Importer JSON
+            <input type="file" id="inputImportJson" accept=".json,application/json" class="hidden">
+          </label>
+          <button type="button" id="btnDownloadBrief" class="btn btn-sm">Last ned prosjektbrief (.txt)</button>
+          <button type="button" id="btnPrintReport" class="btn btn-sm">Skriv ut rapport</button>
+          <button type="button" id="btnOpenResetModal" class="btn btn-sm" style="border-color: var(--status-err-fg); color: var(--status-err-fg);">Nullstill</button>
+        </div>
+      </div>
+
+      <!-- MELDINGSFELT FOR VALIDERING / HANDLINGER (INGEN ALERT) -->
+      <div id="studioFeedbackBanner" class="inline-notice hidden no-print" role="status" aria-live="polite">
+        <span id="studioFeedbackText">Statusmelding</span>
+        <button type="button" id="btnCloseFeedback" class="btn btn-sm">Lukk</button>
+      </div>
+
+      <!-- BEKREFTELSESPANEL FOR NULLSTILLING (INGEN CONFIRM) -->
+      <div id="resetConfirmPanel" class="inline-notice hidden no-print" style="background-color: var(--status-err-bg); border-color: var(--status-err-fg);" role="alertdialog" aria-labelledby="resetConfirmTitle">
+        <div>
+          <strong id="resetConfirmTitle" style="color: var(--status-err-fg);">Bekreft nullstilling av arbeidsflaten:</strong>
+          <span style="margin-left: 0.4rem;">Dette tilbakestiller nåværende romprogram, modulvalg og kalkyle til standardkonseptet («Grenstøl — Familie»).</span>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button type="button" id="btnConfirmResetYes" class="btn btn-sm btn-copper">Ja, nullstill prosjektet</button>
+          <button type="button" id="btnConfirmResetCancel" class="btn btn-sm">Avbryt</button>
+        </div>
+      </div>
+
+      <!-- SAMMENLIGNINGSSKUFF FOR DE TRE KONSEPTLØSNINGENE -->
+      <div id="conceptsComparisonDrawer" class="concepts-drawer hidden no-print">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <span class="mono-label">ARKITEKTONISK KONSEPTSAMMENLIGNING</span>
+            <h3 class="serif-display" style="font-size: 1.35rem;">Tre utgangspunkter for modul- og elementbygg</h3>
+          </div>
+          <button type="button" id="btnCloseCompare" class="btn btn-sm">Skjul tabell</button>
+        </div>
+
+        <div class="concept-table-wrap">
+          <table class="concept-table">
+            <thead>
+              <tr>
+                <th>Egenskap</th>
+                <th>Skogsbrynet — Kompakt</th>
+                <th>Grenstøl — Familie</th>
+                <th>Kystlinjen — Generasjon</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Arkitektonisk idé</strong></td>
+                <td>Konsentrert 1-etasjes bygningskropp med pulttak og lunt utspring.</td>
+                <td>Klassisk 2-etasjes saltaksvolum med tydelig soneinndeling.</td>
+                <td>Romslig 2-etasjes volum for storfamilie eller sekundærsone.</td>
+              </tr>
+              <tr>
+                <td><strong>Moduler &amp; etasjer</strong></td>
+                <td class="mono-val">2 moduler (3.6 × 9.6 m) · 1 etg.</td>
+                <td class="mono-val">3 moduler (3.6 × 10.2 m) · 2 etg.</td>
+                <td class="mono-val">4 moduler (3.8 × 10.8 m) · 2 etg.</td>
+              </tr>
+              <tr>
+                <td><strong>Utvendig fotavtrykk</strong></td>
+                <td class="mono-val">69.1 m²</td>
+                <td class="mono-val">110.2 m²</td>
+                <td class="mono-val">164.2 m²</td>
+              </tr>
+              <tr>
+                <td><strong>Samlet brutto modulareal</strong></td>
+                <td class="mono-val">69.1 m²</td>
+                <td class="mono-val">220.3 m²</td>
+                <td class="mono-val">328.3 m²</td>
+              </tr>
+              <tr>
+                <td><strong>Tak &amp; fasadekledning</strong></td>
+                <td>Pulttak · Stående malmfuru</td>
+                <td>Saltak · Grankledning i skoggrønn</td>
+                <td>Flatt tak · Brent treverk</td>
+              </tr>
+              <tr>
+                <td><strong>Handling</strong></td>
+                <td><button type="button" class="btn btn-sm concept-load-btn" data-concept="skogsbrynet">Last inn Skogsbrynet</button></td>
+                <td><button type="button" class="btn btn-sm concept-load-btn" data-concept="grenstol">Last inn Grenstøl</button></td>
+                <td><button type="button" class="btn btn-sm concept-load-btn" data-concept="kystlinjen">Last inn Kystlinjen</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- NØKKELTALLSLINJE (OPPDATERES SANNTID) -->
+      <div class="metrics-strip" aria-label="Beregnet prosjektgeometri">
+        <div class="metric-box">
+          <div class="metric-title">Utvendig fotavtrykk (1. etg)</div>
+          <div id="metricFootprint" class="metric-number">110.2 m²</div>
+          <div id="metricFootprintSub" class="metric-sub">Utvendig modulgeometri (ikke BRA)</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-title">Samlet brutto modulareal</div>
+          <div id="metricGrossArea" class="metric-number">220.3 m²</div>
+          <div id="metricGrossSub" class="metric-sub">Fordelt på 2 etasjer (6 moduler)</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-title">Beregnet tomteutnyttelse</div>
+          <div id="metricUtilization" class="metric-number">13.8 %</div>
+          <div id="metricUtilizationSub" class="metric-sub">Grense: maks 25.0 % (200.0 m²)</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-title">Romprogram vs. Kapasitet</div>
+          <div id="metricRoomSum" class="metric-number">162.0 m²</div>
+          <div id="metricRoomSub" class="metric-sub">Veiledende netto ramme: ~185.1 m²</div>
+        </div>
+      </div>
+
+      <!-- 3-KOLONNE ARBEIDSFLATE -->
+      <div class="studio-workspace">
+
+        <!-- VENSTRE KOLONNE: KONFIGURASJON, MODULER, ROMPROGRAM OG BRUKERKALKYLE -->
+        <div class="studio-col-left">
+
+          <!-- 1. Prosjektidentitet & Tomteramme -->
+          <div class="config-section">
+            <div class="config-section-title">
+              <span>01 // Prosjekt &amp; Tomteramme</span>
+            </div>
+
+            <div class="field-group">
+              <label for="inpProjectName" class="field-label">Prosjektnavn</label>
+              <input type="text" id="inpProjectName" class="input-control" value="Grenstøl — Familiebolig" maxlength="80">
+            </div>
+
+            <div class="field-group">
+              <label for="selDeliveryLevel" class="field-label">Valgt leveransenivå</label>
+              <select id="selDeliveryLevel" class="select-control">
+                <option value="Prefabrikkerte boligmoduler">Nivå IV: Prefabrikkerte boligmoduler</option>
+                <option value="Prefabrikkerte bygningselementer">Nivå III: Prefabrikkerte bygningselementer</option>
+                <option value="Precut konstruksjonspakke">Nivå II: Precut konstruksjonspakke</option>
+                <option value="Kombinert arkitektur og modul">Nivå I: Arkitektur &amp; Forprosjekt (Halvorsen Arkitekter)</option>
+              </select>
+            </div>
+
+            <div class="grid-2col">
+              <div class="field-group">
+                <label for="inpPlotArea" class="field-label">Tomteareal (m²)</label>
+                <input type="number" id="inpPlotArea" class="input-control mono-val" value="800" min="50" max="50000" step="10">
+              </div>
+              <div class="field-group">
+                <label for="inpMaxUtil" class="field-label">Maks utnyttelse (%)</label>
+                <input type="number" id="inpMaxUtil" class="input-control mono-val" value="25" min="5" max="100" step="1">
+              </div>
+            </div>
+            <p class="field-hint">
+              Merk: Utvendig fotavtrykk beregnes fra modulenes ytterkant. Faktisk bruksareal (BRA) og bebygd areal (BYA) etter TEK17 avhenger av veggtykkelse, konstruksjon, terreng og parkering.
+            </p>
+          </div>
+
+          <!-- 2. Modulgeometri, Etasjer, Tak & Kledning -->
+          <div class="config-section">
+            <div class="config-section-title">
+              <span>02 // Modulgeometri &amp; Konstruksjon</span>
+            </div>
+
+            <div class="grid-2col">
+              <div class="field-group">
+                <label for="inpModuleCount" class="field-label">
+                  <span>Moduler pr. etg</span>
+                  <span id="valModuleCount" class="mono-val">3 stk</span>
+                </label>
+                <input type="range" id="inpModuleCount" min="1" max="6" step="1" value="3">
+              </div>
+
+              <div class="field-group">
+                <label for="selFloors" class="field-label">Antall etasjer</label>
+                <select id="selFloors" class="select-control">
+                  <option value="1">1 etasje</option>
+                  <option value="2" selected>2 etasjer</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-2col">
+              <div class="field-group">
+                <label for="inpModuleWidth" class="field-label">
+                  <span>Modulbredde</span>
+                  <span id="valModuleWidth" class="mono-val">3.6 m</span>
+                </label>
+                <input type="range" id="inpModuleWidth" min="3.0" max="4.2" step="0.2" value="3.6">
+              </div>
+
+              <div class="field-group">
+                <label for="inpModuleLength" class="field-label">
+                  <span>Modullengde</span>
+                  <span id="valModuleLength" class="mono-val">10.2 m</span>
+                </label>
+                <input type="range" id="inpModuleLength" min="6.0" max="12.6" step="0.6" value="10.2">
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label for="selRoofType" class="field-label">Takform</label>
+              <select id="selRoofType" class="select-control">
+                <option value="saltak" selected>Saltak (27° klassisk møne)</option>
+                <option value="pulttak">Pulttak (Ensidig fall)</option>
+                <option value="flatt">Flatt tak (Parapet og kompakt volum)</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label for="selCladding" class="field-label">Utvendig trekledning</label>
+              <select id="selCladding" class="select-control">
+                <option value="Stående malmfuru">Stående malmfuru (Varm gyllenbrun)</option>
+                <option value="Grankledning i skoggrønn" selected>Grankledning i skoggrønn (#1B3024)</option>
+                <option value="Brent treverk">Brent treverk (Mørk karbonisert struktur)</option>
+                <option value="Ubehandlet kjerneved">Ubehandlet kjerneved (Lys nordisk gråning)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 3. Redigerbart Romprogram -->
+          <div class="config-section">
+            <div class="config-section-title">
+              <span>03 // Romprogram (Redigerbart)</span>
+              <span id="roomCountBadge" class="mono-label">6 rom</span>
+            </div>
+
+            <ul id="roomProgramList" class="room-list" aria-label="Liste over rom i prosjektet"></ul>
+
+            <div style="background-color: var(--bg-panel); padding: 0.75rem; border: 1px solid var(--hairline);">
+              <div class="mono-label" style="margin-bottom: 0.5rem;">Legg til nytt rom i skissen</div>
+              <div class="field-group">
+                <label for="inpNewRoomName" class="field-label">Romnavn</label>
+                <input type="text" id="inpNewRoomName" class="input-control" placeholder="F.eks. Arbeidsrom / Bibliotek" maxlength="40">
+              </div>
+              <div class="grid-2col">
+                <div class="field-group">
+                  <label for="inpNewRoomArea" class="field-label">Areal (m²)</label>
+                  <input type="number" id="inpNewRoomArea" class="input-control mono-val" value="12" min="2" max="150" step="1">
+                </div>
+                <div class="field-group">
+                  <label for="selNewRoomFloor" class="field-label">Etasje</label>
+                  <select id="selNewRoomFloor" class="select-control">
+                    <option value="1">1. etasje</option>
+                    <option value="2">2. etasje</option>
+                  </select>
+                </div>
+              </div>
+              <button type="button" id="btnAddRoom" class="btn btn-sm btn-primary" style="width: 100%; margin-top: 0.5rem;">+ Legg til rom i programmet</button>
+            </div>
+          </div>
+
+          <!-- 4. Brukerdefinert Budsjettkalkyle (Ingen Lindal-priser) -->
+          <div class="config-section">
+            <div class="config-section-title">
+              <span>04 // Egenstyrt Kostnadsramme</span>
+            </div>
+            <div style="background-color: var(--status-warn-bg); border: 1px solid var(--copper); padding: 0.65rem; font-size: 0.78rem; color: var(--status-warn-fg); margin-bottom: 0.85rem;">
+              <strong>Viktig:</strong> Lindal Modul oppgir ikke standard kvadratmeterpriser på nett. Kalkulatoren under bruker kun <em>dine egne satser</em> for tidligfase budsjettering.
+            </div>
+
+            <div class="grid-2col">
+              <div class="field-group">
+                <label for="inpRateLow" class="field-label">Egen sats lav (kr/m²)</label>
+                <input type="number" id="inpRateLow" class="input-control mono-val" value="32000" min="0" max="200000" step="1000">
+              </div>
+              <div class="field-group">
+                <label for="inpRateHigh" class="field-label">Egen sats høy (kr/m²)</label>
+                <input type="number" id="inpRateHigh" class="input-control mono-val" value="44000" min="0" max="250000" step="1000">
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label for="inpSiteFixedCost" class="field-label">Egen post for tomt / grunnarbeid (kr)</label>
+              <input type="number" id="inpSiteFixedCost" class="input-control mono-val" value="850000" min="0" max="50000000" step="50000">
+            </div>
+
+            <div style="background-color: var(--bg-panel); border: 1px solid var(--hairline-dark); padding: 0.85rem; margin-top: 0.75rem;">
+              <div class="mono-label">BEREGNET INTERVALL (BASERT PÅ EGNE SATSER)</div>
+              <div id="budgetIntervalDisplay" class="mono-val" style="font-size: 1.15rem; font-weight: 700; color: var(--forest-deep); margin-top: 0.25rem;">
+                7 900 000 – 10 544 000 kr
+              </div>
+              <div id="budgetSubDisplay" class="field-hint">
+                Beregnet av 220.3 m² samlet brutto modulareal + fastpost.
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Lokalt lagrede prosjekter -->
+          <div class="config-section no-print">
+            <div class="config-section-title">
+              <span>05 // Lokalt lagrede utkast (Nettleser)</span>
+            </div>
+            <ul id="savedProjectsList" class="room-list" style="max-height: 180px;" aria-label="Lagrede prosjekter i nettleseren"></ul>
+          </div>
+
+        </div>
+
+        <!-- MIDTRE KOLONNE: 3D ISOMETRISK CANVAS & 2D PLANTEGNINGSSKISSE -->
+        <div class="studio-col-center">
+
+          <!-- 3D ISOMETRISK VISNING -->
+          <div class="viewport-header">
+            <div>
+              <span class="mono-label">INTERAKTIV AKSONOMETRI // SANNTIDS MODULMODELL</span>
+              <h3 id="viewportModelTitle" class="serif-display" style="font-size: 1.25rem;">3 moduler × 2 etasjer — Saltak</h3>
+            </div>
+            <div class="toolbar-group no-print">
+              <button type="button" class="btn btn-sm iso-angle-btn" data-angle="45">45° Nord-Øst</button>
+              <button type="button" class="btn btn-sm iso-angle-btn" data-angle="135">135° Sør-Øst</button>
+              <button type="button" class="btn btn-sm iso-angle-btn" data-angle="225">225° Sør-Vest</button>
+              <button type="button" class="btn btn-sm iso-angle-btn" data-angle="315">315° Nord-Vest</button>
+              <button type="button" id="btnToggleExplodeQuick" class="btn btn-sm btn-copper">Eksploder moduler</button>
+            </div>
+          </div>
+
+          <div class="canvas-stage">
+            <canvas id="isoCanvas" aria-label="Interaktiv 3D-isometrisk modell av modulbygget. Dra med mus eller finger for å rotere."></canvas>
+          </div>
+
+          <!-- SLIDERE FOR ROTASJON OG EKSPLODERT MODULVISNING -->
+          <div class="canvas-controls-bar no-print">
+            <div>
+              <label for="inpRotation" class="field-label">
+                <span>Horisontal rotasjon (0°–360°)</span>
+                <span id="valRotation" class="mono-val">42°</span>
+              </label>
+              <input type="range" id="inpRotation" min="0" max="360" step="1" value="42">
+            </div>
+            <div>
+              <label for="inpExplode" class="field-label">
+                <span>Eksplodert modul- og etasjeseparasjon</span>
+                <span id="valExplode" class="mono-val">0 %</span>
+              </label>
+              <input type="range" id="inpExplode" min="0" max="100" step="1" value="0">
+            </div>
+          </div>
+
+          <!-- 2D PLANTEGNINGSSKISSE (SVG) -->
+          <div class="plan-stage">
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.75rem;">
+              <div>
+                <span class="early-stage-stamp">Tidligfaseillustrasjon — ikke byggemeldingstegning</span>
+                <h3 class="serif-display" style="font-size: 1.3rem;">2D Skisse av modulinndeling og romprogram</h3>
+              </div>
+              <div class="mono-label" id="planScaleInfo">MÅLSATT YTRE MODULGEOMETRI</div>
+            </div>
+
+            <div style="background-color: #FFFFFF; border: 1px solid var(--hairline-dark); padding: 1rem;">
+              <svg id="floorplanSvg" viewBox="0 0 760 440" width="100%" height="auto" role="img" aria-label="2D plantegningsskisse med modulskjøter og romprogram"></svg>
+            </div>
+
+            <p class="field-hint" style="margin-top: 0.65rem;">
+              Stiplede kobberlinjer markerer prefabrikkerte modulskjøter fra Grenstøl. Romplasseringen over er en automatisk proporsjonal soneskisse basert på romprogrammet ditt — endelig bæring, trappeløp, våtromssoner og vindusplassering prosjekteres av arkitekt.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- HØYRE KOLONNE: KONTEKSTBEVISST PROSJEKTVEILEDER & RAMMEVILKÅR -->
+        <div class="studio-col-right">
+
+          <!-- LOKAL PROSJEKTVEILEDER -->
+          <div class="config-section">
+            <div class="config-section-title">
+              <span>Lokal prosjektveileder — regelbasert</span>
+            </div>
+
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; padding: 0.6rem; background-color: var(--bg-panel); border: 1px solid var(--hairline);">
+              <div>
+                <div class="mono-label">STATUS SPRÅKMODELL</div>
+                <div id="advisorEndpointStatus" style="font-size: 0.8rem; font-weight: 600;">AI ikke tilkoblet (Kjører deterministisk lokalt)</div>
+              </div>
+              <button type="button" id="btnTestServerAi" class="btn btn-sm no-print" title="Tester valgfritt same-origin endepunkt POST /api/architect">
+                Sjekk /api/architect
+              </button>
+            </div>
+
+            <!-- Kontekst-analyse og arkitektfaglige spørsmål -->
+            <div id="advisorConversation" class="advisor-log" aria-live="polite" aria-label="Meldinger fra lokal prosjektveileder"></div>
+
+            <!-- Spørsmål- og svarfelt -->
+            <div class="no-print">
+              <label for="inpAdvisorQuery" class="field-label">Still spørsmål eller svar på veilederens spørsmål</label>
+              <div style="display: flex; gap: 0.4rem; margin-bottom: 0.5rem;">
+                <input type="text" id="inpAdvisorQuery" class="input-control" placeholder="F.eks. Hva betyr spennvidden for transport til tomt?">
+                <button type="button" id="btnSendAdvisor" class="btn btn-primary btn-sm">Spør</button>
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.35rem;">
+                <button type="button" class="btn btn-sm quick-ask-btn" data-q="Hvordan påvirker modulbredden transport og kranløft?">Transport &amp; bredde</button>
+                <button type="button" class="btn btn-sm quick-ask-btn" data-q="Bør vi velge moduler, elementer eller precut?">Valg av leveransenivå</button>
+                <button type="button" class="btn btn-sm quick-ask-btn" data-q="Hvordan stemmer romprogrammet med modularealet?">Sjekk rombalanse</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- SJEKKLISTE FOR REGULERINGS- OG TOMTEFORHOLD (ALLTID ÆRLIG STATUS) -->
+          <div class="config-section">
+            <div class="config-section-title">
+              <span>Offentlige rammevilkår &amp; Tomtesjekk</span>
+            </div>
+            <p class="field-hint" style="margin-bottom: 0.75rem;">
+              Denne prototypen utfører ingen skjulte oppslag mot kommunale planregistre. Punktene under krever fagkyndig prosjektering.
+            </p>
+
+            <ul class="reg-list" aria-label="Status for tekniske og regulatoriske rammevilkår">
+              <li class="reg-item">
+                <div class="reg-item-head">
+                  <span>1. Utnyttelsesgrad mot brukeroppgitt grense</span>
+                  <span id="regBadgeUtil" class="status-pill pill-ok">Kontrollert mot egne tall</span>
+                </div>
+                <p id="regTextUtil" style="color: var(--ink-muted);">Fotavtrykk (110.2 m²) er innenfor oppgitt ramme (200.0 m²).</p>
+              </li>
+              <li class="reg-item">
+                <div class="reg-item-head">
+                  <span>2. Reguleringsplan, gesims- og mønehøyde</span>
+                  <span class="status-pill pill-unchecked">Ikke kontrollert</span>
+                </div>
+                <p style="color: var(--ink-muted);">Må sjekkes mot gjeldende reguleringsbestemmelser i aktuell kommune.</p>
+              </li>
+              <li class="reg-item">
+                <div class="reg-item-head">
+                  <span>3. Nabogrenser (PBL § 29-4) og byggegrenser</span>
+                  <span class="status-pill pill-unchecked">Ikke kontrollert</span>
+                </div>
+                <p style="color: var(--ink-muted);">Kartdata, matrikkelgrenser og frisiktsoner er ikke innlest.</p>
+              </li>
+              <li class="reg-item">
+                <div class="reg-item-head">
+                  <span>4. Terrenginngrep, grunnforhold og kranadkomst</span>
+                  <span class="status-pill pill-unchecked">Ikke kontrollert</span>
+                </div>
+                <p style="color: var(--ink-muted);">Veibredde, stigning og oppstillingsplass for mobilkran må avklares.</p>
+              </li>
+              <li class="reg-item">
+                <div class="reg-item-head">
+                  <span>5. Lokale solforhold og TEK17 energirammer</span>
+                  <span class="status-pill pill-unchecked">Ikke kontrollert</span>
+                </div>
+                <p style="color: var(--ink-muted);">Ingen automatisk sol- eller U-verdiberegning i skissemodellen.</p>
+              </li>
+              <li class="reg-item">
+                <div class="reg-item-head">
+                  <span>6. Byggesøknad og ansvarsrett</span>
+                  <span class="status-pill pill-unchecked">Ikke kontrollert</span>
+                </div>
+                <p style="color: var(--ink-muted);">Krever ansvarlig søker og prosjekterende (f.eks. arkitektavdelingen).</p>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SEKSJON 04: INNEBYGD TESTHARNESS & TEKNISK VERIFIKASJON
+         ======================================================================== -->
+    <section id="seksjon-verifikasjon" class="no-print" aria-labelledby="testSectionHeading" style="background-color: var(--bg-chalk-alt); border-bottom: 1px solid var(--hairline-dark);">
+      <div class="section-header-bar">
+        <div>
+          <span class="mono-label">04 // KVALITETSSIKRING &amp; SELVTEST (`window.LindalStudio`)</span>
+          <h2 id="testSectionHeading" class="serif-display" style="font-size: 1.6rem; margin-top: 0.2rem;">
+            Innebygd testharness og arkitekturdokumentasjon
+          </h2>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <span id="testSummaryBadge" class="status-pill pill-ok">Kjører tester...</span>
+          <button type="button" id="btnRunTestsNow" class="btn btn-sm btn-primary">Kjør alle tester på nytt</button>
+        </div>
+      </div>
+
+      <div style="padding: 1.5rem; display: grid; grid-template-columns: 1fr; gap: 1.5rem;">
+        <div style="background-color: #FFFFFF; border: 1px solid var(--hairline-dark); padding: 1rem;">
+          <div class="mono-label" style="margin-bottom: 0.5rem;">RESULTATLOGG FRA AUTOMATISKE ENHETSTESTER:</div>
+          <ul id="testResultsList" style="list-style: none; font-family: var(--font-mono); font-size: 0.8rem; display: grid; gap: 0.35rem;"></ul>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+          <div style="background-color: var(--bg-panel); border: 1px solid var(--hairline); padding: 1.1rem;">
+            <div class="mono-label" style="color: var(--forest-deep); font-weight: 700;">HVA SOM FUNGERER 100 % LOKALT I NETTLESEREN</div>
+            <ul style="margin-top: 0.5rem; padding-left: 1.1rem; font-size: 0.85rem; color: var(--ink-muted); display: grid; gap: 0.3rem;">
+              <li>Sanntids areal-, fotavtrykk- og utnyttelsesberegning.</li>
+              <li>Interaktiv 3D-isometrisk Canvas med rotasjon og eksplodert modulvisning.</li>
+              <li>Dynamisk 2D-plantegningsskisse (SVG) med modulskjøter og romprogram.</li>
+              <li>Lagring i <code>localStorage</code>, skjemavalidert JSON-import/eksport, nedlastbar brief og utskriftsrapport.</li>
+              <li>Kontekstbevisst, regelbasert prosjektveileder.</li>
+            </ul>
+          </div>
+
+          <div style="background-color: var(--bg-panel); border: 1px solid var(--hairline); padding: 1.1rem;">
+            <div class="mono-label" style="color: var(--copper-dark); font-weight: 700;">HVA SOM KREVER BACKEND VED VIDERE UTVIKLING</div>
+            <ul style="margin-top: 0.5rem; padding-left: 1.1rem; font-size: 0.85rem; color: var(--ink-muted); display: grid; gap: 0.3rem;">
+              <li>Tilkobling av generativ språkmodell via same-origin <code>POST /api/architect</code> (uten API-nøkler i frontend).</li>
+              <li>Oppslag mot matrikkel, kommunale reguleringsplaner og kotehøyder.</li>
+              <li>Faktisk statisk dimensjonering, TEK17-energiberegning og offisielt pristilbud fra Lindal Modul AS.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BUNNTEKST -->
+  <footer class="container-grid" style="background-color: var(--ink-black); color: var(--bg-chalk); padding: 2.5rem 1.5rem;">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1.5rem; border-bottom: 1px solid #2D3230; padding-bottom: 1.5rem;">
+      <div style="max-width: 52ch;">
+        <div class="serif-display" style="font-size: 1.35rem; margin-bottom: 0.4rem;">Lindal Modul — Studio (Konseptprototype)</div>
+        <p style="font-size: 0.85rem; color: #B5B9B7;">
+          Et uavhengig, interaktivt konseptutkast bygget for å utforske samspillet mellom arkitekturprosjektering (Halvorsen Arkitekter) og industriell produksjon av boligmoduler, bygningselementer og precut på Grenstøl i Tvedestrand.
+        </p>
+      </div>
+      <div style="font-family: var(--font-mono); font-size: 0.78rem; color: #B5B9B7;">
+        <div>VERIFISERTE FAKTAKILDER:</div>
+        <div style="margin-top: 0.35rem;">• lindalmodul.no (Prefabrikkerte moduler, elementer, precut)</div>
+        <div>• Produksjonssted: Grenstøl, Tvedestrand</div>
+        <div>• Offisiell representant / Daglig leder: <strong>Arne Austenå</strong></div>
+        <div>• Arkitekter: Ole Einar Johnsen &amp; Morten Birkedal</div>
+        <div>• Tomteanalyse: <a href="index.html" style="color: var(--copper-tint); text-decoration: underline;">AI-Tomteplanlegger &amp; Solstudie ↗</a></div>
+      </div>
+    </div>
+    <div style="padding-top: 1rem; font-family: var(--font-mono); font-size: 0.72rem; color: #8A908D; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+      <span>Eksponert API for automatisk test: window.LindalStudio</span>
+      <span>Selvstendig HTML/CSS/JS — fungerer offline og på localhost</span>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       JAVASCRIPT: KJERNEBEREGNING, VALIDERING, 3D CANVAS, 2D SVG, VEILEDER & TESTER
+       ========================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ------------------------------------------------------------------------
+         1. FORHÅNDSDEFINERTE KONSEPTLØSNINGER
+         ------------------------------------------------------------------------ */
+      const PRESET_CONCEPTS = {
+        skogsbrynet: {
+          projectName: 'Skogsbrynet — Kompakt',
+          deliveryLevel: 'Prefabrikkerte boligmoduler',
+          plotArea: 650,
+          maxUtilizationPct: 25,
+          moduleCount: 2,
+          moduleWidth: 3.6,
+          moduleLength: 9.6,
+          floors: 1,
+          roofType: 'pulttak',
+          cladding: 'Stående malmfuru',
+          userRateLow: 33000,
+          userRateHigh: 43000,
+          userSiteCost: 650000,
+          rooms: [
+            { id: 'r1', name: 'Stue / Kjøkken', area: 28, floor: 1 },
+            { id: 'r2', name: 'Hovedsoverom', area: 12, floor: 1 },
+            { id: 'r3', name: 'Gjesterom / Kontor', area: 8, floor: 1 },
+            { id: 'r4', name: 'Bad / Vaskerom', area: 6.5, floor: 1 },
+            { id: 'r5', name: 'Entré / Teknisk', area: 5.5, floor: 1 }
+          ]
+        },
+        grenstol: {
+          projectName: 'Grenstøl — Familiebolig',
+          deliveryLevel: 'Prefabrikkerte boligmoduler',
+          plotArea: 800,
+          maxUtilizationPct: 25,
+          moduleCount: 3,
+          moduleWidth: 3.6,
+          moduleLength: 10.2,
+          floors: 2,
+          roofType: 'saltak',
+          cladding: 'Grankledning i skoggrønn',
+          userRateLow: 32000,
+          userRateHigh: 44000,
+          userSiteCost: 850000,
+          rooms: [
+            { id: 'r1', name: 'Allrom / Kjøkken', area: 42, floor: 1 },
+            { id: 'r2', name: 'Entré / Garderobe', area: 11, floor: 1 },
+            { id: 'r3', name: 'Bad 1. etg / Vask', area: 9, floor: 1 },
+            { id: 'r4', name: 'Teknisk / Bod', area: 8, floor: 1 },
+            { id: 'r5', name: 'Loftstue / Kontor', area: 24, floor: 2 },
+            { id: 'r6', name: 'Hovedsoverom', area: 16, floor: 2 },
+            { id: 'r7', name: 'Soverom 2', area: 12, floor: 2 },
+            { id: 'r8', name: 'Soverom 3', area: 12, floor: 2 },
+            { id: 'r9', name: 'Bad 2. etg', area: 8, floor: 2 }
+          ]
+        },
+        kystlinjen: {
+          projectName: 'Kystlinjen — Generasjon',
+          deliveryLevel: 'Kombinert arkitektur og modul',
+          plotArea: 1100,
+          maxUtilizationPct: 22,
+          moduleCount: 4,
+          moduleWidth: 3.8,
+          moduleLength: 10.8,
+          floors: 2,
+          roofType: 'flatt',
+          cladding: 'Brent treverk',
+          userRateLow: 35000,
+          userRateHigh: 48000,
+          userSiteCost: 1150000,
+          rooms: [
+            { id: 'r1', name: 'Stue / Spisesone', area: 48, floor: 1 },
+            { id: 'r2', name: 'Kjøkken & Spiskammer', area: 22, floor: 1 },
+            { id: 'r3', name: 'Praktikantdel / Studio', area: 28, floor: 1 },
+            { id: 'r4', name: 'Entré / Vaskerom / Teknisk', area: 18, floor: 1 },
+            { id: 'r5', name: 'Foreldresuite m/ bad', area: 28, floor: 2 },
+            { id: 'r6', name: 'Galleri / Bibliotek', area: 26, floor: 2 },
+            { id: 'r7', name: 'Soverom 2', area: 14, floor: 2 },
+            { id: 'r8', name: 'Soverom 3', area: 14, floor: 2 },
+            { id: 'r9', name: 'Soverom 4', area: 12, floor: 2 },
+            { id: 'r10', name: 'Fellesbad 2. etg', area: 9, floor: 2 }
+          ]
+        }
+      };
+
+      const ALLOWED_ROOFS = ['saltak', 'pulttak', 'flatt'];
+      const ALLOWED_CLADDINGS = [
+        'Stående malmfuru',
+        'Grankledning i skoggrønn',
+        'Brent treverk',
+        'Ubehandlet kjerneved'
+      ];
+      const ALLOWED_DELIVERIES = [
+        'Prefabrikkerte boligmoduler',
+        'Prefabrikkerte bygningselementer',
+        'Precut konstruksjonspakke',
+        'Kombinert arkitektur og modul'
+      ];
+
+      const STORAGE_KEY = 'lindal_studio_saved_projects_v1';
+
+      /* Applikasjonens aktive tilstand */
+      const state = JSON.parse(JSON.stringify(PRESET_CONCEPTS.grenstol));
+      state.rotationDeg = 42;
+      state.explodePct = 0;
+      state.aiConnected = false;
+
+      /* ------------------------------------------------------------------------
+         2. HJELPEFUNKSJONER FOR TALLSIKKERHET OG FORMAT
+         ------------------------------------------------------------------------ */
+      function toSafeNum(val, fallback) {
+        const n = typeof val === 'number' ? val : Number(val);
+        return Number.isFinite(n) ? n : fallback;
+      }
+
+      function clamp(val, min, max) {
+        return Math.min(Math.max(val, min), max);
+      }
+
+      function round1(n) {
+        return Math.round(n * 10) / 10;
+      }
+
+      function formatNoNum(n, decimals = 1) {
+        if (!Number.isFinite(n)) return '0';
+        return n.toLocaleString('nb-NO', {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals
+        });
+      }
+
+      function formatCurrency(n) {
+        if (!Number.isFinite(n)) return '0 kr';
+        return Math.round(n).toLocaleString('nb-NO') + ' kr';
+      }
+
+      /* ------------------------------------------------------------------------
+         3. KJERNEFUNKSJONER: VALIDATEPROJECT & CALCULATE (EKSPONERES PÅ WINDOW)
+         ------------------------------------------------------------------------ */
+      function validateProject(candidate) {
+        const errors = [];
+        if (!candidate || typeof candidate !== 'object' || Array.isArray(candidate)) {
+          return { valid: false, errors: ['Prosjektdata må være et gyldig JSON-objekt.'], sanitized: null };
+        }
+
+        const projectName = typeof candidate.projectName === 'string' ? candidate.projectName.trim() : '';
+        if (!projectName || projectName.length > 100) {
+          errors.push('Prosjektnavn må være en tekst mellom 1 og 100 tegn.');
+        }
+
+        const plotArea = Number(candidate.plotArea);
+        if (!Number.isFinite(plotArea) || plotArea <= 0 || plotArea > 100000) {
+          errors.push('Tomteareal må være et positivt tall mellom 1 og 100 000 m².');
+        }
+
+        const maxUtilizationPct = Number(candidate.maxUtilizationPct);
+        if (!Number.isFinite(maxUtilizationPct) || maxUtilizationPct <= 0 || maxUtilizationPct > 100) {
+          errors.push('Maksimal utnyttelsesgrad må være mellom 1 % og 100 %.');
+        }
+
+        const moduleCount = Number(candidate.moduleCount);
+        if (!Number.isInteger(moduleCount) || moduleCount < 1 || moduleCount > 12) {
+          errors.push('Antall moduler per etasje må være et heltall mellom 1 og 12.');
+        }
+
+        const moduleWidth = Number(candidate.moduleWidth);
+        if (!Number.isFinite(moduleWidth) || moduleWidth < 2.4 || moduleWidth > 5.0) {
+          errors.push('Modulbredde må være mellom 2.4 m og 5.0 m.');
+        }
+
+        const moduleLength = Number(candidate.moduleLength);
+        if (!Number.isFinite(moduleLength) || moduleLength < 4.0 || moduleLength > 16.0) {
+          errors.push('Modullengde må være mellom 4.0 m og 16.0 m.');
+        }
+
+        const floors = Number(candidate.floors);
+        if (!Number.isInteger(floors) || (floors !== 1 && floors !== 2)) {
+          errors.push('Antall etasjer må være 1 eller 2.');
+        }
+
+        const roofType = candidate.roofType;
+        if (!ALLOWED_ROOFS.includes(roofType)) {
+          errors.push('Ugyldig takform valgt.');
+        }
+
+        const cladding = candidate.cladding || 'Grankledning i skoggrønn';
+        const deliveryLevel = candidate.deliveryLevel || 'Prefabrikkerte boligmoduler';
+
+        const userRateLow = candidate.userRateLow !== undefined ? Number(candidate.userRateLow) : 0;
+        const userRateHigh = candidate.userRateHigh !== undefined ? Number(candidate.userRateHigh) : 0;
+        const userSiteCost = candidate.userSiteCost !== undefined ? Number(candidate.userSiteCost) : 0;
+
+        if (!Number.isFinite(userRateLow) || userRateLow < 0 || !Number.isFinite(userRateHigh) || userRateHigh < 0) {
+          errors.push('Kvadratmetersatser kan ikke være negative eller ugyldige tall.');
+        }
+        if (Number.isFinite(userRateLow) && Number.isFinite(userRateHigh) && userRateHigh < userRateLow) {
+          errors.push('Høy kvadratmetersats kan ikke være lavere enn lav sats.');
+        }
+        if (!Number.isFinite(userSiteCost) || userSiteCost < 0) {
+          errors.push('Fastpost for tomt/grunnarbeid kan ikke være negativ.');
+        }
+
+        if (!Array.isArray(candidate.rooms) || candidate.rooms.length === 0) {
+          errors.push('Romprogrammet må inneholde minst ett rom.');
+        } else {
+          candidate.rooms.forEach((rm, idx) => {
+            if (!rm || typeof rm !== 'object') {
+              errors.push('Rom nr. ' + (idx + 1) + ' mangler gyldig struktur.');
+              return;
+            }
+            const rName = typeof rm.name === 'string' ? rm.name.trim() : '';
+            const rArea = Number(rm.area);
+            const rFloor = Number(rm.floor || 1);
+            if (!rName) {
+              errors.push('Rom nr. ' + (idx + 1) + ' mangler navn.');
+            }
+            if (!Number.isFinite(rArea) || rArea <= 0 || rArea > 500) {
+              errors.push('Rom "' + (rName || idx + 1) + '" har ugyldig areal.');
+            }
+            if (rFloor !== 1 && rFloor !== 2) {
+              errors.push('Rom "' + (rName || idx + 1) + '" har ugyldig etasje.');
+            }
+          });
+        }
+
+        if (errors.length > 0) {
+          return { valid: false, errors, sanitized: null };
+        }
+
+        const sanitized = {
+          projectName: projectName.slice(0, 80),
+          deliveryLevel: ALLOWED_DELIVERIES.includes(deliveryLevel) ? deliveryLevel : ALLOWED_DELIVERIES[0],
+          plotArea: round1(plotArea),
+          maxUtilizationPct: round1(maxUtilizationPct),
+          moduleCount: moduleCount,
+          moduleWidth: round1(moduleWidth),
+          moduleLength: round1(moduleLength),
+          floors: floors,
+          roofType: roofType,
+          cladding: ALLOWED_CLADDINGS.includes(cladding) ? cladding : ALLOWED_CLADDINGS[0],
+          userRateLow: Math.round(userRateLow),
+          userRateHigh: Math.round(userRateHigh),
+          userSiteCost: Math.round(userSiteCost),
+          rooms: candidate.rooms.map((r, i) => ({
+            id: typeof r.id === 'string' && r.id ? r.id : 'rm_' + i + '_' + Date.now(),
+            name: String(r.name).trim().slice(0, 40),
+            area: round1(Number(r.area)),
+            floor: Number(r.floor) === 2 && floors === 2 ? 2 : 1
+          }))
+        };
+
+        return { valid: true, errors: [], sanitized };
+      }
+
+      function calculate(inputState) {
+        const s = inputState || state;
+
+        const moduleCount = clamp(Math.round(toSafeNum(s.moduleCount, 1)), 1, 12);
+        const moduleWidth = clamp(toSafeNum(s.moduleWidth, 3.6), 2.4, 5.0);
+        const moduleLength = clamp(toSafeNum(s.moduleLength, 10.2), 4.0, 16.0);
+        const floors = toSafeNum(s.floors, 1) === 2 ? 2 : 1;
+        const plotArea = clamp(toSafeNum(s.plotArea, 800), 1, 100000);
+        const maxUtilizationPct = clamp(toSafeNum(s.maxUtilizationPct, 25), 1, 100);
+
+        const singleModuleArea = round1(moduleWidth * moduleLength);
+        const footprintArea = round1(moduleCount * moduleWidth * moduleLength);
+        const grossModuleArea = round1(footprintArea * floors);
+        const totalModules = moduleCount * floors;
+
+        /* Veiledende indre netto ramme (~84 % av utvendig modulvolum pga yttervegger/modulskjøter) */
+        const estimatedUsableArea = round1(grossModuleArea * 0.84);
+
+        const maxAllowedFootprint = round1(plotArea * (maxUtilizationPct / 100));
+        const utilizationPct = round1((footprintArea / plotArea) * 100);
+        const utilizationExceeded = footprintArea > maxAllowedFootprint;
+
+        const rooms = Array.isArray(s.rooms) ? s.rooms : [];
+        let roomProgramArea = 0;
+        let floor1RoomArea = 0;
+        let floor2RoomArea = 0;
+
+        for (let i = 0; i < rooms.length; i++) {
+          const a = toSafeNum(rooms[i].area, 0);
+          if (a > 0) {
+            roomProgramArea += a;
+            if (Number(rooms[i].floor) === 2 && floors === 2) {
+              floor2RoomArea += a;
+            } else {
+              floor1RoomArea += a;
+            }
+          }
+        }
+
+        roomProgramArea = round1(roomProgramArea);
+        floor1RoomArea = round1(floor1RoomArea);
+        floor2RoomArea = round1(floor2RoomArea);
+
+        const roomCapacityExceeded = roomProgramArea > estimatedUsableArea;
+
+        const rateLow = Math.max(0, toSafeNum(s.userRateLow, 0));
+        const rateHigh = Math.max(rateLow, toSafeNum(s.userRateHigh, 0));
+        const siteCost = Math.max(0, toSafeNum(s.userSiteCost, 0));
+
+        const budgetLow = Math.round(grossModuleArea * rateLow + siteCost);
+        const budgetHigh = Math.round(grossModuleArea * rateHigh + siteCost);
+
+        return {
+          singleModuleArea,
+          footprintArea,
+          grossModuleArea,
+          totalModules,
+          estimatedUsableArea,
+          plotArea,
+          maxUtilizationPct,
+          maxAllowedFootprint,
+          utilizationPct,
+          utilizationExceeded,
+          roomProgramArea,
+          floor1RoomArea,
+          floor2RoomArea,
+          roomCapacityExceeded,
+          budgetLow,
+          budgetHigh
+        };
+      }
+
+      /* ------------------------------------------------------------------------
+         4. UI MELDINGER (INGEN ALERT/CONFIRM)
+         ------------------------------------------------------------------------ */
+      function showFeedback(message, isError = false) {
+        const banner = document.getElementById('studioFeedbackBanner');
+        const textEl = document.getElementById('studioFeedbackText');
+        if (!banner || !textEl) return;
+
+        textEl.textContent = message;
+        banner.style.backgroundColor = isError ? 'var(--status-err-bg)' : 'var(--status-ok-bg)';
+        banner.style.color = isError ? 'var(--status-err-fg)' : 'var(--status-ok-fg)';
+        banner.style.borderColor = isError ? 'var(--status-err-fg)' : 'var(--status-ok-fg)';
+        banner.classList.remove('hidden');
+      }
+
+      /* ------------------------------------------------------------------------
+         5. RENDER 3D ISOMETRISK CANVAS-MODELL
+         ------------------------------------------------------------------------ */
+      function getCladdingPalette(claddingName) {
+        switch (claddingName) {
+          case 'Stående malmfuru':
+            return { wallLight: '#C58B57', wallDark: '#9E6A3B', stroke: '#3D2714' };
+          case 'Brent treverk':
+            return { wallLight: '#3A3835', wallDark: '#242321', stroke: '#111110' };
+          case 'Ubehandlet kjerneved':
+            return { wallLight: '#C9C4B8', wallDark: '#A8A295', stroke: '#4A4740' };
+          case 'Grankledning i skoggrønn':
+          default:
+            return { wallLight: '#2E4C39', wallDark: '#1E3527', stroke: '#112017' };
+        }
+      }
+
+      function renderIsometricCanvas(metrics) {
+        const canvas = document.getElementById('isoCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        const rect = canvas.parentElement.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        const width = Math.max(300, Math.floor(rect.width));
+        const height = 460;
+
+        if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
+          canvas.width = width * dpr;
+          canvas.height = height * dpr;
+        }
+        ctx.save();
+        ctx.scale(dpr, dpr);
+
+        /* Bakgrunn og arkitektonisk hjelperutenett */
+        ctx.fillStyle = '#F7F4ED';
+        ctx.fillRect(0, 0, width, height);
+
+        const cx = width / 2;
+        const cy = height * 0.62;
+
+        const rad = (toSafeNum(state.rotationDeg, 42) * Math.PI) / 180;
+        const tilt = 0.52;
+        const explodeFactor = clamp(toSafeNum(state.explodePct, 0) / 100, 0, 1);
+
+        const totalSpanX = state.moduleCount * state.moduleWidth;
+        const totalSpanY = state.moduleLength;
+        const maxDim = Math.max(totalSpanX, totalSpanY, 12);
+        const scale = Math.min(width, height) / (maxDim * 1.85);
+
+        function project(x, y, z) {
+          const rx = x * Math.cos(rad) - y * Math.sin(rad);
+          const ry = x * Math.sin(rad) + y * Math.cos(rad);
+          return {
+            x: cx + rx * scale,
+            y: cy + ry * scale * tilt - z * scale * 0.92,
+            depth: ry
+          };
+        }
+
+        /* Tegn tomteramme / bakkerutenett */
+        ctx.strokeStyle = '#DDD7C8';
+        ctx.lineWidth = 1;
+        const gridLim = Math.ceil(maxDim * 0.85);
+        for (let g = -gridLim; g <= gridLim; g += 2) {
+          const p1 = project(g, -gridLim, 0);
+          const p2 = project(g, gridLim, 0);
+          ctx.beginPath();
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.stroke();
+
+          const q1 = project(-gridLim, g, 0);
+          const q2 = project(gridLim, g, 0);
+          ctx.beginPath();
+          ctx.moveTo(q1.x, q1.y);
+          ctx.lineTo(q2.x, q2.y);
+          ctx.stroke();
+        }
+
+        /* Tegn fundamentplate */
+        const halfW = totalSpanX / 2;
+        const halfL = totalSpanY / 2;
+        const baseCorners = [
+          project(-halfW - 0.3, -halfL - 0.3, 0),
+          project(halfW + 0.3, -halfL - 0.3, 0),
+          project(halfW + 0.3, halfL + 0.3, 0),
+          project(-halfW - 0.3, halfL + 0.3, 0)
+        ];
+        ctx.beginPath();
+        ctx.moveTo(baseCorners[0].x, baseCorners[0].y);
+        for (let i = 1; i < 4; i++) ctx.lineTo(baseCorners[i].x, baseCorners[i].y);
+        ctx.closePath();
+        ctx.fillStyle = '#E2DDD0';
+        ctx.fill();
+        ctx.strokeStyle = '#8F897B';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        const palette = getCladdingPalette(state.cladding);
+        const modH = 3.0;
+        const explodeGapX = explodeFactor * 1.45;
+        const explodeGapZ = explodeFactor * 2.1;
+
+        /* Samle alle moduler og sorter dem etter dybde (Painter's algorithm) */
+        const boxes = [];
+        for (let f = 0; f < state.floors; f++) {
+          for (let m = 0; m < state.moduleCount; m++) {
+            const centerOffset = m - (state.moduleCount - 1) / 2;
+            const x0 = centerOffset * (state.moduleWidth + explodeGapX) - state.moduleWidth / 2;
+            const x1 = x0 + state.moduleWidth;
+            const y0 = -halfL;
+            const y1 = halfL;
+            const z0 = f * (modH + explodeGapZ);
+            const z1 = z0 + modH;
+
+            const mid = project((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2);
+            boxes.push({
+              floorIdx: f,
+              modIdx: m,
+              label: 'E' + (f + 1) + '·M' + (m + 1),
+              x0, x1, y0, y1, z0, z1,
+              depth: mid.depth + f * 0.01
+            });
+          }
+        }
+
+        boxes.sort((a, b) => a.depth - b.depth);
+
+        function drawPolygon(pts, fill, stroke, lineW = 1.2) {
+          ctx.beginPath();
+          ctx.moveTo(pts[0].x, pts[0].y);
+          for (let i = 1; i < pts.length; i++) {
+            ctx.lineTo(pts[i].x, pts[i].y);
+          }
+          ctx.closePath();
+          ctx.fillStyle = fill;
+          ctx.fill();
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = lineW;
+          ctx.stroke();
+        }
+
+        boxes.forEach((b) => {
+          /* Eksplodert monteringsanvisning (stiplede kobberlinjer) */
+          if (explodeFactor > 0.03) {
+            const botCenter = project((b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2, 0);
+            const modCenter = project((b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2, b.z0);
+            ctx.save();
+            ctx.setLineDash([4, 4]);
+            ctx.strokeStyle = '#B86B43';
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(botCenter.x, botCenter.y);
+            ctx.lineTo(modCenter.x, modCenter.y);
+            ctx.stroke();
+            ctx.restore();
+          }
+
+          /* 6 flater per modul, sortert fra lengst bak til fremst */
+          const faces = [
+            {
+              name: 'bottom',
+              pts3: [[b.x0, b.y0, b.z0], [b.x1, b.y0, b.z0], [b.x1, b.y1, b.z0], [b.x0, b.y1, b.z0]],
+              color: '#D5CFC0'
+            },
+            {
+              name: 'front',
+              pts3: [[b.x0, b.y1, b.z0], [b.x1, b.y1, b.z0], [b.x1, b.y1, b.z1], [b.x0, b.y1, b.z1]],
+              color: palette.wallLight
+            },
+            {
+              name: 'back',
+              pts3: [[b.x1, b.y0, b.z0], [b.x0, b.y0, b.z0], [b.x0, b.y0, b.z1], [b.x1, b.y0, b.z1]],
+              color: palette.wallLight
+            },
+            {
+              name: 'left',
+              pts3: [[b.x0, b.y0, b.z0], [b.x0, b.y1, b.z0], [b.x0, b.y1, b.z1], [b.x0, b.y0, b.z1]],
+              color: palette.wallDark
+            },
+            {
+              name: 'right',
+              pts3: [[b.x1, b.y1, b.z0], [b.x1, b.y0, b.z0], [b.x1, b.y0, b.z1], [b.x1, b.y1, b.z1]],
+              color: palette.wallDark
+            },
+            {
+              name: 'top',
+              pts3: [[b.x0, b.y0, b.z1], [b.x1, b.y0, b.z1], [b.x1, b.y1, b.z1], [b.x0, b.y1, b.z1]],
+              color: '#EAE5D9'
+            }
+          ];
+
+          faces.forEach((f) => {
+            f.pts2 = f.pts3.map((p) => project(p[0], p[1], p[2]));
+            f.depth = f.pts2.reduce((acc, p) => acc + p.depth, 0) / 4;
+          });
+
+          faces.sort((a, bFace) => a.depth - bFace.depth);
+
+          faces.forEach((f) => {
+            drawPolygon(f.pts2, f.color, palette.stroke, 1.3);
+          });
+
+          /* Modul-ID-etikett på toppskive */
+          const topMid = project((b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2, b.z1);
+          ctx.fillStyle = '#141615';
+          ctx.font = 'bold 11px monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText(b.label, topMid.x, topMid.y + 4);
+        });
+
+        /* Tegn takkonstruksjon (løftes opp ved eksplodert visning) */
+        const roofBaseZ = state.floors * modH + (state.floors - 1) * explodeGapZ + explodeFactor * 2.4;
+        const totalHalfSpanX = (state.moduleCount * state.moduleWidth + (state.moduleCount - 1) * explodeGapX) / 2;
+
+        if (state.roofType === 'saltak') {
+          const ridgeH = 2.1;
+          const slope1 = [
+            project(-totalHalfSpanX - 0.25, -halfL - 0.25, roofBaseZ),
+            project(0, -halfL - 0.25, roofBaseZ + ridgeH),
+            project(0, halfL + 0.25, roofBaseZ + ridgeH),
+            project(-totalHalfSpanX - 0.25, halfL + 0.25, roofBaseZ)
+          ];
+          const slope2 = [
+            project(totalHalfSpanX + 0.25, -halfL - 0.25, roofBaseZ),
+            project(0, -halfL - 0.25, roofBaseZ + ridgeH),
+            project(0, halfL + 0.25, roofBaseZ + ridgeH),
+            project(totalHalfSpanX + 0.25, halfL + 0.25, roofBaseZ)
+          ];
+          const d1 = slope1.reduce((s, p) => s + p.depth, 0);
+          const d2 = slope2.reduce((s, p) => s + p.depth, 0);
+          if (d1 < d2) {
+            drawPolygon(slope1, 'rgba(35, 62, 46, 0.85)', '#141615', 1.5);
+            drawPolygon(slope2, 'rgba(184, 107, 67, 0.88)', '#141615', 1.5);
+          } else {
+            drawPolygon(slope2, 'rgba(35, 62, 46, 0.85)', '#141615', 1.5);
+            drawPolygon(slope1, 'rgba(184, 107, 67, 0.88)', '#141615', 1.5);
+          }
+        } else if (state.roofType === 'pulttak') {
+          const highH = 1.6;
+          const pultPts = [
+            project(-totalHalfSpanX - 0.25, -halfL - 0.25, roofBaseZ + highH),
+            project(totalHalfSpanX + 0.25, -halfL - 0.25, roofBaseZ + 0.2),
+            project(totalHalfSpanX + 0.25, halfL + 0.25, roofBaseZ + 0.2),
+            project(-totalHalfSpanX - 0.25, halfL + 0.25, roofBaseZ + highH)
+          ];
+          drawPolygon(pultPts, 'rgba(184, 107, 67, 0.86)', '#141615', 1.5);
+        } else {
+          /* Flatt tak / takkassett */
+          const flatPts = [
+            project(-totalHalfSpanX - 0.15, -halfL - 0.15, roofBaseZ + 0.35),
+            project(totalHalfSpanX + 0.15, -halfL - 0.15, roofBaseZ + 0.35),
+            project(totalHalfSpanX + 0.15, halfL + 0.15, roofBaseZ + 0.35),
+            project(-totalHalfSpanX - 0.15, halfL + 0.15, roofBaseZ + 0.35)
+          ];
+          drawPolygon(flatPts, 'rgba(42, 46, 44, 0.84)', '#141615', 1.5);
+        }
+
+        /* Teknisk informasjonsstempel øverst i venstre hjørne på Canvas */
+        ctx.fillStyle = '#141615';
+        ctx.font = '11px monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText(
+          'MODULSYSTEM: ' + state.moduleCount + ' × ' + state.moduleWidth.toFixed(1) + 'm × ' + state.moduleLength.toFixed(1) + 'm (' + state.floors + ' ETG)',
+          16,
+          24
+        );
+        ctx.fillStyle = '#4A4F4C';
+        ctx.fillText(
+          'FOTAVTRYKK: ' + metrics.footprintArea.toFixed(1) + ' m² // SAMLET MODULAREAL: ' + metrics.grossModuleArea.toFixed(1) + ' m²',
+          16,
+          42
+        );
+
+        ctx.restore();
+      }
+
+      /* ------------------------------------------------------------------------
+         6. RENDER 2D PLANTEGNINGSSKISSE (SIKKER SVG UTEN INNERHTML)
+         ------------------------------------------------------------------------ */
+      function createSvgEl(tag, attrs) {
+        const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+        if (attrs) {
+          Object.keys(attrs).forEach((k) => {
+            el.setAttribute(k, String(attrs[k]));
+          });
+        }
+        return el;
+      }
+
+      function renderFloorplanSvg() {
+        const svg = document.getElementById('floorplanSvg');
+        if (!svg) return;
+
+        while (svg.firstChild) {
+          svg.removeChild(svg.firstChild);
+        }
+
+        const totalW = round1(state.moduleCount * state.moduleWidth);
+        const totalL = round1(state.moduleLength);
+
+        /* Bakgrunn */
+        svg.appendChild(createSvgEl('rect', { x: 0, y: 0, width: 760, height: 440, fill: '#FAF8F3' }));
+
+        const floorsToDraw = state.floors === 2 ? [1, 2] : [1];
+        const panelWidth = state.floors === 2 ? 340 : 660;
+
+        floorsToDraw.forEach((flNum, idx) => {
+          const offsetX = state.floors === 2 ? (idx === 0 ? 35 : 400) : 50;
+          const offsetY = 52;
+          const availW = panelWidth;
+          const availH = 330;
+
+          const scale = Math.min(availW / totalW, availH / totalL);
+          const drawW = totalW * scale;
+          const drawH = totalL * scale;
+          const startX = offsetX + (availW - drawW) / 2;
+          const startY = offsetY + (availH - drawH) / 2;
+
+          /* Etasjetittel */
+          const title = createSvgEl('text', {
+            x: startX,
+            y: startY - 14,
+            'font-family': 'monospace',
+            'font-size': '12',
+            'font-weight': 'bold',
+            fill: '#1B3024'
+          });
+          title.textContent = flNum + '. ETASJE (' + formatNoNum(totalW) + ' m × ' + formatNoNum(totalL) + ' m)';
+          svg.appendChild(title);
+
+          /* Ytterveggsramme */
+          svg.appendChild(createSvgEl('rect', {
+            x: startX,
+            y: startY,
+            width: drawW,
+            height: drawH,
+            fill: '#FFFFFF',
+            stroke: '#141615',
+            'stroke-width': 3
+          }));
+
+          /* Romfordeling på etasjen (Horisontale bånd proporsjonalt med areal) */
+          const floorRooms = state.rooms.filter((r) => (state.floors === 2 ? Number(r.floor) === flNum : true));
+          const sumArea = floorRooms.reduce((acc, r) => acc + Math.max(1, toSafeNum(r.area, 1)), 0);
+
+          let curY = startY;
+          floorRooms.forEach((rm, rIdx) => {
+            const ratio = Math.max(1, toSafeNum(rm.area, 1)) / Math.max(1, sumArea);
+            const rmH = rIdx === floorRooms.length - 1 ? (startY + drawH - curY) : drawH * ratio;
+
+            svg.appendChild(createSvgEl('rect', {
+              x: startX + 2,
+              y: curY + 2,
+              width: Math.max(4, drawW - 4),
+              height: Math.max(4, rmH - 4),
+              fill: rIdx % 2 === 0 ? '#F4F1EA' : '#EFECE4',
+              stroke: '#9A9486',
+              'stroke-width': 1
+            }));
+
+            const label = createSvgEl('text', {
+              x: startX + 12,
+              y: curY + Math.min(22, Math.max(14, rmH / 2 + 4)),
+              'font-family': 'sans-serif',
+              'font-size': '11',
+              'font-weight': '600',
+              fill: '#141615'
+            });
+            label.textContent = rm.name + ' (' + formatNoNum(rm.area, 1) + ' m²)';
+            svg.appendChild(label);
+
+            curY += rmH;
+          });
+
+          /* Stiplede modulskjøter (M1, M2, ...) */
+          const modPxW = drawW / state.moduleCount;
+          for (let m = 0; m < state.moduleCount; m++) {
+            const mx = startX + m * modPxW;
+            if (m > 0) {
+              svg.appendChild(createSvgEl('line', {
+                x1: mx,
+                y1: startY - 6,
+                x2: mx,
+                y2: startY + drawH + 6,
+                stroke: '#B86B43',
+                'stroke-width': 2,
+                'stroke-dasharray': '5,4'
+              }));
+            }
+            const mTag = createSvgEl('text', {
+              x: mx + modPxW / 2,
+              y: startY + drawH + 20,
+              'text-anchor': 'middle',
+              'font-family': 'monospace',
+              'font-size': '10',
+              fill: '#944F2B'
+            });
+            mTag.textContent = 'M' + (m + 1) + ' (' + formatNoNum(state.moduleWidth) + 'm)';
+            svg.appendChild(mTag);
+          }
+        });
+      }
+
+      /* ------------------------------------------------------------------------
+         7. RENDER ROMPROGRAM-LISTE & LOKALT LAGREDE PROSJEKTER
+         ------------------------------------------------------------------------ */
+      function renderRoomProgramList() {
+        const listEl = document.getElementById('roomProgramList');
+        const badgeEl = document.getElementById('roomCountBadge');
+        if (!listEl) return;
+
+        while (listEl.firstChild) {
+          listEl.removeChild(listEl.firstChild);
+        }
+
+        if (badgeEl) {
+          badgeEl.textContent = state.rooms.length + ' rom';
+        }
+
+        state.rooms.forEach((room, idx) => {
+          const li = document.createElement('li');
+          li.className = 'room-item';
+
+          /* Romnavn input */
+          const nameInp = document.createElement('input');
+          nameInp.type = 'text';
+          nameInp.className = 'input-control';
+          nameInp.style.minHeight = '36px';
+          nameInp.style.padding = '0.25rem 0.5rem';
+          nameInp.value = room.name;
+          nameInp.setAttribute('aria-label', 'Navn på rom ' + (idx + 1));
+          nameInp.addEventListener('input', () => {
+            const val = nameInp.value.trim();
+            if (val) {
+              room.name = val.slice(0, 40);
+              renderFloorplanSvg();
+              updateAdvisorContext();
+            }
+          });
+
+          /* Areal input */
+          const areaInp = document.createElement('input');
+          areaInp.type = 'number';
+          areaInp.className = 'input-control mono-val';
+          areaInp.style.minHeight = '36px';
+          areaInp.style.padding = '0.25rem 0.4rem';
+          areaInp.min = '1';
+          areaInp.max = '300';
+          areaInp.step = '0.5';
+          areaInp.value = String(room.area);
+          areaInp.setAttribute('aria-label', 'Areal i kvadratmeter for ' + room.name);
+          areaInp.addEventListener('change', () => {
+            const parsed = toSafeNum(areaInp.value, room.area);
+            room.area = clamp(round1(parsed), 1, 300);
+            areaInp.value = String(room.area);
+            syncAllViews();
+          });
+
+          /* Etasje velger */
+          const floorSel = document.createElement('select');
+          floorSel.className = 'select-control';
+          floorSel.style.minHeight = '36px';
+          floorSel.style.padding = '0.2rem 0.3rem';
+          floorSel.setAttribute('aria-label', 'Etasje for ' + room.name);
+
+          const opt1 = document.createElement('option');
+          opt1.value = '1';
+          opt1.textContent = '1. etg';
+          floorSel.appendChild(opt1);
+
+          if (state.floors === 2) {
+            const opt2 = document.createElement('option');
+            opt2.value = '2';
+            opt2.textContent = '2. etg';
+            floorSel.appendChild(opt2);
+          }
+
+          floorSel.value = state.floors === 2 ? String(room.floor) : '1';
+          floorSel.disabled = state.floors === 1;
+          floorSel.addEventListener('change', () => {
+            room.floor = Number(floorSel.value) === 2 ? 2 : 1;
+            syncAllViews();
+          });
+
+          /* Slett-knapp */
+          const delBtn = document.createElement('button');
+          delBtn.type = 'button';
+          delBtn.className = 'btn btn-sm';
+          delBtn.style.minHeight = '36px';
+          delBtn.style.minWidth = '36px';
+          delBtn.style.padding = '0.2rem';
+          delBtn.textContent = '×';
+          delBtn.title = 'Fjern rom';
+          delBtn.setAttribute('aria-label', 'Slett ' + room.name);
+          delBtn.addEventListener('click', () => {
+            if (state.rooms.length <= 1) {
+              showFeedback('Romprogrammet må ha minst ett rom.', true);
+              return;
+            }
+            state.rooms.splice(idx, 1);
+            syncAllViews();
+          });
+
+          li.appendChild(nameInp);
+          li.appendChild(areaInp);
+          li.appendChild(floorSel);
+          li.appendChild(delBtn);
+          listEl.appendChild(li);
+        });
+      }
+
+      /* ------------------------------------------------------------------------
+         8. REGELBASERT KONTEKSTBEVISST PROSJEKTVEILEDER
+         ------------------------------------------------------------------------ */
+      function buildAdvisorAssessment(metrics, customUserQuestion) {
+        const notes = [];
+        const questions = [];
+
+        /* 1. Vurdering av tomteutnyttelse */
+        if (metrics.utilizationExceeded) {
+          notes.push(
+            'OBS — Fotavtrykk overstiger oppgitt ramme: Modulenes utvendige fotavtrykk (' +
+            formatNoNum(metrics.footprintArea) + ' m²) er større enn din oppgitte grense på ' +
+            formatNoNum(metrics.maxAllowedFootprint) + ' m² (' + formatNoNum(metrics.maxUtilizationPct, 0) +
+            ' % av ' + formatNoNum(metrics.plotArea, 0) + ' m²). Vurder å redusere antall moduler i bredden eller gå fra 1 til 2 etasjer.'
+          );
+        } else {
+          notes.push(
+            'Tomteutnyttelse: Utvendig fotavtrykk er ' + formatNoNum(metrics.footprintArea) +
+            ' m² (' + formatNoNum(metrics.utilizationPct) + ' % av tomten), som ligger innenfor din oppgitte maksgrense (' +
+            formatNoNum(metrics.maxAllowedFootprint) + ' m²).'
+          );
+        }
+
+        /* 2. Vurdering av romprogram mot modulkapasitet */
+        if (metrics.roomCapacityExceeded) {
+          notes.push(
+            'Romprogram vs. modulvolum: Summen av ønskede rom (' + formatNoNum(metrics.roomProgramArea) +
+            ' m²) overstiger veiledende netto kapasitet (~' + formatNoNum(metrics.estimatedUsableArea) +
+            ' m² etter fradrag for yttervegger og modulskjøter). Øk modullengde/antall moduler, eller stram inn romarealene.'
+          );
+        } else {
+          const margin = round1(metrics.estimatedUsableArea - metrics.roomProgramArea);
+          notes.push(
+            'Arealbalanse: Romprogrammet utgjør ' + formatNoNum(metrics.roomProgramArea) +
+            ' m² av ca. ' + formatNoNum(metrics.estimatedUsableArea) +
+            ' m² veiledende netto ramme. Det gir ' + formatNoNum(margin) + ' m² til innervegger, sjakter og kommunikasjon/trapp.'
+          );
+        }
+
+        /* 3. Vurdering av moduldimensjoner og transport fra Grenstøl */
+        if (state.moduleWidth >= 4.0) {
+          notes.push(
+            'Transport og bredde: Du har valgt ' + formatNoNum(state.moduleWidth) +
+            ' m modulbredde. Bredder over 3.8 m krever nøye sjekk av veibredde, svingradius og følgebil fra fabrikken på Grenstøl til byggeplass.'
+          );
+          questions.push('Er adkomstveien frem til tomten bred nok for modulbredde på ' + formatNoNum(state.moduleWidth) + ' m og oppstilling av mobilkran?');
+        } else {
+          questions.push('Ønsker dere å samle våtrom (bad/vaskerom/kjøkken) innenfor samme modul fra Grenstøl for å minimere rørkoblinger på byggeplass?');
+        }
+
+        if (state.floors === 2) {
+          questions.push('Hvilken modul (M1–M' + state.moduleCount + ') skal romme trappeløpet mellom 1. og 2. etasje slik at utveksling i bjelkelaget blir rasjonell?');
+        } else {
+          questions.push('Har tomten flatt terreng som passer for plate på mark, eller skrått terreng der underetasje/peler bør vurderes med arkitekt?');
+        }
+
+        /* Svar på eventuelt konkret spørsmål fra brukeren */
+        let directReply = null;
+        if (customUserQuestion) {
+          const qLower = customUserQuestion.toLowerCase();
+          if (qLower.includes('transport') || qLower.includes('bredde') || qLower.includes('kran')) {
+            directReply =
+              'Ved produksjon på Grenstøl i Tvedestrand transporteres boligmoduler på bil til byggeplass. Med ' +
+              state.moduleCount + ' moduler à ' + formatNoNum(state.moduleWidth) + ' × ' + formatNoNum(state.moduleLength) +
+              ' m bør kranoppstillingsplass og bæreevne på adkomstvei avklares tidlig. Dersom kranbil ikke kommer frem, kan samme arkitektur leveres som bygningselementer eller precut.';
+          } else if (qLower.includes('leveranse') || qLower.includes('element') || qLower.includes('precut')) {
+            directReply =
+              'Valgt nivå nå er "' + state.deliveryLevel + '". Rommoduler gir høyest ferdigstillelsesgrad innendørs på Grenstøl. Bygningselementer passer godt ved store spenn eller spesiell takgeometri, mens precut velges når man vil bygge på stedet med ferdigkappede trepakker.';
+          } else if (qLower.includes('rom') || qLower.includes('areal') || qLower.includes('bra')) {
+            directReply =
+              'Utvendig modulareal er ' + formatNoNum(metrics.grossModuleArea) +
+              ' m², mens summen av romprogrammet ditt er ' + formatNoNum(metrics.roomProgramArea) +
+              ' m². Merk at utvendig modulgeometri inkluderer yttervegger og skjøter og derfor ikke skal forveksles med TEK17 BRA.';
+          } else {
+            directReply =
+              'Notert for "' + state.projectName + '" (' + state.moduleCount + ' moduler × ' + state.floors +
+              ' etg, ' + state.roofType + '). Ta dette punktet med i prosjektbriefen til arkitektavdelingen for detaljprosjektering.';
+          }
+        }
+
+        return { notes, questions, directReply };
+      }
+
+      function appendAdvisorMessage(senderLabel, paragraphs, isUser = false) {
+        const container = document.getElementById('advisorConversation');
+        if (!container) return;
+
+        const box = document.createElement('div');
+        box.className = 'advisor-msg' + (isUser ? ' advisor-msg-user' : '');
+
+        const meta = document.createElement('div');
+        meta.className = 'advisor-msg-meta';
+        meta.textContent = senderLabel;
+        box.appendChild(meta);
+
+        paragraphs.forEach((txt) => {
+          const p = document.createElement('p');
+          p.style.marginBottom = '0.35rem';
+          p.textContent = txt;
+          box.appendChild(p);
+        });
+
+        container.appendChild(box);
+        container.scrollTop = container.scrollHeight;
+      }
+
+      function updateAdvisorContext(customUserQuestion) {
+        const container = document.getElementById('advisorConversation');
+        if (!container) return;
+
+        const metrics = calculate(state);
+        const assessment = buildAdvisorAssessment(metrics, customUserQuestion);
+
+        if (!customUserQuestion) {
+          while (container.firstChild) {
+            container.removeChild(container.firstChild);
+          }
+        } else {
+          appendAdvisorMessage('BRUKERSPØRSMÅL', [customUserQuestion], true);
+        }
+
+        const lines = [];
+        if (assessment.directReply) {
+          lines.push(assessment.directReply);
+        }
+        assessment.notes.forEach((n) => lines.push('• ' + n));
+        lines.push('Relevante arkitektspørsmål for videre skissefase:');
+        assessment.questions.forEach((q) => lines.push('? ' + q));
+
+        appendAdvisorMessage('LOKAL PROSJEKTVEILEDER — REGELBASERT ANALYSE', lines, false);
+      }
+
+      /* Valgfri manuell sjekk av same-origin POST /api/architect */
+      async function checkSameOriginArchitectEndpoint() {
+        const statusEl = document.getElementById('advisorEndpointStatus');
+        const badgeEl = document.getElementById('aiConnectionBadge');
+        if (statusEl) statusEl.textContent = 'Kontakter POST /api/architect ...';
+
+        try {
+          const metrics = calculate(state);
+          const response = await fetch('/api/architect', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              project: state,
+              metrics: metrics
+            })
+          });
+
+          if (!response.ok) {
+            throw new Error('HTTP ' + response.status);
+          }
+          const data = await response.json();
+          if (data && typeof data.reply === 'string') {
+            state.aiConnected = true;
+            if (statusEl) statusEl.textContent = 'Tilkoblet same-origin /api/architect';
+            if (badgeEl) {
+              badgeEl.textContent = 'Same-origin AI tilkoblet';
+              badgeEl.className = 'status-pill pill-ok';
+            }
+            appendAdvisorMessage('SERVER-ARKITEKT (/api/architect)', [data.reply], false);
+            return;
+          }
+          throw new Error('Uventet responsformat');
+        } catch (err) {
+          state.aiConnected = false;
+          if (statusEl) {
+            statusEl.textContent = 'AI ikke tilkoblet (Ingen backend på /api/architect — bruker lokal regelmotor)';
+          }
+          if (badgeEl) {
+            badgeEl.textContent = 'AI ikke tilkoblet // Lokal regelmotor';
+            badgeEl.className = 'status-pill pill-offline';
+          }
+          appendAdvisorMessage(
+            'SYSTEMSTATUS // /api/architect',
+            [
+              'Same-origin endepunktet POST /api/architect svarte ikke (forventet når du kjører statisk HTML uten backend).',
+              'Lokal regelbasert prosjektveileder fortsetter å analysere prosjektvalgene dine 100 % offline.'
+            ],
+            false
+          );
+        }
+      }
+
+      /* ------------------------------------------------------------------------
+         9. SYNKRONISER ALLE VISNINGER OG METRIKKER
+         ------------------------------------------------------------------------ */
+      function syncInputsFromState() {
+        const setVal = (id, v) => {
+          const el = document.getElementById(id);
+          if (el) el.value = String(v);
+        };
+        setVal('inpProjectName', state.projectName);
+        setVal('selDeliveryLevel', state.deliveryLevel);
+        setVal('inpPlotArea', state.plotArea);
+        setVal('inpMaxUtil', state.maxUtilizationPct);
+        setVal('inpModuleCount', state.moduleCount);
+        setVal('selFloors', state.floors);
+        setVal('inpModuleWidth', state.moduleWidth);
+        setVal('inpModuleLength', state.moduleLength);
+        setVal('selRoofType', state.roofType);
+        setVal('selCladding', state.cladding);
+        setVal('inpRateLow', state.userRateLow);
+        setVal('inpRateHigh', state.userRateHigh);
+        setVal('inpSiteFixedCost', state.userSiteCost);
+        setVal('inpRotation', state.rotationDeg);
+        setVal('inpExplode', state.explodePct);
+      }
+
+      function syncAllViews() {
+        /* Sørg for at ingen rom ligger i 2. etasje hvis bruker bytter til 1 etasje */
+        if (state.floors === 1) {
+          state.rooms.forEach((r) => { r.floor = 1; });
+        }
+
+        const m = calculate(state);
+
+        /* Oppdater tekstverdier ved slidere */
+        const setTxt = (id, txt) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = txt;
+        };
+
+        setTxt('valModuleCount', state.moduleCount + ' stk');
+        setTxt('valModuleWidth', formatNoNum(state.moduleWidth) + ' m');
+        setTxt('valModuleLength', formatNoNum(state.moduleLength) + ' m');
+        setTxt('valRotation', state.rotationDeg + '°');
+        setTxt('valExplode', state.explodePct + ' %');
+        setTxt('activeDeliveryBadge', 'Leveranse: ' + state.deliveryLevel);
+        setTxt(
+          'viewportModelTitle',
+          state.moduleCount + ' moduler × ' + state.floors + ' etg — ' +
+          state.roofType.charAt(0).toUpperCase() + state.roofType.slice(1) + ' (' + state.cladding + ')'
+        );
+
+        /* Oppdater topp-nøkkeltall */
+        setTxt('metricFootprint', formatNoNum(m.footprintArea) + ' m²');
+        setTxt('metricFootprintSub', state.moduleCount + ' × (' + formatNoNum(state.moduleWidth) + ' × ' + formatNoNum(state.moduleLength) + ' m) utvendig');
+
+        setTxt('metricGrossArea', formatNoNum(m.grossModuleArea) + ' m²');
+        setTxt('metricGrossSub', 'Fordelt på ' + state.floors + ' etg (' + m.totalModules + ' moduler totalt)');
+
+        setTxt('metricUtilization', formatNoNum(m.utilizationPct) + ' %');
+        const utilSubEl = document.getElementById('metricUtilizationSub');
+        if (utilSubEl) {
+          utilSubEl.textContent = m.utilizationExceeded
+            ? 'OVERSKREDET: Maks ' + formatNoNum(state.maxUtilizationPct, 0) + ' % (' + formatNoNum(m.maxAllowedFootprint) + ' m²)'
+            : 'Innenfor maks ' + formatNoNum(state.maxUtilizationPct, 0) + ' % (' + formatNoNum(m.maxAllowedFootprint) + ' m²)';
+          utilSubEl.style.color = m.utilizationExceeded ? 'var(--status-err-fg)' : 'var(--ink-muted)';
+        }
+
+        setTxt('metricRoomSum', formatNoNum(m.roomProgramArea) + ' m²');
+        const roomSubEl = document.getElementById('metricRoomSub');
+        if (roomSubEl) {
+          roomSubEl.textContent = m.roomCapacityExceeded
+            ? 'Overstiger veiledende ramme (~' + formatNoNum(m.estimatedUsableArea) + ' m²)'
+            : 'Veiledende netto ramme: ~' + formatNoNum(m.estimatedUsableArea) + ' m²';
+          roomSubEl.style.color = m.roomCapacityExceeded ? 'var(--status-err-fg)' : 'var(--ink-muted)';
+        }
+
+        /* Oppdater brukerens budsjettintervall */
+        setTxt('budgetIntervalDisplay', formatCurrency(m.budgetLow) + ' – ' + formatCurrency(m.budgetHigh));
+        setTxt(
+          'budgetSubDisplay',
+          'Beregnet av ' + formatNoNum(m.grossModuleArea) + ' m² brutto modulareal × dine satser + fastpost (' + formatCurrency(state.userSiteCost) + ').'
+        );
+
+        /* Oppdater sjekkliste-punkt 1 (Utnyttelsesgrad) */
+        const regBadgeUtil = document.getElementById('regBadgeUtil');
+        const regTextUtil = document.getElementById('regTextUtil');
+        if (regBadgeUtil && regTextUtil) {
+          if (m.utilizationExceeded) {
+            regBadgeUtil.className = 'status-pill pill-err';
+            regBadgeUtil.textContent = 'Overskrider egen grense';
+            regTextUtil.textContent =
+              'Fotavtrykk (' + formatNoNum(m.footprintArea) + ' m²) overstiger din oppgitte maksgrense (' + formatNoNum(m.maxAllowedFootprint) + ' m²).';
+          } else {
+            regBadgeUtil.className = 'status-pill pill-ok';
+            regBadgeUtil.textContent = 'Innenfor egne tall';
+            regTextUtil.textContent =
+              'Fotavtrykk (' + formatNoNum(m.footprintArea) + ' m²) er innenfor oppgitt ramme (' + formatNoNum(m.maxAllowedFootprint) + ' m²).';
+          }
+        }
+
+        renderRoomProgramList();
+        renderIsometricCanvas(m);
+        renderFloorplanSvg();
+        updateAdvisorContext();
+      }
+
+      /* ------------------------------------------------------------------------
+         10. LOKAL LAGRING (LOCALSTORAGE), JSON EKSPORT/IMPORT & PROSJEKTBRIEF
+         ------------------------------------------------------------------------ */
+      function getSavedProjects() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return [];
+          const parsed = JSON.parse(raw);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function renderSavedProjectsList() {
+        const listEl = document.getElementById('savedProjectsList');
+        if (!listEl) return;
+        while (listEl.firstChild) listEl.removeChild(listEl.firstChild);
+
+        const saved = getSavedProjects();
+        if (saved.length === 0) {
+          const emptyLi = document.createElement('li');
+          emptyLi.style.padding = '0.65rem';
+          emptyLi.style.fontSize = '0.8rem';
+          emptyLi.style.color = 'var(--ink-muted)';
+          emptyLi.textContent = 'Ingen lokalt lagrede prosjekter ennå. Klikk «Lagre lokalt» i verktøylinjen.';
+          listEl.appendChild(emptyLi);
+          return;
+        }
+
+        saved.forEach((entry, idx) => {
+          const li = document.createElement('li');
+          li.style.display = 'flex';
+          li.style.justifyContent = 'space-between';
+          li.style.alignItems = 'center';
+          li.style.padding = '0.5rem 0.65rem';
+          li.style.borderBottom = '1px solid var(--hairline)';
+          li.style.gap = '0.5rem';
+
+          const info = document.createElement('div');
+          const title = document.createElement('div');
+          title.style.fontWeight = '600';
+          title.style.fontSize = '0.82rem';
+          title.textContent = entry.projectName || 'Uten navn';
+
+          const sub = document.createElement('div');
+          sub.className = 'mono-label';
+          sub.style.fontSize = '0.68rem';
+          sub.textContent = (entry.savedAt || '') + ' · ' + entry.moduleCount + ' mod × ' + entry.floors + ' etg';
+
+          info.appendChild(title);
+          info.appendChild(sub);
+
+          const actions = document.createElement('div');
+          actions.style.display = 'flex';
+          actions.style.gap = '0.35rem';
+
+          const loadBtn = document.createElement('button');
+          loadBtn.type = 'button';
+          loadBtn.className = 'btn btn-sm';
+          loadBtn.textContent = 'Last inn';
+          loadBtn.addEventListener('click', () => {
+            const check = validateProject(entry);
+            if (!check.valid) {
+              showFeedback('Kunne ikke laste lagret prosjekt: ' + check.errors.join(' '), true);
+              return;
+            }
+            Object.assign(state, check.sanitized);
+            syncInputsFromState();
+            syncAllViews();
+            showFeedback('Lastet inn prosjektet «' + state.projectName + '».', false);
+          });
+
+          const delBtn = document.createElement('button');
+          delBtn.type = 'button';
+          delBtn.className = 'btn btn-sm';
+          delBtn.textContent = 'Slett';
+          delBtn.addEventListener('click', () => {
+            const current = getSavedProjects();
+            current.splice(idx, 1);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
+            renderSavedProjectsList();
+            showFeedback('Slettet lagret utkast.', false);
+          });
+
+          actions.appendChild(loadBtn);
+          actions.appendChild(delBtn);
+
+          li.appendChild(info);
+          li.appendChild(actions);
+          listEl.appendChild(li);
+        });
+      }
+
+      function saveCurrentProjectLocally() {
+        const check = validateProject(state);
+        if (!check.valid) {
+          showFeedback('Kan ikke lagre ugyldig prosjekt: ' + check.errors.join(' '), true);
+          return;
+        }
+        try {
+          const list = getSavedProjects();
+          const copy = Object.assign({}, check.sanitized, {
+            savedAt: new Date().toLocaleDateString('nb-NO')
+          });
+          list.unshift(copy);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(list.slice(0, 15)));
+          renderSavedProjectsList();
+          showFeedback('Prosjektet «' + state.projectName + '» er lagret lokalt i nettleseren.', false);
+        } catch (e) {
+          showFeedback('Kunne ikke lagre til localStorage.', true);
+        }
+      }
+
+      function triggerDownload(filename, mimeType, content) {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      function exportProjectJson() {
+        const check = validateProject(state);
+        if (!check.valid) {
+          showFeedback('Valideringsfeil før eksport: ' + check.errors.join(' '), true);
+          return;
+        }
+        const payload = JSON.stringify(check.sanitized, null, 2);
+        const safeSlug = state.projectName.toLowerCase().replace(/[^a-z0-9æøå]+/g, '-').replace(/^-|-$/g, '') || 'lindal-prosjekt';
+        triggerDownload(safeSlug + '.json', 'application/json', payload);
+        showFeedback('Eksporterte prosjektfil (' + safeSlug + '.json).', false);
+      }
+
+      function generateProjectBriefText() {
+        const m = calculate(state);
+        const lines = [
+          '====================================================================',
+          'LINDAL MODUL — STUDIO // PROSJEKTBRIEF (TIDLIGFASE KONSEPTUTKAST)',
+          '====================================================================',
+          'Merk: Dette dokumentet er generert i et uavhengig konseptverktøy.',
+          'Det utgjør ikke et offisielt pristilbud eller byggemeldingstegning.',
+          '',
+          '1. PROSJEKTIDENTITET & VALGT LEVERANSENIVÅ',
+          '--------------------------------------------------------------------',
+          'Prosjektnavn:          ' + state.projectName,
+          'Leveransenivå:         ' + state.deliveryLevel,
+          'Produksjonssted:       Grenstøl i Tvedestrand (Lindal Modul AS)',
+          'Arkitekturfaglig:      Egen arkitektavdeling (fusjonert m/ Halvorsen Arkitekter)',
+          '',
+          '2. MODULGEOMETRI & KONSTRUKTIVE VALG',
+          '--------------------------------------------------------------------',
+          'Antall moduler/etg:    ' + state.moduleCount + ' stk',
+          'Moduldimensjon:        ' + formatNoNum(state.moduleWidth) + ' m bredde × ' + formatNoNum(state.moduleLength) + ' m lengde',
+          'Antall etasjer:        ' + state.floors + ' (' + m.totalModules + ' moduler totalt)',
+          'Takform:               ' + state.roofType,
+          'Utvendig trekledning:  ' + state.cladding,
+          '',
+          '3. AREAL- OG TOMTEOPPSTILLING (IKKE TEK17 BRA)',
+          '--------------------------------------------------------------------',
+          'Oppgitt tomteareal:    ' + formatNoNum(state.plotArea) + ' m²',
+          'Brukerens maksgrense:  ' + formatNoNum(state.maxUtilizationPct) + ' % (' + formatNoNum(m.maxAllowedFootprint) + ' m²)',
+          'Utvendig fotavtrykk:   ' + formatNoNum(m.footprintArea) + ' m² (' + formatNoNum(m.utilizationPct) + ' %)',
+          'Samlet modulareal:     ' + formatNoNum(m.grossModuleArea) + ' m² (utvendig brutto)',
+          'Veiledende netto:      ~' + formatNoNum(m.estimatedUsableArea) + ' m²',
+          'Sum romprogram:        ' + formatNoNum(m.roomProgramArea) + ' m²',
+          '',
+          '4. SPESIFISERT ROMPROGRAM',
+          '--------------------------------------------------------------------'
+        ];
+
+        state.rooms.forEach((r, idx) => {
+          lines.push((idx + 1) + '. ' + r.name + ' — ' + formatNoNum(r.area) + ' m² (' + r.floor + '. etasje)');
+        });
+
+        lines.push(
+          '',
+          '5. BRUKERDEFINERT KOSTNADSRAMME (EGNE SATSER — IKKE LINDAL-PRISER)',
+          '--------------------------------------------------------------------',
+          'Brukerens lav sats:    ' + formatCurrency(state.userRateLow) + ' / m²',
+          'Brukerens høy sats:    ' + formatCurrency(state.userRateHigh) + ' / m²',
+          'Fastpost tomt/grunn:   ' + formatCurrency(state.userSiteCost),
+          'Beregnet intervall:    ' + formatCurrency(m.budgetLow) + ' – ' + formatCurrency(m.budgetHigh),
+          '',
+          '6. REGULATORISK STATUS (MÅ KONTROLLERES AV ANSVARLIG PROSJEKTERENDE)',
+          '--------------------------------------------------------------------',
+          '- Reguleringsplan, gesims- og mønehøyde: IKKE KONTROLLERT',
+          '- Nabogrenser (PBL § 29-4) og byggegrenser: IKKE KONTROLLERT',
+          '- Terreng, grunnforhold og kranadkomst: IKKE KONTROLLERT',
+          '- Lokale solforhold og TEK17 energiberegning: IKKE KONTROLLERT',
+          '- Byggesøknad og ansvarsrett: IKKE KONTROLLERT',
+          '===================================================================='
+        );
+
+        return lines.join('\n');
+      }
+
+      /* ------------------------------------------------------------------------
+         11. INNEBYGD TESTHARNESS (EKSPONERT PÅ WINDOW.LINDALSTUDIO)
+         ------------------------------------------------------------------------ */
+      function runTests() {
+        const results = [];
+        function assert(name, condition, details) {
+          results.push({
+            name,
+            passed: Boolean(condition),
+            details: details || (condition ? 'OK' : 'Feilet')
+          });
+        }
+
+        /* Test 1: Fotavtrykk og brutto modulareal beregnes eksakt */
+        const calc1 = calculate({
+          moduleCount: 3,
+          moduleWidth: 3.6,
+          moduleLength: 10.0,
+          floors: 2,
+          plotArea: 600,
+          maxUtilizationPct: 25,
+          userRateLow: 30000,
+          userRateHigh: 40000,
+          userSiteCost: 500000,
+          rooms: [{ id: '1', name: 'Stue', area: 40, floor: 1 }]
+        });
+        assert(
+          'Test 1: Beregning av utvendig fotavtrykk (3 × 3.6m × 10.0m = 108.0 m²)',
+          calc1.footprintArea === 108.0 && calc1.grossModuleArea === 216.0,
+          'Fotavtrykk=' + calc1.footprintArea + ' m², Brutto=' + calc1.grossModuleArea + ' m²'
+        );
+
+        /* Test 2: Deteksjon av overskredet tomteutnyttelse */
+        const calc2 = calculate({
+          moduleCount: 4,
+          moduleWidth: 4.0,
+          moduleLength: 11.0,
+          floors: 1,
+          plotArea: 500,
+          maxUtilizationPct: 25,
+          rooms: [{ id: '1', name: 'Hall', area: 30, floor: 1 }]
+        });
+        assert(
+          'Test 2: Oppdager overskridelse av oppgitt utnyttelsesgrad (176 m² > 125 m²)',
+          calc2.utilizationExceeded === true && calc2.maxAllowedFootprint === 125.0,
+          'Tillatt=' + calc2.maxAllowedFootprint + ' m², Faktisk=' + calc2.footprintArea + ' m²'
+        );
+
+        /* Test 3: Beskyttelse mot NaN og negative verdier i calculate() */
+        const calcNaN = calculate({
+          moduleCount: NaN,
+          moduleWidth: -5,
+          moduleLength: 'ugyldig',
+          floors: 99,
+          plotArea: -200,
+          maxUtilizationPct: NaN,
+          userRateLow: -1000,
+          userRateHigh: NaN,
+          rooms: [{ id: '1', name: 'Bad', area: -20, floor: 1 }]
+        });
+        assert(
+          'Test 3: Forhindrer NaN og negative mål i areal- og budsjettberegning',
+          Number.isFinite(calcNaN.footprintArea) &&
+          calcNaN.footprintArea > 0 &&
+          Number.isFinite(calcNaN.budgetLow) &&
+          calcNaN.budgetLow >= 0,
+          'Sikker fallback fotavtrykk=' + calcNaN.footprintArea + ' m²'
+        );
+
+        /* Test 4: Validering avviser korrupt JSON / negative mål */
+        const invalidCheck = validateProject({
+          projectName: '',
+          plotArea: -400,
+          maxUtilizationPct: 140,
+          moduleCount: 0,
+          moduleWidth: 1.2,
+          moduleLength: 20,
+          floors: 3,
+          roofType: 'ukjent_tak',
+          rooms: []
+        });
+        assert(
+          'Test 4: validateProject() avviser ugyldige tall, negativ tomt og tomme rom',
+          invalidCheck.valid === false && invalidCheck.errors.length >= 5,
+          'Fanget ' + invalidCheck.errors.length + ' valideringsfeil'
+        );
+
+        /* Test 5: Validering godkjenner gyldig oppsett og renser struktur */
+        const validCheck = validateProject(PRESET_CONCEPTS.skogsbrynet);
+        assert(
+          'Test 5: validateProject() godkjenner gyldig prosjektmal (Skogsbrynet)',
+          validCheck.valid === true && validCheck.sanitized.moduleCount === 2,
+          'Validert uten feil'
+        );
+
+        const allPassed = results.every((r) => r.passed);
+
+        /* Oppdater UI-logg */
+        const listEl = document.getElementById('testResultsList');
+        const badgeEl = document.getElementById('testSummaryBadge');
+        if (listEl) {
+          while (listEl.firstChild) listEl.removeChild(listEl.firstChild);
+          results.forEach((r) => {
+            const li = document.createElement('li');
+            li.style.padding = '0.35rem 0.5rem';
+            li.style.backgroundColor = r.passed ? 'var(--status-ok-bg)' : 'var(--status-err-bg)';
+            li.style.color = r.passed ? 'var(--status-ok-fg)' : 'var(--status-err-fg)';
+            li.textContent = (r.passed ? '[PASS] ' : '[FAIL] ') + r.name + ' — ' + r.details;
+            listEl.appendChild(li);
+          });
+        }
+        if (badgeEl) {
+          badgeEl.className = 'status-pill ' + (allPassed ? 'pill-ok' : 'pill-err');
+          badgeEl.textContent = allPassed
+            ? 'Alle ' + results.length + ' tester bestått'
+            : 'Testfeil oppdaget';
+        }
+
+        return {
+          passed: allPassed,
+          total: results.length,
+          results
+        };
+      }
+
+      /* ------------------------------------------------------------------------
+         12. KOBLE SAMMEN HENDELSER (INGEN DØDE KNAPPER)
+         ------------------------------------------------------------------------ */
+      function initEvents() {
+        /* Hopp til Studio-knapper */
+        const jumpToStudio = () => {
+          const studioSec = document.getElementById('seksjon-studio');
+          if (studioSec) studioSec.scrollIntoView({ behavior: 'smooth' });
+          const inpName = document.getElementById('inpProjectName');
+          if (inpName) inpName.focus({ preventScroll: true });
+        };
+
+        document.getElementById('btnJumpStudio')?.addEventListener('click', jumpToStudio);
+        document.getElementById('btnHeroOpenStudio')?.addEventListener('click', jumpToStudio);
+
+        /* Hero teknisk konstruksjonslag-velger */
+        const heroBtns = document.querySelectorAll('.hero-layer-btn');
+        heroBtns.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            heroBtns.forEach((b) => b.classList.remove('btn-active'));
+            btn.classList.add('btn-active');
+
+            const layer = btn.getAttribute('data-layer');
+            const lPrecut = document.getElementById('svgLayerPrecut');
+            const lElem = document.getElementById('svgLayerElements');
+            const lMod = document.getElementById('svgLayerModule');
+            const lbl = document.getElementById('heroActiveLayerLabel');
+
+            if (lPrecut && lElem && lMod) {
+              lPrecut.style.opacity = (layer === 'all' || layer === 'precut') ? '1' : '0.15';
+              lElem.style.opacity = (layer === 'all' || layer === 'element') ? '1' : '0.12';
+              lMod.style.opacity = (layer === 'all' || layer === 'module') ? '1' : '0.12';
+            }
+            if (lbl) {
+              const titles = {
+                all: 'VISER: KOMPLETT SYSTEM',
+                precut: 'VISER: KUN PRECUT BÆRERAMME',
+                element: 'VISER: BYGNINGSELEMENTER (VEGGSKIVER)',
+                module: 'VISER: ROMMODUL & LØFTEPUNKTER'
+              };
+              lbl.textContent = titles[layer] || 'VISER: KOMPLETT SYSTEM';
+            }
+          });
+        });
+
+        /* Velg leveransenivå fra seksjon 02 */
+        document.querySelectorAll('.select-delivery-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const deliv = btn.getAttribute('data-delivery');
+            if (deliv && ALLOWED_DELIVERIES.includes(deliv)) {
+              state.deliveryLevel = deliv;
+              syncInputsFromState();
+              syncAllViews();
+              jumpToStudio();
+              showFeedback('Valgte leveransenivå: «' + deliv + '».', false);
+            }
+          });
+        });
+
+        /* Last inn en av de tre konseptløsningene */
+        document.querySelectorAll('.concept-load-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const key = btn.getAttribute('data-concept');
+            if (key && PRESET_CONCEPTS[key]) {
+              const copy = JSON.parse(JSON.stringify(PRESET_CONCEPTS[key]));
+              Object.assign(state, copy);
+              syncInputsFromState();
+              syncAllViews();
+              showFeedback('Lastet inn konseptløsning: «' + state.projectName + '».', false);
+            }
+          });
+        });
+
+        /* Vis/skjul konseptsammenligning */
+        const compareDrawer = document.getElementById('conceptsComparisonDrawer');
+        const btnToggleCompare = document.getElementById('btnToggleCompare');
+        const toggleCompare = () => {
+          if (!compareDrawer) return;
+          const isHidden = compareDrawer.classList.toggle('hidden');
+          if (btnToggleCompare) btnToggleCompare.setAttribute('aria-expanded', String(!isHidden));
+        };
+        btnToggleCompare?.addEventListener('click', toggleCompare);
+        document.getElementById('btnCloseCompare')?.addEventListener('click', toggleCompare);
+
+        /* Lukk meldingsbanner */
+        document.getElementById('btnCloseFeedback')?.addEventListener('click', () => {
+          document.getElementById('studioFeedbackBanner')?.classList.add('hidden');
+        });
+
+        /* Nullstill-bekreftelse */
+        const resetPanel = document.getElementById('resetConfirmPanel');
+        document.getElementById('btnOpenResetModal')?.addEventListener('click', () => {
+          resetPanel?.classList.remove('hidden');
+        });
+        document.getElementById('btnConfirmResetCancel')?.addEventListener('click', () => {
+          resetPanel?.classList.add('hidden');
+        });
+        document.getElementById('btnConfirmResetYes')?.addEventListener('click', () => {
+          const fresh = JSON.parse(JSON.stringify(PRESET_CONCEPTS.grenstol));
+          Object.assign(state, fresh, { rotationDeg: 42, explodePct: 0 });
+          resetPanel?.classList.add('hidden');
+          syncInputsFromState();
+          syncAllViews();
+          showFeedback('Arbeidsflaten ble tilbakestilt til standardkonseptet.', false);
+        });
+
+        /* Skjemafelter i venstre kolonne */
+        document.getElementById('inpProjectName')?.addEventListener('input', (e) => {
+          const val = e.target.value.trim();
+          state.projectName = val || 'Uten prosjektnavn';
+        });
+
+        document.getElementById('selDeliveryLevel')?.addEventListener('change', (e) => {
+          if (ALLOWED_DELIVERIES.includes(e.target.value)) {
+            state.deliveryLevel = e.target.value;
+            syncAllViews();
+          }
+        });
+
+        document.getElementById('inpPlotArea')?.addEventListener('change', (e) => {
+          const v = toSafeNum(e.target.value, state.plotArea);
+          if (v <= 0) {
+            showFeedback('Tomteareal må være større enn 0 m². Korrigerte til gyldig verdi.', true);
+          }
+          state.plotArea = clamp(round1(v), 50, 50000);
+          e.target.value = String(state.plotArea);
+          syncAllViews();
+        });
+
+        document.getElementById('inpMaxUtil')?.addEventListener('change', (e) => {
+          const v = toSafeNum(e.target.value, state.maxUtilizationPct);
+          state.maxUtilizationPct = clamp(round1(v), 5, 100);
+          e.target.value = String(state.maxUtilizationPct);
+          syncAllViews();
+        });
+
+        document.getElementById('inpModuleCount')?.addEventListener('input', (e) => {
+          state.moduleCount = clamp(Math.round(toSafeNum(e.target.value, 3)), 1, 6);
+          syncAllViews();
+        });
+
+        document.getElementById('selFloors')?.addEventListener('change', (e) => {
+          state.floors = Number(e.target.value) === 2 ? 2 : 1;
+          syncAllViews();
+        });
+
+        document.getElementById('inpModuleWidth')?.addEventListener('input', (e) => {
+          state.moduleWidth = clamp(round1(toSafeNum(e.target.value, 3.6)), 3.0, 4.2);
+          syncAllViews();
+        });
+
+        document.getElementById('inpModuleLength')?.addEventListener('input', (e) => {
+          state.moduleLength = clamp(round1(toSafeNum(e.target.value, 10.2)), 6.0, 12.6);
+          syncAllViews();
+        });
+
+        document.getElementById('selRoofType')?.addEventListener('change', (e) => {
+          if (ALLOWED_ROOFS.includes(e.target.value)) {
+            state.roofType = e.target.value;
+            syncAllViews();
+          }
+        });
+
+        document.getElementById('selCladding')?.addEventListener('change', (e) => {
+          if (ALLOWED_CLADDINGS.includes(e.target.value)) {
+            state.cladding = e.target.value;
+            syncAllViews();
+          }
+        });
+
+        /* Legg til nytt rom */
+        document.getElementById('btnAddRoom')?.addEventListener('click', () => {
+          const nameInp = document.getElementById('inpNewRoomName');
+          const areaInp = document.getElementById('inpNewRoomArea');
+          const floorSel = document.getElementById('selNewRoomFloor');
+
+          const rName = (nameInp?.value || '').trim() || 'Nytt rom ' + (state.rooms.length + 1);
+          const rArea = clamp(round1(toSafeNum(areaInp?.value, 12)), 2, 200);
+          const rFloor = state.floors === 2 && Number(floorSel?.value) === 2 ? 2 : 1;
+
+          state.rooms.push({
+            id: 'rm_' + Date.now(),
+            name: rName.slice(0, 40),
+            area: rArea,
+            floor: rFloor
+          });
+
+          if (nameInp) nameInp.value = '';
+          syncAllViews();
+          showFeedback('La til rommet «' + rName + '» (' + rArea + ' m²).', false);
+        });
+
+        /* Brukerens kalkylesatser */
+        const updateBudgetInputs = () => {
+          const lowEl = document.getElementById('inpRateLow');
+          const highEl = document.getElementById('inpRateHigh');
+          const siteEl = document.getElementById('inpSiteFixedCost');
+
+          let low = Math.max(0, Math.round(toSafeNum(lowEl?.value, state.userRateLow)));
+          let high = Math.max(0, Math.round(toSafeNum(highEl?.value, state.userRateHigh)));
+          const site = Math.max(0, Math.round(toSafeNum(siteEl?.value, state.userSiteCost)));
+
+          if (high < low) {
+            high = low;
+            if (highEl) highEl.value = String(high);
+          }
+
+          state.userRateLow = low;
+          state.userRateHigh = high;
+          state.userSiteCost = site;
+          syncAllViews();
+        };
+
+        document.getElementById('inpRateLow')?.addEventListener('change', updateBudgetInputs);
+        document.getElementById('inpRateHigh')?.addEventListener('change', updateBudgetInputs);
+        document.getElementById('inpSiteFixedCost')?.addEventListener('change', updateBudgetInputs);
+
+        /* 3D Rotasjon og eksplodert visning */
+        document.getElementById('inpRotation')?.addEventListener('input', (e) => {
+          state.rotationDeg = clamp(Math.round(toSafeNum(e.target.value, 42)), 0, 360);
+          document.getElementById('valRotation').textContent = state.rotationDeg + '°';
+          renderIsometricCanvas(calculate(state));
+        });
+
+        document.getElementById('inpExplode')?.addEventListener('input', (e) => {
+          state.explodePct = clamp(Math.round(toSafeNum(e.target.value, 0)), 0, 100);
+          document.getElementById('valExplode').textContent = state.explodePct + ' %';
+          renderIsometricCanvas(calculate(state));
+        });
+
+        document.querySelectorAll('.iso-angle-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            state.rotationDeg = clamp(Number(btn.getAttribute('data-angle')), 0, 360);
+            syncInputsFromState();
+            document.getElementById('valRotation').textContent = state.rotationDeg + '°';
+            renderIsometricCanvas(calculate(state));
+          });
+        });
+
+        document.getElementById('btnToggleExplodeQuick')?.addEventListener('click', () => {
+          state.explodePct = state.explodePct > 10 ? 0 : 75;
+          syncInputsFromState();
+          document.getElementById('valExplode').textContent = state.explodePct + ' %';
+          renderIsometricCanvas(calculate(state));
+        });
+
+        /* Dra direkte på 3D Canvas med mus eller touch for å rotere */
+        const canvas = document.getElementById('isoCanvas');
+        let isDragging = false;
+        let lastX = 0;
+
+        if (canvas) {
+          canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            lastX = e.clientX;
+          });
+          window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const dx = e.clientX - lastX;
+            lastX = e.clientX;
+            state.rotationDeg = (state.rotationDeg + Math.round(dx * 0.6) + 360) % 360;
+            syncInputsFromState();
+            document.getElementById('valRotation').textContent = state.rotationDeg + '°';
+            renderIsometricCanvas(calculate(state));
+          });
+          window.addEventListener('mouseup', () => {
+            isDragging = false;
+          });
+
+          canvas.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+              isDragging = true;
+              lastX = e.touches[0].clientX;
+            }
+          }, { passive: true });
+          canvas.addEventListener('touchmove', (e) => {
+            if (!isDragging || e.touches.length !== 1) return;
+            const dx = e.touches[0].clientX - lastX;
+            lastX = e.touches[0].clientX;
+            state.rotationDeg = (state.rotationDeg + Math.round(dx * 0.6) + 360) % 360;
+            syncInputsFromState();
+            document.getElementById('valRotation').textContent = state.rotationDeg + '°';
+            renderIsometricCanvas(calculate(state));
+          }, { passive: true });
+          canvas.addEventListener('touchend', () => {
+            isDragging = false;
+          });
+        }
+
+        window.addEventListener('resize', () => {
+          renderIsometricCanvas(calculate(state));
+        });
+
+        /* Lagring, JSON eksport/import, brief og utskrift */
+        document.getElementById('btnSaveLocal')?.addEventListener('click', saveCurrentProjectLocally);
+        document.getElementById('btnExportJson')?.addEventListener('click', exportProjectJson);
+
+        document.getElementById('inputImportJson')?.addEventListener('change', (e) => {
+          const file = e.target.files && e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = () => {
+            try {
+              const parsed = JSON.parse(String(reader.result));
+              const check = validateProject(parsed);
+              if (!check.valid) {
+                showFeedback('Ugyldig JSON-prosjektfil: ' + check.errors.join(' '), true);
+                return;
+              }
+              Object.assign(state, check.sanitized);
+              syncInputsFromState();
+              syncAllViews();
+              showFeedback('Importerte prosjektet «' + state.projectName + '» fra JSON.', false);
+            } catch (err) {
+              showFeedback('Kunne ikke lese JSON-filen. Kontroller filformatet.', true);
+            }
+          };
+          reader.readAsText(file);
+          e.target.value = '';
+        });
+
+        document.getElementById('btnDownloadBrief')?.addEventListener('click', () => {
+          const txt = generateProjectBriefText();
+          const slug = state.projectName.toLowerCase().replace(/[^a-z0-9æøå]+/g, '-') || 'prosjektbrief';
+          triggerDownload(slug + '-brief.txt', 'text/plain;charset=utf-8', txt);
+          showFeedback('Lastet ned tekstlig prosjektbrief.', false);
+        });
+
+        document.getElementById('btnPrintReport')?.addEventListener('click', () => {
+          window.print();
+        });
+
+        /* Prosjektveileder interaksjon */
+        const sendQuestion = () => {
+          const inp = document.getElementById('inpAdvisorQuery');
+          const q = (inp?.value || '').trim();
+          if (!q) return;
+          updateAdvisorContext(q);
+          if (inp) inp.value = '';
+        };
+        document.getElementById('btnSendAdvisor')?.addEventListener('click', sendQuestion);
+        document.getElementById('inpAdvisorQuery')?.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            sendQuestion();
+          }
+        });
+
+        document.querySelectorAll('.quick-ask-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const q = btn.getAttribute('data-q');
+            if (q) updateAdvisorContext(q);
+          });
+        });
+
+        document.getElementById('btnTestServerAi')?.addEventListener('click', checkSameOriginArchitectEndpoint);
+        document.getElementById('btnRunTestsNow')?.addEventListener('click', runTests);
+      }
+
+      /* ------------------------------------------------------------------------
+         13. EKSPONER WINDOW.LINDALSTUDIO OG START APPLIKASJONEN
+         ------------------------------------------------------------------------ */
+      window.LindalStudio = {
+        state: state,
+        calculate: calculate,
+        validateProject: validateProject,
+        runTests: runTests
+      };
+
+      window.addEventListener('DOMContentLoaded', () => {
+        initEvents();
+        syncInputsFromState();
+        renderSavedProjectsList();
+        syncAllViews();
+        runTests();
+      });
+    })();
+  </script>
+</body>
+</html>
