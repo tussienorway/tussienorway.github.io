@@ -421,6 +421,166 @@
     }
     .btn-copy:hover { color: #fff; border-color: #fff; }
 
+    /* Live Cockpit Stiler */
+    .cockpit-box {
+      background: #0d131d;
+      border: 1px solid #1e293b;
+      border-radius: 24px;
+      padding: 32px;
+      margin-top: 40px;
+      margin-bottom: 64px;
+      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.6);
+      position: relative;
+    }
+    .cockpit-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 20px;
+    }
+    .pulse-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 12px var(--accent-green);
+      animation: pulse 2s infinite;
+      margin-right: 8px;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 18px;
+      margin-top: 20px;
+    }
+    .agent-status-card {
+      background: #131b26;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+    .agent-status-card:hover {
+      border-color: rgba(56, 189, 248, 0.35);
+      transform: translateY(-2px);
+    }
+    .agent-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .agent-title {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .status-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .status-badge.online, .status-badge.aktiv {
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--accent-green);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+    .status-badge.working {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-blue);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    .status-badge.ledig {
+      background: rgba(148, 163, 184, 0.15);
+      color: var(--text-muted);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+    .status-badge.pause {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .agent-desc {
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+    .agent-meta {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-family: var(--font-mono);
+    }
+    .dispatcher-box {
+      background: #090e17;
+      border: 1px solid #1e293b;
+      border-radius: 18px;
+      padding: 24px;
+      margin-top: 28px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .form-input, .form-select, .form-textarea {
+      background: #131c2a;
+      border: 1px solid #2d3748;
+      color: #f1f5f9;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--accent-blue);
+    }
+    .form-textarea {
+      resize: vertical;
+      min-height: 80px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+    }
+
     /* Footer */
     footer {
       border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -456,6 +616,7 @@
       </a>
       <div class="nav-links">
         <a href="/">← Tilbake til oversikt</a>
+        <a href="#cockpit" style="color: var(--accent-cyan); font-weight: 700;">⚡ Live Cockpit</a>
         <a href="#arkitektur">Arkitektur</a>
         <a href="#maskinvare">RTX 5060 Ti</a>
         <a href="#benchmark">Benchmark</a>
@@ -500,6 +661,118 @@
         <div class="stat-label">Enhetstester Grønne (pytest)</div>
       </div>
     </div>
+
+
+    <!-- Live Hermes & Agent-Board Cockpit -->
+    <section id="cockpit" style="padding-top: 32px;">
+      <div class="cockpit-box">
+        <div class="cockpit-header">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span class="pulse-dot"></span>
+              <span class="nav-badge" id="board-health-badge" style="background: rgba(52, 211, 153, 0.15); color: var(--accent-green); border-color: rgba(52, 211, 153, 0.3);">🟢 TAVLE STATUS: FRISK</span>
+              <span class="tag" id="last-updated-text" style="font-family: var(--font-mono);">Sist synkronisert: 2026-11-02 17:18</span>
+            </div>
+            <h2 class="section-title" style="margin-bottom: 4px;">⚡ Hermes Live Swarm Cockpit</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
+              Aktiv overvåking og oppgavedelegasjon for Nous Hermes Agent, Google Gemini 4 Argon og RTX 5060 Ti.
+            </p>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="loadBoardStatus()" style="padding: 8px 16px; font-size: 0.85rem;">🔄 Oppdater nå</button>
+            <a href="./data/board-status.json" class="btn btn-secondary" target="_blank" style="padding: 8px 16px; font-size: 0.85rem;">📥 Rå JSON-Feed</a>
+          </div>
+        </div>
+
+        <!-- Hermes Koordinator Banner -->
+        <div style="background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 16px; padding: 18px 22px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <div style="font-size: 2rem;">🦉</div>
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <strong style="color: #fff; font-size: 1.1rem;">Hermes Koordinator</strong>
+                <span class="status-badge online" id="hermes-badge">OPERATIV</span>
+                <span class="tag purple" style="font-size: 0.72rem;">Qwen3.5-9B-Heretic-TOOLS-MTP (131K ctx)</span>
+              </div>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin: 2px 0 0;" id="hermes-status-desc">
+                Kjører lokalt på RTX 5060 Ti 16 GB · Triage og vaktloop hver 2. time · 0 ubehandlede oppgaver i innboks
+              </p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 16px; font-family: var(--font-mono); font-size: 0.82rem;">
+            <div><span style="color: var(--text-muted);">Innboks:</span> <strong id="hermes-inbox-count" style="color: var(--accent-cyan);">0</strong></div>
+            <div><span style="color: var(--text-muted);">Sjef:</span> <strong style="color: var(--accent-purple);">Gemini 4 Argon</strong></div>
+            <div><span style="color: var(--text-muted);">Arbeider:</span> <strong style="color: var(--accent-blue);">AGY (Full Autonomi)</strong></div>
+          </div>
+        </div>
+
+        <!-- Agent-Grid -->
+        <h3 style="font-size: 1.2rem; font-weight: 700; color: #fff; margin-bottom: 8px;">Aktive Agenter på Tavlen</h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 16px;">Sanntidsvisning fra <code>status.json</code> og <code>BOARD.md</code>.</p>
+        <div class="agent-grid" id="agents-container">
+          <!-- Dynamisk fylt via JS -->
+        </div>
+
+        <!-- Hermes Interaktiv Task Dispatcher -->
+        <div class="dispatcher-box">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 800; color: #fff; margin: 0;">🎯 Hermes Interaktiv Task Dispatcher</h3>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin: 2px 0 0;">Opprett PROTOCOL-kompatible oppgavemeldinger og CLI-kommandoer for agy-swarm.</p>
+            </div>
+            <span class="tag primary">Klar til dispatch</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="disp-to">Mottaker Agent</label>
+              <select id="disp-to" class="form-select" onchange="updateDispatchPreview()">
+                <option value="AGY">AGY (Hovedarbeider / Koder)</option>
+                <option value="GrokBuild">GrokBuild (Bygge & Kalkyle)</option>
+                <option value="Codex">Codex (Research & Idéer)</option>
+                <option value="Perrin">Perrin (System & Vedlikehold)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="disp-priority">Prioritet</label>
+              <select id="disp-priority" class="form-select" onchange="updateDispatchPreview()">
+                <option value="normal">Normal</option>
+                <option value="haster">Haster</option>
+                <option value="lav">Lav</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="disp-footprint">Footprint (filer som rører)</label>
+              <input type="text" id="disp-footprint" class="form-input" placeholder="f.eks. src/app.py, tests/" value="src/, tests/" oninput="updateDispatchPreview()">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label for="disp-subject">Emne / Tittel</label>
+            <input type="text" id="disp-subject" class="form-input" placeholder="Kort beskrivelse av oppgaven" value="Implementer ny integrasjon" oninput="updateDispatchPreview()">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label for="disp-body">Oppgaveinstruks (Body)</label>
+            <textarea id="disp-body" class="form-textarea" placeholder="Nøyaktig hva som skal gjøres..." oninput="updateDispatchPreview()">Utføre oppgaven i henhold til instruks. Husk å kjøre tester før leveranse.</textarea>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label for="disp-acceptance">Akseptkriterier</label>
+            <input type="text" id="disp-acceptance" class="form-input" placeholder="Observerbare kriterier for godkjenning" value="- Observerbart artefakt (commit-SHA, grønne tester) og ingen hemmeligheter." oninput="updateDispatchPreview()">
+          </div>
+
+          <!-- Generert CLI kommando -->
+          <div class="terminal-box" style="margin-top: 14px;">
+            <div class="terminal-bar">
+              <span>AGY-SWARM CLI KOMMANDO FOR HERMES</span>
+              <button class="btn-copy" onclick="copyDispatchCLI()">Kopier CLI-kommando</button>
+            </div>
+            <div class="terminal-code" id="dispatch-cli-code">agy-swarm agentboard dispatch --to AGY --subject "Implementer ny integrasjon" --body "Utføre oppgaven i henhold til instruks."</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- Arkitektur & Grunnlov -->
     <section id="arkitektur" style="padding-top: 24px;">
@@ -788,6 +1061,110 @@ agy-swarm hardware --edition 16
 
     // Init 16GB
     setEdition(16);
+
+    async function loadBoardStatus() {
+      try {
+        const res = await fetch('./data/board-status.json?t=' + Date.now());
+        if (!res.ok) throw new Error('Offline eller status ikke tilgjengelig');
+        const data = await res.json();
+        renderBoard(data);
+      } catch (e) {
+        console.warn('Kunne ikke hente lokal board-status.json, prøver GitHub fallback...', e);
+        try {
+          const ghRes = await fetch('https://raw.githubusercontent.com/tussienorway/agent-board/main/status.json');
+          if (ghRes.ok) {
+            const ghData = await ghRes.json();
+            renderBoard({
+              updated_at: ghData.sist_oppdatert || 'Live GitHub',
+              board_health: { status: 'FRISK', dirty_files_count: 0 },
+              coordinator: { name: 'Hermes', pending_inbox_count: 0, model: 'Qwen3.5-9B-Heretic (RTX 5060 Ti)' },
+              agents: ghData.agents || []
+            });
+          }
+        } catch (err) {
+          console.error('Klarte ikke laste board data:', err);
+        }
+      }
+    }
+
+    function renderBoard(data) {
+      if (data.updated_at) {
+        const el = document.getElementById('last-updated-text');
+        if (el) el.textContent = 'Sist synkronisert: ' + data.updated_at;
+      }
+      if (data.board_health) {
+        const badge = document.getElementById('board-health-badge');
+        if (badge) {
+          const isOk = data.board_health.status === 'FRISK';
+          badge.textContent = isOk ? '🟢 TAVLE STATUS: FRISK' : '🟡 TAVLE STATUS: ' + data.board_health.status;
+          badge.style.color = isOk ? 'var(--accent-green)' : 'var(--accent-amber)';
+        }
+      }
+      if (data.coordinator) {
+        const el = document.getElementById('hermes-inbox-count');
+        if (el) el.textContent = data.coordinator.pending_inbox_count || 0;
+      }
+      if (data.agents && data.agents.length > 0) {
+        const container = document.getElementById('agents-container');
+        if (container) {
+          container.innerHTML = data.agents.map(a => {
+            const st = (a.status || 'ledig').toLowerCase();
+            const badgeClass = (st === 'online' || st === 'aktiv') ? 'online' : (st === 'working' ? 'working' : (st === 'pause' ? 'pause' : 'ledig'));
+            return `
+              <div class="agent-status-card">
+                <div>
+                  <div class="agent-header">
+                    <div class="agent-title">🤖 ${a.agent}</div>
+                    <span class="status-badge ${badgeClass}">${a.status || 'ukjent'}</span>
+                  </div>
+                  <div class="agent-desc">
+                    <strong>Oppgave:</strong> ${a.holder_pa_med || 'Ingen oppgave registrert'}<br>
+                    ${a.neste_steg ? `<span style="color: var(--accent-cyan); font-size: 0.8rem;"><strong>Neste:</strong> ${a.neste_steg}</span>` : ''}
+                  </div>
+                </div>
+                <div class="agent-meta">
+                  <div>📁 <strong>Filer:</strong> ${a.rorer_filer || 'ingen'}</div>
+                  <div>🕒 <strong>Oppdatert:</strong> ${a.sist_oppdatert || 'ukjent'}</div>
+                  ${a.blokkert_av && a.blokkert_av !== 'ingen' && a.blokkert_av !== 'ingenting' ? `<div style="color: var(--accent-amber);">⚠️ <strong>Blokkert:</strong> ${a.blokkert_av}</div>` : ''}
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+    }
+
+    function updateDispatchPreview() {
+      const toEl = document.getElementById('disp-to');
+      if (!toEl) return;
+      const to = toEl.value;
+      const subj = document.getElementById('disp-subject').value.trim() || 'Oppgave';
+      const body = document.getElementById('disp-body').value.trim() || 'Utfør oppgaven.';
+      const prio = document.getElementById('disp-priority').value;
+      const fp = document.getElementById('disp-footprint').value.trim();
+      const acc = document.getElementById('disp-acceptance').value.trim();
+
+      const cmd = `agy-swarm agentboard dispatch --to ${to} --subject "${subj}" --body "${body}" --priority ${prio} ${fp ? `--footprint "${fp}"` : ''} ${acc ? `--acceptance "${acc}"` : ''}`;
+      const codeEl = document.getElementById('dispatch-cli-code');
+      if (codeEl) codeEl.textContent = cmd;
+    }
+
+    function copyDispatchCLI() {
+      const code = document.getElementById('dispatch-cli-code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.querySelector('.dispatcher-box .btn-copy');
+        if (btn) {
+          btn.textContent = 'Kopiert!';
+          setTimeout(() => { btn.textContent = 'Kopier CLI-kommando'; }, 2000);
+        }
+      });
+    }
+
+    // Init Cockpit
+    loadBoardStatus();
+    setInterval(loadBoardStatus, 20000);
+    updateDispatchPreview();
+
   </script>
 </body>
 </html>

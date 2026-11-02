@@ -1,0 +1,137 @@
+{
+  "updated_at": "2026-11-02 17:20",
+  "board_health": {
+    "status": "FRISK",
+    "ok": true,
+    "git_branch": "main",
+    "git_head": "02df6f5",
+    "dirty_files_count": 1,
+    "problems": [],
+    "warnings": [
+      "1 lokale endringer i arbeidskopien"
+    ]
+  },
+  "coordinator": {
+    "name": "Hermes",
+    "role": "Operativ Koordinator & Swarm Triage",
+    "model": "Qwen3.5-9B-Heretic-TOOLS-MTP-Q6_K (Lokal RTX 5060 Ti 16 GB, 131K ctx)",
+    "pending_inbox_count": 0,
+    "pending_files": []
+  },
+  "agents": [
+    {
+      "agent": "TussieBot",
+      "status": "aktiv",
+      "holder_pa_med": "Orkestrator (boksen): agent-board-sjekk 3x daglig, Ødegården, EuroHPC, AWS-sak",
+      "rorer_filer": "agent-board (BOARD, GOALS, status.json, inbox/*)",
+      "blokkert_av": "ingenting nytt; tussie: Bitwarden/credential-tilgang for agenter må bekreftes",
+      "sist_oppdatert": "2026-10-23 09:05",
+      "neste_steg": "Skills-research gitt til Codex (eier) med Hermes; neste sjekk ved neste rutine"
+    },
+    {
+      "agent": "HermesBot",
+      "status": "pause",
+      "holder_pa_med": "Hermes-kode (boksen, PC via godkjenning). Ingen endringer pågår",
+      "rorer_filer": "hermes-agent (ren v0.22.2, gamle endringer i stash@{0})",
+      "blokkert_av": "Venter på tussies ja: tidssonefeil (config.yaml), lillebror-malrepo",
+      "sist_oppdatert": "2026-10-21 00:55",
+      "neste_steg": "Vent på tussies ja"
+    },
+    {
+      "agent": "KodeBot",
+      "status": "pause",
+      "holder_pa_med": "Ødegården publisert med anbudsprototype, PWA og sjekkliste (main d5de4e0), Lighthouse live 100 x4. Steinli pauset",
+      "rorer_filer": "tussienorway/odegarden",
+      "blokkert_av": "tussies ja: CMS OAuth, analyse- og oppetidskonto. Info fra Ødegården",
+      "sist_oppdatert": "2026-10-21 19:12",
+      "neste_steg": "Vent på info og godkjenning"
+    },
+    {
+      "agent": "Perrin",
+      "status": "ledig",
+      "holder_pa_med": "Ingen aktiv oppgave. Ferdig: debloat-skript (/workspace/debloat, ikke kjørt), gulltester/syrefritt fett-søk",
+      "rorer_filer": "ingen",
+      "blokkert_av": "ingenting",
+      "sist_oppdatert": "2026-10-21 00:55",
+      "neste_steg": "Vent på tussies ja før debloat kjøres"
+    },
+    {
+      "agent": "Egwene",
+      "status": "ukjent",
+      "holder_pa_med": "Prosjektoversikt",
+      "rorer_filer": "ukjent",
+      "blokkert_av": "ukjent",
+      "sist_oppdatert": "ukjent",
+      "neste_steg": "Ukesrapport man. 26.10 ca. 08:00"
+    },
+    {
+      "agent": "Elayne",
+      "status": "ukjent",
+      "holder_pa_med": "Økonomi",
+      "rorer_filer": "/workspace/okonomi/",
+      "blokkert_av": "ukjent",
+      "sist_oppdatert": "ukjent",
+      "neste_steg": "ukjent"
+    },
+    {
+      "agent": "Codex",
+      "status": "working",
+      "holder_pa_med": "Prepare ten source-backed, prototypeable Perplexity Pro ideas for Agent Board",
+      "rorer_filer": "Codex row, proposal markdown, Codex work log",
+      "blokkert_av": "Daily public research run completed successfully at 2026-10-30 10:05 Oslo; next eligible window is 2026-10-31 10:05 Oslo",
+      "sist_oppdatert": "2026-10-30 13:40",
+      "neste_steg": "Use the next permitted public research window, then add and verify the ten-idea proposal"
+    },
+    {
+      "agent": "Hermes",
+      "status": "online",
+      "holder_pa_med": "Koordinator aktiv; 0 i innboks; agy-swarm hybrid online",
+      "rorer_filer": "status.json, BOARD.md",
+      "blokkert_av": "ingen",
+      "sist_oppdatert": "2026-11-02 17:18",
+      "neste_steg": "Fortsett overvåking og dispatch via agy-swarm"
+    },
+    {
+      "agent": "ChatGPT/OpenClaude",
+      "status": "ukjent",
+      "holder_pa_med": "PC",
+      "rorer_filer": "ukjent",
+      "blokkert_av": "ukjent",
+      "sist_oppdatert": "ukjent",
+      "neste_steg": "ukjent"
+    },
+    {
+      "agent": "AGY",
+      "status": "done",
+      "holder_pa_med": "Installert og verifisert Qwen3.5-9B-Heretic-TOOLS-MTP-Q6_K (47.5 t/s, 131K ctx) i Hermes + guide",
+      "rorer_filer": "plans/abliterated-heretic-guide.md, status.json, BOARD.md",
+      "blokkert_av": "ingen",
+      "sist_oppdatert": "2026-11-02 17:09",
+      "neste_steg": "Klar for oppdrag"
+    },
+    {
+      "agent": "GrokBuild",
+      "status": "aktiv",
+      "holder_pa_med": "Til tjeneste. Tar Lindal kostnad, CO2 og Planner.optimize.",
+      "rorer_filer": "agent-board, inbox/AGY/20261028-2345-GrokBuild-lindal-kalkyle.md, inbox/Systemsjekk/20261028-1630-GrokBuild-svar.md",
+      "blokkert_av": "ingen",
+      "sist_oppdatert": "2026-10-28 23:45",
+      "neste_steg": "Lese kalkylekoden og levere forslag. Ingen publisering."
+    }
+  ],
+  "swarm_engine": {
+    "version": "2.0.0",
+    "chief_brain": "Google Gemini 4 Argon",
+    "local_workers": "RTX 5060 Ti 16 GB Blackwell",
+    "profiles_active": [
+      "hybrid-rtx5060ti-16gb"
+    ],
+    "vram_allocation_gb": {
+      "weights": 8.74,
+      "kv_cache": 1.5,
+      "cuda_overhead": 1.4,
+      "free_buffer": 4.36,
+      "total": 16.0
+    }
+  }
+}
