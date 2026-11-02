@@ -1,22 +1,16 @@
 {
-  "updated_at": "2026-11-02 17:20",
+  "updated_at": "2026-11-02 17:24",
   "board_health": {
     "status": "FRISK",
-    "ok": true,
-    "git_branch": "main",
-    "git_head": "02df6f5",
-    "dirty_files_count": 1,
-    "problems": [],
-    "warnings": [
-      "1 lokale endringer i arbeidskopien"
-    ]
+    "git_branch": "## main...origin/main",
+    "dirty_files_count": 0
   },
   "coordinator": {
     "name": "Hermes",
     "role": "Operativ Koordinator & Swarm Triage",
     "model": "Qwen3.5-9B-Heretic-TOOLS-MTP-Q6_K (Lokal RTX 5060 Ti 16 GB, 131K ctx)",
     "pending_inbox_count": 0,
-    "pending_files": []
+    "pending_tasks": []
   },
   "agents": [
     {
