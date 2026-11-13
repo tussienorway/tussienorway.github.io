@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Den umulige sirkelen – Thomas Strand Egeland Austenaa</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    :root {
+      --blue: #1a4f8a;
+      --blue-light: #e8f0fb;
+      --red: #c0392b;
+      --red-light: #fdf0ee;
+      --green: #1a6e3c;
+      --green-light: #eaf4ee;
+      --yellow: #856404;
+      --yellow-light: #fff8e1;
+      --purple: #5b2d8e;
+      --purple-light: #f0eaf8;
+      --border: #d0d7e2;
+      --radius: 8px;
+      --max: 920px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: #1a1a1a;
+      background: #f5f7fa;
+    }
+    a { color: var(--blue); }
+
+    header {
+      background: linear-gradient(135deg, #1a2a4a 0%, #1a4f8a 100%);
+      color: #fff;
+      padding: 3rem 1.5rem 2.5rem;
+      text-align: center;
+    }
+    header h1 { font-size: 1.9rem; font-weight: 800; margin-bottom: .5rem; letter-spacing: -.5px; }
+    header .subtitle { font-size: 1.05rem; opacity: .8; max-width: 640px; margin: 0 auto; }
+    .meta-row {
+      display: flex; flex-wrap: wrap; gap: .5rem 2rem;
+      justify-content: center; margin-top: 1.25rem;
+      font-size: .85rem; opacity: .75;
+    }
+
+    main { max-width: var(--max); margin: 2rem auto; padding: 0 1rem 5rem; }
+
+    /* ── INTRO QUOTE ── */
+    .intro-quote {
+      background: #fff;
+      border-left: 5px solid var(--blue);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: #333;
+      box-shadow: 0 2px 8px rgba(0,0,0,.07);
+    }
+
+    /* ── CIRCLE DIAGRAM ── */
+    .circle-container {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .circle-container h2 {
+      font-size: 1.15rem;
+      color: var(--blue);
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+    }
+    .circle-steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      justify-content: center;
+      align-items: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .circle-step {
+      background: var(--blue-light);
+      border: 2px solid var(--blue);
+      border-radius: var(--radius);
+      padding: .85rem 1rem;
+      flex: 1 1 160px;
+      max-width: 180px;
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--blue);
+      text-align: center;
+    }
+    .circle-arrow {
+      font-size: 1.5rem;
+      color: var(--red);
+      padding: 0 .5rem;
+      flex-shrink: 0;
+    }
+    .circle-block {
+      background: var(--red-light);
+      border: 2px solid var(--red);
+      border-radius: var(--radius);
+      padding: .85rem 1rem;
+      flex: 1 1 160px;
+      max-width: 200px;
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--red);
+      text-align: center;
+    }
+    .circle-label {
+      margin-top: 1.25rem;
+      font-size: .9rem;
+      color: #666;
+      font-style: italic;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+    }
+    .card-header {
+      padding: 1rem 1.25rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .card-header.blue   { background: var(--blue-light);   color: var(--blue);   border-bottom: 2px solid var(--blue);   }
+    .card-header.red    { background: var(--red-light);    color: var(--red);    border-bottom: 2px solid var(--red);    }
+    .card-header.green  { background: var(--green-light);  color: var(--green);  border-bottom: 2px solid var(--green);  }
+    .card-header.yellow { background: var(--yellow-light); color: var(--yellow); border-bottom: 2px solid var(--yellow); }
+    .card-header.purple { background: var(--purple-light); color: var(--purple); border-bottom: 2px solid var(--purple); }
+    .card-body { padding: 1.35rem; }
+
+    /* ── ALERTS ── */
+    .alert {
+      border-left: 4px solid;
+      border-radius: 4px;
+      padding: .9rem 1.1rem;
+      margin: 1rem 0;
+      font-size: .95rem;
+    }
+    .alert-red    { border-color: var(--red);    background: var(--red-light);    color: #7b1a13; }
+    .alert-green  { border-color: var(--green);  background: var(--green-light);  color: #0f4225; }
+    .alert-yellow { border-color: var(--yellow); background: var(--yellow-light); color: var(--yellow); }
+    .alert-blue   { border-color: var(--blue);   background: var(--blue-light);   color: var(--blue); }
+    .alert-purple { border-color: var(--purple); background: var(--purple-light); color: var(--purple); }
+    .alert strong { display: block; margin-bottom: .3rem; }
+
+    /* ── TIMELINE ── */
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: .6rem;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+    .tl-item {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -1.55rem;
+      top: .4rem;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+    }
+    .tl-item.trauma::before  { background: var(--red); }
+    .tl-item.system::before  { background: var(--yellow); }
+    .tl-item.medical::before { background: var(--blue); }
+    .tl-item.positive::before { background: var(--green); }
+
+    .tl-year {
+      font-size: .78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: .2rem;
+    }
+    .tl-item.trauma  .tl-year { color: var(--red); }
+    .tl-item.system  .tl-year { color: var(--yellow); }
+    .tl-item.medical .tl-year { color: var(--blue); }
+    .tl-item.positive .tl-year { color: var(--green); }
+
+    .tl-content {
+      font-size: .93rem;
+      color: #333;
+    }
+
+    /* ── CATCH-22 TABLE ── */
+    table { width: 100%; border-collapse: collapse; font-size: .91rem; }
+    th {
+      background: var(--blue);
+      color: #fff;
+      text-align: left;
+      padding: .6rem .85rem;
+      font-weight: 600;
+    }
+    td { padding: .55rem .85rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:nth-child(even) td { background: #f8f9fb; }
+
+    /* ── DEMAND ── */
+    .demand-list { list-style: none; }
+    .demand-list li {
+      display: flex; gap: .8rem;
+      padding: .75rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+      font-size: .95rem;
+    }
+    .demand-list li:last-child { border-bottom: none; }
+    .demand-num {
+      flex-shrink: 0;
+      width: 1.9rem; height: 1.9rem;
+      background: var(--blue);
+      color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .82rem; font-weight: 700;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: .82rem;
+      color: #777;
+      border-top: 1px solid var(--border);
+      background: #fff;
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.35rem; }
+      .circle-steps { flex-direction: column; align-items: center; }
+      .circle-arrow { transform: rotate(90deg); }
+    }
+    @media print {
+      body { background: #fff; }
+      .card { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🔄 Den umulige sirkelen</h1>
+  <p class="subtitle">Hvordan systemet straffer folk for å være syke på den «feil» måten – og hvorfor Thomas Strand Egeland Austenaa aldri fikk hjelpen han trengte</p>
+  <div class="meta-row">
+    <span>📋 Thomas Strand Egeland Austenaa · f. 12.04.1984</span>
+    <span>📅 November 2026</span>
+    <span>📎 Utarbeidet som supplement til medisinsk dokumentasjon</span>
+  </div>
+</header>
+
+<main>
+
+  <blockquote class="intro-quote">
+    «For å få hjelp med angst mot offentlige ansatte og leger, må du møte opp til offentlige ansatte og leger. Men møte opp er nøyaktig det angsten gjør umulig. Så systemet konkluderer at du ikke vil ha hjelp.»
+    <br><br>
+    Dette er ikke et argument. Det er en 30 år lang livshistorie.
+  </blockquote>
+
+  <!-- ── DEN UMULIGE SIRKELEN ── -->
+  <div class="circle-container">
+    <h2>🔄 Den diagnostiserte fellen – visualisert</h2>
+    <div class="circle-steps">
+      <div class="circle-step">Trenger hjelp for sosial angst (F40.1) og PTSD</div>
+      <div class="circle-arrow">→</div>
+      <div class="circle-block">❌ Systemkrav: må møte opp til timer for å dokumentere behov</div>
+      <div class="circle-arrow">→</div>
+      <div class="circle-step">Angst mot leger og offentlige ansatte gjør oppmøte umulig</div>
+      <div class="circle-arrow">→</div>
+      <div class="circle-block">❌ Konklusjon: «møter ikke opp» = mangler motivasjon</div>
+      <div class="circle-arrow">→</div>
+      <div class="circle-step">Ingen hjelp. Tilstanden forverres.</div>
+      <div class="circle-arrow">→</div>
+      <div class="circle-block">❌ Start på nytt fra toppen</div>
+    </div>
+    <p class="circle-label">Dette er ikke pasientens feil. Det er et systemdesignproblem.</p>
+  </div>
+
+  <!-- ── HVEM ER THOMAS ── -->
+  <div class="card">
+    <div class="card-header blue">👤 Hvem er Thomas – det systemet aldri fikk vite</div>
+    <div class="card-body">
+      <p>Thomas er pianist. Han er blant de 5 % mest teknisk kompetente innen IT og AI-systemer i Norge – selvlært de siste to årene, på tross av kroniske smerter, isolasjon og et system som har sviktet ham konsekvent.</p>
+
+      <p style="margin-top:.85rem;">Han er ikke lat. Han er ikke umotivert. Han er ikke «vanskelig».</p>
+
+      <p style="margin-top:.85rem;">Han er en person med <strong>ubehandlet PTSD fra barndommen</strong>, <strong>diagnostisert sosial fobi (F40.1)</strong>, og <strong>en kropp full av brudd og nerveskader</strong> – som likevel har klart å bygge seg opp en enorm kompetanse i et forsøk på å skape seg et liv som er verdt å leve.</p>
+
+      <div class="alert alert-blue" style="margin-top:1rem;">
+        <strong>Agder fylkeskommune betalte skoleplass</strong>
+        Thomas ble sendt til Adolf Øien skole i Trondheim (IKT-driftsfag) fordi fylkeskommunen så potensialet hans og ville gi ham en sjanse til et normalt voksenliv. Det var ikke et tilbud til noen uten ressurser – det var et tilbud til noen med uvanlige ressurser, blokkert av ubehandlet barndomstrauma.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BARNDOMSTRAUMA ── -->
+  <div class="card">
+    <div class="card-header red">🧒 Barndomstrauma – det som skapte angsten systemet nå straffer</div>
+    <div class="card-body">
+      <p>Thomas vokste opp i et hjem med alvorlig psykisk sykdom hos nærstående familiemedlem. Som 12-åring ble han vitne til – og måtte gripe inn ved – et selvmordsforsøk. Han gjenopplivet sin mor som 12-åring.</p>
+
+      <div class="alert alert-red" style="margin-top:1rem;">
+        <strong>Hva dette gjør med et barn:</strong>
+        Et 12-åring barn som opplever dette alene, uten profesjonell hjelp etterpå, utvikler hypervigilans, unngåelsesatferd og frykt for autoriteter og offentlige hjelpere – fordi hjelpesystemet ikke kom da det trengtes mest. Dette er tekstboklæreboks PTSD-utvikling.
+      </div>
+
+      <p style="margin-top:1rem;">Farens oppmerksomhet måtte nødvendigvis gå til yngre søsken. Thomas «spilte tøff». Skoleavslutninger kom og gikk. Ingen så det. Ingen spurte.</p>
+
+      <p style="margin-top:.85rem;">PTSD hos barn viser seg ikke alltid som åpenbar nød. Det viser seg som <strong>prestasjon uten trygghet</strong>, som <strong>taushet overfor autoriteter</strong>, og som en dyptsittende forventning om at hjelpesystemet vil svikte deg – fordi det allerede har gjort det.</p>
+
+      <div class="alert alert-yellow" style="margin-top:1rem;">
+        <strong>Systemets svar da det var akutt nødvendig:</strong>
+        Thomas har trengt psykisk oppfølging siden han var 12 år. Det han fikk var ingenting – eller verst av alt: kortvarig hjelp som deretter ble trukket tilbake fordi han «ikke møtte opp».
+      </div>
+    </div>
+  </div>
+
+  <!-- ── VOLDSTRAUMA OG BESKYTTELSE AV ANDRE ── -->
+  <div class="card">
+    <div class="card-header red">🛡️ Voldstraumer og det usagte ansvaret: Å bære andres byrder</div>
+    <div class="card-body">
+      <p>I tillegg til barndomstraumet bærer Thomas på alvorlige, ubehandlede traumer etter grov vold. Blant annet har han opplevd å bli holdt fanget en hel natt under trusler om drap og lemlestelse, og utsatt for massiv stump vold mot ansikt og rygg.</p>
+
+      <div class="alert alert-red" style="margin-top:1rem;">
+        <strong>Hvorfor dette aldri ble en politisak:</strong>
+        Fordi gjerningspersonen var i familie med noen Thomas er glad i som har små barn. En anmeldelse ville medført langvarig fengselsstraff og knust livene til uskyldige barn. Thomas valgte å ta hele den fysiske og psykiske støyten alene for å beskytte barna.
+      </div>
+
+      <p style="margin-top:1rem;"><strong>Hvordan helsevesenet reagerte:</strong> Da han fortalte legen om disse traumene og hvordan de hadde ødelagt helsen hans, ble han møtt med mistillit fordi han nektet å oppgi navnet på gjerningspersonen. Helsevesenet forvekslet et etisk valg om å beskytte uskyldige tredjepersoner med «upålitelighet».</p>
+
+      <div class="alert alert-yellow" style="margin-top:1rem;">
+        <strong>Fysiske spor i journalene:</strong>
+        Dette henger direkte sammen med journalførte skader: <em>«2011: Spiralbrudd og bimalleolært ankelbrudd høyre side, operert. Thomas har fortalt at han ble mishandlet og fikk fem brudd i foten»</em> (ortopedi 2019 og 2024, DPS 2019). Skadene er objektive og bekreftet på røntgen.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── AKUTT TANNSTATUS ── -->
+  <div class="card">
+    <div class="card-header red">🦷 Akutt tannstatus: Smertehelvete og nektet narkose</div>
+    <div class="card-body">
+      <p>Thomas har nå <strong>ingen jeksler igjen</strong>, kun tannstubber som ikke kan brukes til å tygge mat, og opplever <strong>akutte infeksjoner og betennelser nesten hver eneste uke</strong> med voldsomme smerter og nedsatt allmenntilstand.</p>
+
+      <div class="alert alert-red" style="margin-top:1rem;">
+        <strong>Den medisinske svikten på tannhelse:</strong>
+        <ul style="margin-top:.4rem; padding-left:1.3rem; display:flex; flex-direction:column; gap:.4rem;">
+          <li>Gratis tannbehandling er allerede <strong>innvilget</strong> av det offentlige (bekreftet i journal 2022).</li>
+          <li>På grunn av alvorlig sosial fobi (F40.1) og traumer er det fysiologisk og psykologisk umulig å gjennomføre denne omfattende kirurgien i våken tilstand i en vanlig tannlegestol.</li>
+          <li>Behandlingen <strong>må gjennomføres under full narkose eller dyp sedasjon</strong> ved sykehus / tilrettelagt tannklinikk (TOO-team).</li>
+          <li>Fastlegen <strong>nekter å henvise til full narkose</strong>, og nekter å skrive ut nødvendig beroligende medisin. Resultatet er at pasienten går med ubehandlede kjeveinfeksjoner uke etter uke.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SELVMEDISINERING ── -->
+  <div class="card">
+    <div class="card-header purple">🍺 20 år med alkohol som medisin – og hva som faktisk skjedde</div>
+    <div class="card-body">
+      <p>Thomas drakk i 20 år. <strong>Ikke fordi han er svak. Fordi det var den eneste smertestilleren som var tilgjengelig.</strong></p>
+
+      <p style="margin-top:.85rem;">Alkohol demper sosial angst. Det demper hypervigilans fra PTSD. Det gjør det mulig å møte opp på et legekontor, snakke med en offentlig ansatt, sitte i et venterom uten panikk. For en person med ubehandlet F40.1 og PTSD, uten tilgang til reell behandling, er dette ikke avhengighet av valg – det er overlevelsesmedisin.</p>
+
+      <div class="alert alert-purple" style="margin-top:1rem;">
+        <strong>Den doble trappefellen:</strong>
+        <ol style="margin-top:.5rem; padding-left:1.3rem; display:flex; flex-direction:column; gap:.4rem;">
+          <li>Alkohol gjør det mulig å fungere → men systemet bruker alkoholbruken som <em>forklaring</em> på alle problemene.</li>
+          <li>Thomas slutter å drikke → men nå mangler han den eneste angstdemperen han hadde tilgang til → systemkrav om oppmøte er umulige → mer isolasjon og smerte.</li>
+          <li>Cannabis erstatter noe av effekten → pasienten kan se en film uten depressive tanker → men systemet registrerer det som «rusmisbruk» i stedet for som en fysiologisk rasjonell erstatningsstrategi.</li>
+        </ol>
+      </div>
+
+      <p style="margin-top:1rem;"><strong>Hva spesialisthelsetjenesten faktisk sier om dette:</strong> ARA FACT (Sørlandet sykehus 2022) bekrefter at rusdiagnosene er dokumenterte, men at <em>«valide psykiatriske diagnoser krever rusfrihet i minst tre måneder eller innleggelse»</em> – en betingelse som i praksis er umulig å oppfylle uten at noen <em>hjelper ham gjennom det</em>. Ingen tilbød innleggelse. Ingen tilbød tett ambulant støtte gjennom avrusningsperioden.</p>
+
+      <div class="alert alert-blue" style="margin-top:1rem;">
+        <strong>Relevant praksis – Trygderetten:</strong>
+        TRR-2020-155: Retten anerkjente at ruslidelse kan være sekundær til somatisk sykdom og PTSD, og at videre rusbehandling ikke nødvendigvis ville bedre arbeidsevnen når de underliggende somatiske og traumatiske lidelsene er så alvorlige. Innvilget 50 % uføretrygd.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TIDSLINJE ── -->
+  <div class="card">
+    <div class="card-header blue">📅 Livsløpet – sett fra hjelpeapparatets manglende side</div>
+    <div class="card-body">
+      <div class="timeline">
+
+        <div class="tl-item trauma">
+          <div class="tl-year">Ca. 1996 (12 år)</div>
+          <div class="tl-content">
+            <strong>Mors selvmordsforsøk.</strong> Thomas gjenoppliver henne alene. Ingen profesjonell psykisk hjelp til barnet etterpå. PTSD-grunnlaget legges.
+          </div>
+        </div>
+
+        <div class="tl-item system">
+          <div class="tl-year">Barndom / ungdom</div>
+          <div class="tl-content">
+            <strong>Angst mot autoriteter utvikles.</strong> Lærere, offentlige ansatte, leger – alle representanter for et system som sviktet da det trengtes mest. Thomas «spiller tøff». Ingen ser det.
+          </div>
+        </div>
+
+        <div class="tl-item positive">
+          <div class="tl-year">Tidlig voksenliv</div>
+          <div class="tl-content">
+            <strong>Agder fylkeskommune ser potensial.</strong> Betaler plass ved Adolf Øien skole i Trondheim, IKT-driftsfag. Thomas viser at han er langt over gjennomsnittet intellektuelt og teknisk.
+          </div>
+        </div>
+
+        <div class="tl-item medical">
+          <div class="tl-year">2011</div>
+          <div class="tl-content">
+            <strong>Første store skjelettskade</strong> – ankelbrudd, operert. Kjeden av fysiske skader begynner.
+          </div>
+        </div>
+
+        <div class="tl-item medical">
+          <div class="tl-year">2018</div>
+          <div class="tl-content">
+            <strong>A3 burstfraktur i Th6</strong> (sykkelulykke). Behandlet konservativt. Ingen strukturert smertebehandling eller rehabilitering. DXA viser osteopeni – ingen behandling settes i gang. Alkohol er nå primær smertelindring.
+          </div>
+        </div>
+
+        <div class="tl-item system">
+          <div class="tl-year">2019</div>
+          <div class="tl-content">
+            <strong>Første møte med rusbehandling (ARA).</strong> Thomas møter ikke opp. Behandleren skriver: <em>«fremstår motivert og hjelpsøkende, men klarer ikke å møte.»</em> Behandlingen avsluttes. Ingen oppsøkende alternativ tilbys.
+          </div>
+        </div>
+
+        <div class="tl-item medical">
+          <div class="tl-year">2019</div>
+          <div class="tl-content">
+            <strong>Radiusfraktur venstre side – operert.</strong> Skruer «backer noe» ved kontroll. Habituelt nedsatt sensibilitet i alle fingre allerede på dette tidspunktet.
+          </div>
+        </div>
+
+        <div class="tl-item system">
+          <div class="tl-year">2022</div>
+          <div class="tl-content">
+            <strong>ARA FACT overtar.</strong> Psykolog setter F40.1 (sosial fobi). Klinisk beslutning: behov for TSB, kommunale tjenester, NAV, oppsøkende oppfølging. <strong>Individuell Plan vedtas.</strong> Behandlingsmål: uføretrygd, egen bolig. Ingen av tiltakene gjennomføres fullt ut.
+          </div>
+        </div>
+
+        <div class="tl-item system">
+          <div class="tl-year">2023</div>
+          <div class="tl-content">
+            <strong>ARA FACT avslutter.</strong> Begrunnelse: <em>«teamet kom ikke i posisjon til behandling.»</em> Epikrisen anbefaler uføretrygdutredning og kartlegging av fysisk helse. Ingen av disse anbefalingene følges opp av fastlegen.
+          </div>
+        </div>
+
+        <div class="tl-item medical">
+          <div class="tl-year">2024–2025</div>
+          <div class="tl-content">
+            <strong>Ytterligere brudd</strong> (kne, mulig håndledd). MR nakke 2025: bilateral nerverotaffeksjon C6+C7, benmargsødem, utslukket bicepsrefleks venstre. Spesialist: <em>«hovedproblemet er sosial angst som gjør at han ikke kommer inn i et behandlingsløp.»</em>
+          </div>
+        </div>
+
+        <div class="tl-item trauma">
+          <div class="tl-year">2026</div>
+          <div class="tl-content">
+            <strong>Thomas slutter å drikke.</strong> Nå lider han uten selvmedisinering, med kroniske smerter, nedsatt følelse begge armer, ingen jeksler igjen – og en fastlege som nekter angstmedisin, nekter narkosehenvisning til tannlege, og nekter å journalføre spesialistopplysninger.
+          </div>
+        </div>
+
+        <div class="tl-item positive">
+          <div class="tl-year">2024–2026</div>
+          <div class="tl-content">
+            <strong>Til tross for alt dette</strong> har Thomas lært seg avansert IT og AI-systemer på egenhånd. Han er nå blant de teknisk mest kompetente innen sitt felt i Norge. Dette er ikke en person uten vilje eller evne. Dette er en person uten tilgjengelig hjelp.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CATCH-22 TABELL ── -->
+  <div class="card">
+    <div class="card-header red">⚠️ De konkrete systemparadoksene – dokumentert</div>
+    <div class="card-body">
+      <table>
+        <thead>
+          <tr><th>Systemkravet</th><th>Problemet</th><th>Hvem som har sagt det</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Møt til timer for å dokumentere angst</td>
+            <td>Angst mot leger og offentlige ansatte gjør dette umulig uten støtte</td>
+            <td>ARA FACT 2023: «sosial angst er hovedgrunnen til at han ikke kommer inn i behandlingsløpet»</td>
+          </tr>
+          <tr>
+            <td>Gjennomfør rusbehandling for å få psykisk hjelp</td>
+            <td>Rusbehandling krever oppmøte til timer – se rad 1</td>
+            <td>ARA FACT 2019 og 2023: avsluttet fordi han ikke klarte å møte</td>
+          </tr>
+          <tr>
+            <td>Vær rusfri i 3 måneder for å få psykiatrisk diagnose</td>
+            <td>Rusen er eneste tilgjengelige angstdemper – rusfrihet uten alternativ angstmedisin er umulig</td>
+            <td>ARA FACT 2022: «valide diagnoser krever rusfrihet eller innleggelse»</td>
+          </tr>
+          <tr>
+            <td>Be fastlegen om angstmedisin for å klare å møte</td>
+            <td>Fastlegen nekter å skrive ut angstmedisin</td>
+            <td>Pasienten selv, 2026</td>
+          </tr>
+          <tr>
+            <td>Gjennomfør tannbehandling (allerede innvilget gratis)</td>
+            <td>Klarer ikke møte uten sedasjon – fastlegen nekter å henvise til narkose</td>
+            <td>Legenotat 2022: «innvilget gratis tannbehandling men har vansker med å møte»</td>
+          </tr>
+          <tr>
+            <td>Søk NAV om uføretrygd via fastlege</td>
+            <td>Fastlegen nekter å journalføre spesialistopplysninger og skrive erklæring</td>
+            <td>Pasienten selv, 2026; hpls. § 39 er brutt</td>
+          </tr>
+          <tr>
+            <td>Klage på fastlegen til Statsforvalteren</td>
+            <td>Klage krever skriftlig prosess med offentlige myndigheter – se rad 1</td>
+            <td>Thomas selv: «jeg orker ikke, jeg gidder ikke» – ikke latskap, men kapasitetssvikt</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="alert alert-red" style="margin-top:1.25rem;">
+        <strong>Konklusjon:</strong> Hvert eneste utgangspunkt fra sirkelen er blokkert av et annet element i den samme sirkelen. Dette er ikke manglende vilje. Dette er en 30 år gammel felle laget av et system som ikke var designet for å hjelpe folk med denne kombinasjonen av diagnoser.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── HVA SYSTEMET HAR SVIKTET MED ── -->
+  <div class="card">
+    <div class="card-header yellow">📋 Hva systemet skyldte Thomas – og ikke leverte</div>
+    <div class="card-body">
+      <p style="margin-bottom:1rem;">Basert på vedtak og kliniske beslutninger fattet av spesialisthelsetjenesten selv:</p>
+      <table>
+        <thead><tr><th>Hva som ble vedtatt</th><th>Hvem vedtok det</th><th>Hva som skjedde</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Oppsøkende/ambulant oppfølging (FACT-modellen)</td>
+            <td>ARA FACT, Sørlandet sykehus 2022</td>
+            <td>Ikke gjennomført. Avsluttet 2023.</td>
+          </tr>
+          <tr>
+            <td>Individuell Plan (IP)</td>
+            <td>ARA FACT, Sørlandet sykehus 04.10.2022</td>
+            <td>Ikke gjennomført.</td>
+          </tr>
+          <tr>
+            <td>Kriseplan</td>
+            <td>ARA FACT, Sørlandet sykehus 2022</td>
+            <td>Ikke gjennomført.</td>
+          </tr>
+          <tr>
+            <td>Kartlegging av benskjørhet (DXA, blodprøver)</td>
+            <td>Legegjennomgang 04.08.2022</td>
+            <td>Ikke gjennomført. Siste blodprøver: 2019.</td>
+          </tr>
+          <tr>
+            <td>Kartlegging av smertetilstand</td>
+            <td>Legegjennomgang 04.08.2022</td>
+            <td>Ikke gjennomført.</td>
+          </tr>
+          <tr>
+            <td>Tannhelseoppfølging (allerede innvilget)</td>
+            <td>Legenotat 2022</td>
+            <td>Ikke gjennomført – mangler følgetjeneste og narkosehenvisning.</td>
+          </tr>
+          <tr>
+            <td>Utredning for uføretrygd</td>
+            <td>ARA FACT epikrise 2023</td>
+            <td>Ikke gjennomført. Fastlege samarbeider ikke.</td>
+          </tr>
+          <tr>
+            <td>Kartlegging av rus (DUDIT/AUDIT)</td>
+            <td>ARA FACT 2022</td>
+            <td>Planlagt men aldri gjennomført.</td>
+          </tr>
+          <tr>
+            <td>Psykisk helsehjelp (siden 12 år)</td>
+            <td>Ethvert forsvarlighetskrav i norsk helselov</td>
+            <td>Aldri levert på et reelt og tilgjengelig nivå.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── KRAV TIL NAV ── -->
+  <div class="card">
+    <div class="card-header green">✅ Hva NAV må gjøre nå</div>
+    <div class="card-body">
+      <ul class="demand-list">
+        <li>
+          <div class="demand-num">1</div>
+          <div>
+            <strong>Anerkjenn at manglende oppmøte er et symptom, ikke en forsømmelse</strong><br>
+            Rundskriv R12-00 til ftrl. § 12-5 åpner eksplisitt for at motforestillinger mot behandling kan inngå i symptombildet. F40.1 + PTSD + 30 år uten reell hjelp = klinisk begrunnelse for unntak fra standard oppmøtekrav.
+          </div>
+        </li>
+        <li>
+          <div class="demand-num">2</div>
+          <div>
+            <strong>Innhent epikriser direkte fra Sørlandet sykehus (§ 21-4)</strong><br>
+            Fastlegen nekter å fungere som kanal. NAV har både rett og plikt til å gå direkte til nevrolog og ortoped ved Sørlandet sykehus Kristiansand.
+          </div>
+        </li>
+        <li>
+          <div class="demand-num">3</div>
+          <div>
+            <strong>Krev at kommunen skaffer følgetjeneste</strong><br>
+            Kommunen plikter å tilby praktisk bistand (helse- og omsorgstjenesteloven § 3-2). Følge til lege, tannlege og NAV-kontor er en lovpålagt tjeneste Thomas har krav på.
+          </div>
+        </li>
+        <li>
+          <div class="demand-num">4</div>
+          <div>
+            <strong>Vurder om rusdiagnosene er sekundære til PTSD og somatikk</strong><br>
+            20 år med alkohol som selvmedisinering av ubehandlet PTSD og kroniske smerter er ikke primær ruslidelse. Trygderetten (TRR-2020-155) har anerkjent nettopp dette skillet.
+          </div>
+        </li>
+        <li>
+          <div class="demand-num">5</div>
+          <div>
+            <strong>Start arbeidsevnevurdering basert på faktisk funksjonsnivå</strong><br>
+            Ikke basert på hva Thomas sier i en time med angst, men på objektive funn: nerverotaffeksjon C6+C7, burstfraktur Th6, osteopeni/osteoporose, nedsatt følelse begge armer, smerter som ikke er behandlet.
+          </div>
+        </li>
+        <li>
+          <div class="demand-num">6</div>
+          <div>
+            <strong>Vurder søknad om uføretrygd nå, mens AAP pågår</strong><br>
+            40 %-regelen gjelder. Spesialisthelsetjenesten anbefalte dette allerede i 2023. Hvert år uten avklaring er et år uten stabilitet og inntektsgrunnlag.
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── AVSLUTTENDE NOTAT ── -->
+  <div class="card">
+    <div class="card-header blue">📝 Avsluttende notat til alle som leser dette</div>
+    <div class="card-body">
+      <p>Thomas Austenaa er en mann som har slåss mot overveldende odds i 42 år. Han lærte seg å spille piano. Han lærte seg å programmere AI-systemer. Han satt alene som 12-åring og reddet sin mors liv.</p>
+
+      <p style="margin-top:.85rem;">Han trenger ikke bevise at han er syk nok. <strong>Han trenger at systemet gjør jobben sin.</strong></p>
+
+      <p style="margin-top:.85rem;">Hvis du er en NAV-veileder, lege, saksbehandler eller annen offentlig ansatt som leser dette: Det du ser her er ikke en klage. Det er en dokumentasjon av hva som skjer når systemet gjentatte ganger svikter en person med akkurat denne kombinasjonen av diagnoser – og deretter bruker svikten mot ham.</p>
+
+      <div class="alert alert-green" style="margin-top:1.25rem;">
+        <strong>Gratis hjelp – Gatejuristen Kristiansand (Kirkens Bymisjon)</strong>
+        Trygde- og helsejus for personer med ruserfaring. Oppsøkende virksomhet i Arendal.<br>
+        📞 <strong>941 41 765</strong> | ✉️ <a href="mailto:gatejuristen.kristiansand@bymisjon.no">gatejuristen.kristiansand@bymisjon.no</a>
+      </div>
+      <div class="alert alert-blue" style="margin-top:.75rem;">
+        <strong>Pasient- og brukerombudet i Agder</strong>
+        Gratis hjelp til å klage på helsetjenester og kreve rettigheter.<br>
+        📞 <strong>800 42 831</strong> | 🌐 <a href="https://pasientogbrukerombudet.no" target="_blank">pasientogbrukerombudet.no</a>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Utarbeidet av Thomas Strand Egeland Austenaa · November 2026
+  · Basert på journaldokumenter fra Helsenorge.no, Sørlandet sykehus HF og pasienterfaringer
+  · <a href="/KnutTuv">Se også: Medisinsk dokumentasjon og krav</a>
+</footer>
+
+</body>
+</html>
