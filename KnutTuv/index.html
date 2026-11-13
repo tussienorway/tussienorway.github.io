@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medisinsk dokumentasjon – Thomas Strand Egeland Austenaa</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    :root {
+      --blue: #1a4f8a;
+      --blue-light: #e8f0fb;
+      --red: #c0392b;
+      --red-light: #fdf0ee;
+      --green: #1a6e3c;
+      --green-light: #eaf4ee;
+      --yellow: #856404;
+      --yellow-light: #fff8e1;
+      --gray: #444;
+      --border: #d0d7e2;
+      --radius: 8px;
+      --max: 900px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+      color: #222;
+      background: #f5f7fa;
+    }
+    a { color: var(--blue); }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--blue);
+      color: #fff;
+      padding: 2.5rem 1.5rem 2rem;
+      text-align: center;
+    }
+    header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: .4rem; }
+    header p  { font-size: 1rem; opacity: .85; }
+    .meta-row {
+      display: flex; flex-wrap: wrap; gap: .5rem 2rem;
+      justify-content: center; margin-top: 1rem;
+      font-size: .88rem; opacity: .8;
+    }
+
+    /* ── CRISIS BANNER ── */
+    .crisis-banner {
+      background: var(--red);
+      color: #fff;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      font-size: .95rem;
+      display: none; /* hidden on public page */
+    }
+
+    /* ── LAYOUT ── */
+    main { max-width: var(--max); margin: 2rem auto; padding: 0 1rem 4rem; }
+
+    /* ── CARDS ── */
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    .card-header {
+      background: var(--blue-light);
+      border-bottom: 2px solid var(--blue);
+      padding: .9rem 1.25rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .card-body { padding: 1.25rem; }
+
+    /* ── ALERT BOXES ── */
+    .alert {
+      border-left: 4px solid;
+      border-radius: 4px;
+      padding: .9rem 1.1rem;
+      margin: 1rem 0;
+      font-size: .95rem;
+    }
+    .alert-red    { border-color: var(--red);    background: var(--red-light);    color: #7b1a13; }
+    .alert-green  { border-color: var(--green);  background: var(--green-light);  color: #0f4225; }
+    .alert-yellow { border-color: var(--yellow); background: var(--yellow-light); color: var(--yellow); }
+    .alert-blue   { border-color: var(--blue);   background: var(--blue-light);   color: var(--blue); }
+    .alert strong { display: block; margin-bottom: .25rem; }
+
+    /* ── TABLES ── */
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; margin-top: .75rem; }
+    th {
+      background: var(--blue);
+      color: #fff;
+      text-align: left;
+      padding: .55rem .75rem;
+      font-weight: 600;
+    }
+    td { padding: .5rem .75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:nth-child(even) td { background: #f8f9fb; }
+    .badge {
+      display: inline-block;
+      padding: .15rem .55rem;
+      border-radius: 20px;
+      font-size: .78rem;
+      font-weight: 600;
+    }
+    .badge-red    { background: var(--red-light);    color: var(--red); }
+    .badge-green  { background: var(--green-light);  color: var(--green); }
+    .badge-yellow { background: var(--yellow-light); color: var(--yellow); }
+    .badge-blue   { background: var(--blue-light);   color: var(--blue); }
+
+    /* ── DEMAND LIST ── */
+    .demand-list { list-style: none; }
+    .demand-list li {
+      display: flex;
+      gap: .75rem;
+      padding: .65rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+    .demand-list li:last-child { border-bottom: none; }
+    .demand-num {
+      flex-shrink: 0;
+      width: 1.8rem; height: 1.8rem;
+      background: var(--blue);
+      color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .82rem; font-weight: 700;
+    }
+
+    /* ── SIGNATURE BOX ── */
+    .sig-box {
+      background: var(--blue-light);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.25rem;
+      font-size: .9rem;
+      margin-top: 1rem;
+    }
+    .sig-box p { margin-bottom: .25rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: .82rem;
+      color: #777;
+      border-top: 1px solid var(--border);
+      background: #fff;
+    }
+
+    /* ── ICON HELPERS ── */
+    .icon { font-size: 1.1em; }
+
+    /* ── PRINT ── */
+    @media print {
+      body { background: #fff; }
+      .card { break-inside: avoid; }
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>⚕️ Medisinsk dokumentasjon og krav</h1>
+  <p>Utarbeidet for innsending til NAV og behandlingsapparatet</p>
+  <div class="meta-row">
+    <span>📋 Pasient: Thomas Strand Egeland Austenaa</span>
+    <span>🎂 Født: 12. april 1984 (fnr. 120484-36372)</span>
+    <span>📅 Dato: 13. november 2026</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── VARSEL: KRITISKE SYMPTOMER ── -->
+  <div class="alert alert-red" style="margin-bottom:1.5rem;">
+    <strong>🚨 Pågående nevrologiske symptomer som ikke er utredet</strong>
+    Nedsatt følelse i <strong>begge armer og alle fingre</strong>, brennende og sovende smerter i korsryggen, forverret etter kjent børstefraktur i øvre del av ryggen. Disse symptomene er ennå ikke medisinsk avklart eller behandlet.
+  </div>
+
+  <!-- ── FORMÅL ── -->
+  <div class="card">
+    <div class="card-header"><span class="icon">📌</span> Formål med dette dokumentet</div>
+    <div class="card-body">
+      <p>Dette dokumentet er utarbeidet av pasienten selv, basert på journaldokumenter hentet fra Helsenorge.no, bildesvar fra Kulturhuset Legesenter og epikriser fra Sørlandet sykehus HF. Det er laget fordi:</p>
+      <ul style="margin: .75rem 0 .75rem 1.25rem; display:flex; flex-direction:column; gap:.4rem;">
+        <li>Fastlegen nekter å journalføre opplysninger mottatt fra spesialister ved Sørlandet sykehus (nevrolog og ortoped).</li>
+        <li>Fastlegen nekter å skrive ut angstmedisin eller henvise til sedasjon/narkose for nødvendig tannbehandling, til tross for diagnostisert alvorlig sosial fobi (F40.1).</li>
+        <li>Pasienten har ikke kapasitet til å gjennomføre klager til Statsforvalteren, fylkeslegen eller Norsk pasientskadeerstatning på grunn av sykdommen sin.</li>
+        <li>NAV trenger et samlet bilde av medisinsk situasjon, systemsvikt og hindringer for behandling.</li>
+      </ul>
+      <div class="alert alert-blue">
+        <strong>Hjemmel:</strong> Helsepersonelloven § 39 pålegger helsepersonell å journalføre alle opplysninger som er nødvendige og relevante for helsehjelpen, inkludert opplysninger fra andre behandlere. Det er ikke opp til fastlegen å nekte dette.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DIAGNOSER ── -->
+  <div class="card">
+    <div class="card-header"><span class="icon">🏥</span> Dokumenterte diagnoser (fra spesialisthelsetjenesten)</div>
+    <div class="card-body">
+      <p style="margin-bottom:.75rem;">Følgende diagnoser er stilt av spesialister ved Sørlandet sykehus HF og dokumentert i journal:</p>
+      <table>
+        <thead><tr><th>ICD-10</th><th>Diagnose</th><th>Stilt av</th><th>År</th></tr></thead>
+        <tbody>
+          <tr><td><strong>F40.1</strong></td><td>Sosiale fobier</td><td>Psykolog Emily Davidson, ARA FACT</td><td>2022</td></tr>
+          <tr><td><strong>F15.2</strong></td><td>Avhengighetssyndrom – andre stimulanter</td><td>ARA FACT</td><td>2022</td></tr>
+          <tr><td><strong>F12.2</strong></td><td>Cannabinoidavhengighetssyndrom</td><td>ARA FACT</td><td>2022</td></tr>
+          <tr><td><strong>F17.2</strong></td><td>Tobakksavhengighetssyndrom</td><td>ARA FACT</td><td>2022</td></tr>
+          <tr><td><strong>F19.1</strong></td><td>Skadelig bruk av flere stoffer</td><td>ARA FACT</td><td>2022</td></tr>
+          <tr><td><strong>M81 / M85</strong></td><td>Osteopeni/osteoporose (påvist DXA 2018, bekreftet i flere journaler)</td><td>OUS ortopedi + gjentatte journalnotater</td><td>2018–2025</td></tr>
+          <tr><td><strong>M50.1</strong></td><td>Uttalte degenerative nakkeforandringer C4–C7, bilateral nerverotaffeksjon C6+C7</td><td>MR Sørlandet sykehus</td><td>2025</td></tr>
+          <tr><td><strong>S22 (gammel)</strong></td><td>Børstefraktur (A3 burstfraktur) Th6 – sykkelulykke 2018</td><td>OUS ortopedi</td><td>2018</td></tr>
+          <tr><td><strong>M48</strong></td><td>Eldre kompresjonsfrakturer Th1–Th4</td><td>MR Sørlandet sykehus</td><td>2025</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── BRUDDHISTORIKK ── -->
+  <div class="card">
+    <div class="card-header"><span class="icon">🦴</span> Dokumenterte brudd og skjelettskader (kronologisk)</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Tidspunkt</th><th>Skade</th><th>Kilde</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Barndom</td>
+            <td>Brudd i skinnebein og leggbein</td>
+            <td>Journalanamnese</td>
+            <td><span class="badge badge-yellow">Historisk</span></td>
+          </tr>
+          <tr>
+            <td>2011</td>
+            <td>Spiralbrudd og bimalleolært ankelbrudd høyre side – operert, skrue i laterale malleol</td>
+            <td>Ortopedi 2019; bildesvar 2025</td>
+            <td><span class="badge badge-yellow">Kroniske følger</span></td>
+          </tr>
+          <tr>
+            <td>Før 2019</td>
+            <td>Radiusfraktur venstre arm × 4 (gjentatte brudd)</td>
+            <td>Journalanamnese ortopedi 2024</td>
+            <td><span class="badge badge-yellow">Historisk</span></td>
+          </tr>
+          <tr>
+            <td><strong>07.06.2018</strong></td>
+            <td><strong>A3 burstfraktur Th6</strong> – sykkelulykke, «i grenseland for operasjon», behandlet konservativt. 10° skoliose.</td>
+            <td>OUS telefonnotater 09.06 og 19.06.2018</td>
+            <td><span class="badge badge-red">Ikke etterbehandlet</span></td>
+          </tr>
+          <tr>
+            <td>2018</td>
+            <td>Eldre kompresjonsfrakturer Th1–Th4 (bekreftet på MR 2025)</td>
+            <td>MR Sørlandet sykehus 01.09.2025</td>
+            <td><span class="badge badge-red">Aldri utredet</span></td>
+          </tr>
+          <tr>
+            <td>29.08.2018</td>
+            <td>DXA-måling: osteopeni. Ingen behandling satt i gang.</td>
+            <td>Ortopedi 2019; FACT-notat 2022</td>
+            <td><span class="badge badge-red">Ikke behandlet</span></td>
+          </tr>
+          <tr>
+            <td>21.05.2019</td>
+            <td>Distal radiusfraktur venstre side – operert med DVR-plate. Skruer «bakket noe» ved kontroll.</td>
+            <td>Skadepoliklinikk Arendal; epikrise OUS</td>
+            <td><span class="badge badge-yellow">Operert, ikke fulgt opp</span></td>
+          </tr>
+          <tr>
+            <td>23.10.2019</td>
+            <td>Fall fra el-sparkesykkel, hjernerystelse. Legen noterer: «Er kjent beinskjør.»</td>
+            <td>Skadepoliklinikk</td>
+            <td><span class="badge badge-yellow">Historisk</span></td>
+          </tr>
+          <tr>
+            <td>25.07.2023</td>
+            <td>Sykkelkrasj med bil: skråfraktur distale 5. mellomhåndsben venstre. Henvisning: «Kjent osteoporose».</td>
+            <td>Bildesvar fastlege</td>
+            <td><span class="badge badge-yellow">Historisk</span></td>
+          </tr>
+          <tr>
+            <td>30.08.2024</td>
+            <td>Fall – mulig udislosert fraktur processus styloideus ulnae høyre. Pasienten reiste hjem uten behandling.</td>
+            <td>Bildesvar fastlege</td>
+            <td><span class="badge badge-red">Uavklart</span></td>
+          </tr>
+          <tr>
+            <td><strong>18.–19.10.2024</strong></td>
+            <td><strong>Nedpresningsfraktur laterale tibiaplatå</strong> høyre kne (~4 mm innsynkning) + rift i mediale menisk. Initial røntgen viste ingen brudd.</td>
+            <td>MR Sørlandet sykehus 31.10.2024</td>
+            <td><span class="badge badge-red">Ikke fulgt opp</span></td>
+          </tr>
+          <tr>
+            <td>01.09.2025</td>
+            <td>MR nakke: eldre kompresjonsfrakturer Th1–Th4, benmargsødem C5–C7, prolaps C6/C7 venstre, bilateral nerverotaffeksjon C6+C7.</td>
+            <td>MR Sørlandet sykehus</td>
+            <td><span class="badge badge-red">Forverret</span></td>
+          </tr>
+          <tr>
+            <td>03.11.2025</td>
+            <td>Fysikalsk medisin: utslukket bicepsrefleks venstre, nedsatt finmotorikk venstre hånd.</td>
+            <td>FMR Kongsgård</td>
+            <td><span class="badge badge-red">Ikke fulgt opp</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="alert alert-red" style="margin-top:1rem;">
+        <strong>Nåværende ulykke – ikke medisinsk vurdert</strong>
+        Sykkelulykke i ca. 45 km/t: landet på hodet. Kjent børstefraktur i øvre del av ryggen fra før. Pasienten møtte til legekontor på Elverum men ble avvist og måtte vente uten å komme inn. Reiste hjem og lå sengebundet i ca. én måned. Nå: <strong>nedsatt følelse begge armer og alle fingre, brennende/sovende smerter i korsrygg, vedvarende hoste.</strong> Ingen legeundersøkelse gjennomført etter ulykken.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SYSTEMSVIKT ── -->
+  <div class="card">
+    <div class="card-header"><span class="icon">⚠️</span> Dokumentert systemsvikt – konkrete hendelser</div>
+    <div class="card-body">
+
+      <div class="alert alert-red">
+        <strong>1. Fastlegen nekter å journalføre spesialistopplysninger</strong>
+        Fastlegen nekter å skrive inn i journalen opplysninger og vurderinger mottatt fra nevrolog og ortoped ved Sørlandet sykehus Kristiansand. Dette er i strid med helsepersonelloven § 39.
+      </div>
+
+      <div class="alert alert-red">
+        <strong>2. Fastlegen nekter å skrive ut angstmedisin</strong>
+        Til tross for diagnostisert sosial fobi (F40.1) av psykolog ved spesialisthelsetjenesten nekter fastlegen å forskrive angstdempende medisin. Dette hindrer pasienten i å møte til nødvendige legetimer, tannlege og offentlige kontorer.
+      </div>
+
+      <div class="alert alert-red">
+        <strong>3. Fastlegen nekter å henvise til sedasjon/narkose for tannbehandling</strong>
+        Pasienten har alvorlig tannhelseproblem og er innvilget gratis tannbehandling, men klarer ikke gjennomføre behandling uten sedasjon eller fullnarkose grunnet diagnostisert sosial fobi og angst for helsepersonell. Fastlegen nekter å sende slik henvisning.
+      </div>
+
+      <div class="alert alert-yellow">
+        <strong>4. FACT-teamet leverte ikke oppsøkende oppfølging</strong>
+        ARA FACT-teamet ved Sørlandet sykehus vedtok i 2022 en behandlingsplan med oppsøkende/ambulant tilnærming (hjemmebesøk, følge til timer). Dette ble ikke gjennomført. Pasienten ble avsluttet i 2023 fordi teamet «ikke kom i posisjon til behandling» – et ansvar som ligger hos tjenesteapparatet, ikke pasienten.
+      </div>
+
+      <div class="alert alert-yellow">
+        <strong>5. Osteoporose aldri utredet eller behandlet (siden 2018)</strong>
+        DXA-måling 2018 viste osteopeni. Ingen ny DXA, ingen blodprøver (siste blodprøver 2019 ifølge legenotat fra 2022), ingen behandling satt i gang på 8 år. Legenotater fra 2022–2025 bekrefter at pasienten ikke er i noe behandlingsforløp for benskjørhet.
+      </div>
+
+      <div class="alert alert-blue">
+        <strong>Pasientens situasjon er en direkte konsekvens av F40.1</strong>
+        Sosial fobi er ikke «manglende vilje». Manglende oppmøte til timer, manglende gjennomføring av behandling og vansker med å møte opp hos lege, NAV og tannlege er symptomer på den diagnostiserte lidelsen – ikke et argument mot at pasienten er syk eller trenger hjelp. NAVs eget rundskriv R12-00 anerkjenner at motforestillinger mot behandling kan være en del av symptombildet ved psykiske lidelser.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BAKGRUNN ── -->
+  <div class="card">
+    <div class="card-header"><span class="icon">📖</span> Livshistorie og kontekst</div>
+    <div class="card-body">
+      <p>Thomas vokste opp i et hjem med psykisk sykdom. Dette er bakgrunnshistorie som er dokumentert av fastlegen over mange år. Agder fylkeskommune betalte skoleplass ved <strong>Adolf Øien skole i Trondheim</strong>, IKT-driftsfag, for å gi Thomas en mulighet til et normalt voksenliv.</p>
+      <p style="margin-top:.75rem;">Han har tidligere arbeidet som gartner og i bygg- og anleggsbransjen. Han har ikke vært i ordinært arbeid på mange år, dels på grunn av gjentatte skjelettskader, dels på grunn av angst og sammensatte diagnoser. Han mottar AAP.</p>
+      <div class="alert alert-blue" style="margin-top:.75rem;">
+        <strong>Relevant for NAV:</strong> Fysisk tungt arbeid (gartner, bygg og anlegg) er uforenlig med dokumenterte ryggskadet, børstefraktur, nerverotaffeksjon i nakken og benskjørhet med gjentatte lavenergibrudd. Utdanningen (IKT-drift) er fra en periode pasienten var i stand til å fungere.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ANGST OG LEGE ── -->
+  <div class="card">
+    <div class="card-header"><span class="icon">🧠</span> Sosial fobi: slik påvirker det legetimer og oppmøte</div>
+    <div class="card-body">
+      <p>Thomas har sterk angst for legekontorer, sykehus og offentlige kontorer. I slike situasjoner kan han <strong>underestimere egne smerter</strong> (sier «det går greit» mens MR viser brudd) eller <strong>ikke klare å møte opp i det hele tatt</strong>.</p>
+
+      <div class="alert alert-yellow" style="margin-top:.75rem;">
+        <strong>Konkret eksempel fra journal (2024):</strong> Ved kneskadet i oktober 2024 ble Thomas beskrevet som «ikke smertepreget» og sa selv at han ikke trengte smertestillende. <em>Samme dag</em> viste MR et nedpresningsbrudd i tibiaplatået med 4 mm innsynkning og meniskrift. Det muntlige inntrykket reflekterte ikke skadens faktiske alvor.
+      </div>
+
+      <p style="margin-top:.75rem;">Dette er ikke uvanlig ved F40.1. Behandlere ved Sørlandet sykehus, Fysikalsk medisin og ARA FACT har alle bekreftet i egne journalnotater at <strong>angst er hovedgrunnen til at pasienten ikke kommer inn i et behandlingsløp.</strong></p>
+    </div>
+  </div>
+
+  <!-- ── KRAV TIL NAV ── -->
+  <div class="card">
+    <div class="card-header"><span class="icon">📋</span> Konkrete krav til NAV</div>
+    <div class="card-body">
+      <ul class="demand-list">
+        <li>
+          <div class="demand-num">1</div>
+          <div>
+            <strong>Innhent epikriser direkte fra Sørlandet sykehus (§ 21-4)</strong><br>
+            NAV har lovhjemmel og plikt til å innhente journaldokumenter direkte fra nevrolog og ortoped ved Sørlandet sykehus Kristiansand, uten at fastlegen er mellomledd. Dette er spesielt nødvendig siden fastlegen nekter å journalføre spesialistopplysningene.
+          </div>
+        </li>
+        <li>
+          <div class="demand-num">2</div>
+          <div>
+            <strong>Vurder nevrologisk hastehenvisning</strong><br>
+            Nedsatt følelse begge armer og fingre etter kjent ryggskadet er et potensielt alvorlig nevrologisk funn. NAVs rådgivende lege bør vurdere om det er behov for akutt MR-vurdering av ryggmarg/nerverøtter.
+          </div>
+        </li>
+        <li>
+          <div class="demand-num">3</div>
+          <div>
+            <strong>Anerkjenn at manglende oppmøte er symptom – ikke forsømmelse</strong><br>
+            Folktrygdloven § 21-8 krever medvirkning, men rundskriv R12-00 presiserer at motforestillinger mot behandling ved psykisk lidelse kan inngå i symptombildet. Pasienten har diagnostisert F40.1. Manglende oppmøte er en konsekvens av sykdommen.
+          </div>
+        </li>
+        <li>
+          <div class="demand-num">4</div>
+          <div>
+            <strong>Utarbeide en realistisk aktivitetsplan med tilpasset oppfølging</strong><br>
+            Ambulant oppfølging, følgetjeneste og digital kontakt (telefon/video) er nødvendig, ikke valgfritt. Se klinisk beslutning fra ARA FACT 04.10.2022 der dette ble vedtatt men ikke gjennomført.
+          </div>
+        </li>
+        <li>
+          <div class="demand-num">5</div>
+          <div>
+            <strong>Vurder søknad om uføretrygd mens AAP pågår (40%-regelen)</strong><br>
+            Mens pasienten mottar AAP er terskelen for uføretrygd 40 % nedsatt inntektsevne, ikke 50 %. Spesialister (ARA FACT, 2023) har selv anbefalt at pasienten «bør utredes for uførestønad for å sikre inntekt».
+          </div>
+        </li>
+        <li>
+          <div class="demand-num">6</div>
+          <div>
+            <strong>Vurder om fastlegens atferd utgjør et brudd på plikter</strong><br>
+            Nektelse av journalføring av spesialistopplysninger (hpls. § 39), nektelse av angstmedisin uten faglig begrunnelse og nektelse av narkosehenvising for tannbehandling kan innklages til Statsforvalteren. Pasienten har ikke kapasitet til å gjøre dette selv, men NAV kan notere forholdet.
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── JURIDISKE RETTIGHETER ── -->
+  <div class="card">
+    <div class="card-header"><span class="icon">⚖️</span> Pasientens juridiske rettigheter</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Lov / paragraf</th><th>Hva det betyr for denne saken</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Helsepersonelloven § 39</strong></td>
+            <td>Fastlegen har <em>plikt</em> til å journalføre alle relevante opplysninger, inkludert fra andre behandlere. Nektelse er lovbrudd.</td>
+          </tr>
+          <tr>
+            <td><strong>Pasient- og brukerrettighetsloven § 2-1b</strong></td>
+            <td>Rett til nødvendig helsehjelp fra spesialisthelsetjenesten. Nevrologiske symptomer etter ryggskadet kvalifiserer.</td>
+          </tr>
+          <tr>
+            <td><strong>Pasient- og brukerrettighetsloven § 5-1</strong></td>
+            <td>Rett til innsyn i og kopi av hele journalen. Kan kreves fra fastlegen og alle sykehus.</td>
+          </tr>
+          <tr>
+            <td><strong>Folketrygdloven § 21-4</strong></td>
+            <td>NAV kan og skal innhente medisinske opplysninger direkte fra behandler/sykehus uten å gå via fastlegen.</td>
+          </tr>
+          <tr>
+            <td><strong>Klage til Statsforvalteren</strong></td>
+            <td>Forsvarlighetskrav (hpls. § 4) og journalplikt (§ 39) kan innklages. Pasient- og brukerombudet i Agder kan bistå gratis.</td>
+          </tr>
+          <tr>
+            <td><strong>Bytte av fastlege</strong></td>
+            <td>Kan gjøres digitalt på <a href="https://helsenorge.no" target="_blank">helsenorge.no</a> uten legens samtykke. To ganger per år uten begrunnelse.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="alert alert-green" style="margin-top:1rem;">
+        <strong>Gratis juridisk hjelp – Gatejuristen Kristiansand</strong>
+        Kirkens Bymisjon tilbyr gratis rettshjelp i trygde- og helsesaker for personer med ruserfaring. Oppsøkende virksomhet i Arendal.
+        Tlf: <strong>941 41 765</strong> | E-post: <a href="mailto:gatejuristen.kristiansand@bymisjon.no">gatejuristen.kristiansand@bymisjon.no</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── KLINISK BESLUTNING 2022 ── -->
+  <div class="card">
+    <div class="card-header"><span class="icon">📄</span> Klinisk beslutning – ARA FACT 04.10.2022 (Sørlandet sykehus HF)</div>
+    <div class="card-body">
+      <p style="margin-bottom:.75rem;">Spesialisthelsetjenesten fattet følgende kliniske beslutning (avkryssede punkter fra originaldokument):</p>
+      <ul style="list-style:none; display:flex; flex-direction:column; gap:.5rem; margin-bottom:1rem;">
+        <li>✅ <strong>Behov for behandling innen Tverrfaglig spesialisert rusbehandling (TSB)</strong></li>
+        <li>✅ <strong>Behov for behandling og oppfølging fra annen instans enn psykisk helsevern</strong></li>
+        <li>✅ <strong>Behov for behandling og/eller oppfølging fra fastlege, kommunal helse- og omsorgstjeneste</strong></li>
+        <li>✅ <strong>Behov for oppfølging fra andre instanser som NAV, PPT, arbeidsgiver, skole m.m.</strong></li>
+      </ul>
+      <div class="alert alert-yellow">
+        <strong>Vedtak som ikke ble gjennomført:</strong> Behandlingsplan opprettet 04.10.2022 med behandlingsmål definert av pasienten. IP (Individuell Plan) og kriseplan ble vurdert nødvendig. Kartlegging av rusbruk (DUDIT/AUDIT) planlagt. Somatiske tiltak (benskjørhet, tannhelse, ernæring) planlagt. <strong>Ingen av disse tiltakene ble gjennomført.</strong>
+      </div>
+      <p style="margin-top:.75rem; font-size:.9rem; color:#555;">
+        Kilde: PPR Klinisk beslutning basis utredning. Austenaa, Thomas Strand Egeland. 120484-36372. Sørlandet sykehus HF, 04.10.2022.
+      </p>
+    </div>
+  </div>
+
+  <!-- ── KONTAKT / SIGNATUR ── -->
+  <div class="card">
+    <div class="card-header"><span class="icon">✍️</span> Kontaktinformasjon og erklæring</div>
+    <div class="card-body">
+      <div class="sig-box">
+        <p><strong>Pasient:</strong> Thomas Strand Egeland Austenaa</p>
+        <p><strong>Fødselsnummer:</strong> 120484-36372</p>
+        <p><strong>Dato:</strong> 13. november 2026</p>
+        <p style="margin-top:.75rem; font-size:.9rem; color:#555;">
+          Alle opplysninger i dette dokumentet er hentet fra egne journaldokumenter lastet ned fra Helsenorge.no, bildesvar fra Kulturhuset Legesenter og epikriser fra Sørlandet sykehus HF. Dokumentet er laget av pasienten selv og er ikke en medisinsk diagnose eller juridisk rådgivning. Faktapåstandene er merket med kildereferanse.
+        </p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Dokument utarbeidet av Thomas Strand Egeland Austenaa · Basert på journaldokumenter fra Helsenorge.no og Sørlandet sykehus HF
+  · <a href="https://helsenorge.no" target="_blank">helsenorge.no</a>
+  · <a href="https://www.nav.no" target="_blank">nav.no</a>
+</footer>
+
+</body>
+</html>
