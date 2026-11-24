@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blacktower // SuperGrok OS — Multi-Agent Control Plane</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0e17;
+      --card: #111827;
+      --border: #1e293b;
+      --cyan: #38bdf8;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.65;
+    }
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      padding: 14px 20px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .top-nav a {
+      color: var(--cyan);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+    }
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+    }
+    .lead {
+      color: var(--muted);
+      font-size: 1.1rem;
+      margin-bottom: 36px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .card h2 {
+      font-size: 1.25rem;
+      color: var(--cyan);
+      margin-bottom: 12px;
+    }
+    ul {
+      padding-left: 20px;
+      color: #cbd5e1;
+    }
+    li { margin-bottom: 8px; }
+    pre, code {
+      font-family: 'Fira Code', monospace;
+      background: #060911;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    code { padding: 2px 6px; font-size: 0.9em; color: #7dd3fc; }
+    pre {
+      padding: 14px 16px;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      color: #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="top-nav">
+      <a href="../">&larr; Tilbake til forsiden</a>
+      <span class="badge">Wheel of Time Alias: Blacktower</span>
+    </nav>
+
+    <h1>Blacktower — SuperGrok OS</h1>
+    <p class="lead">
+      Selvhostet multi-agent kontrollplan med Google Vertex AI som hovedhjerne, automatisk n&oslash;dfailover til
+      <code>vertex_ai/gemini-2.5-flash-lite</code>, plug-and-play agent-harnesses og sanntids RAM- og VRAM-overv&aring;king.
+    </p>
+
+    <section class="card">
+      <h2>1. Hva som er laget</h2>
+      <ul>
+        <li><strong>Sentral modell-ruter &amp; Vertex AI-n&oslash;dl&oslash;sning:</strong> Google Vertex AI (<code>gemini-2.5-pro</code> / <code>gemini-2.5-flash</code>) som prim&aelig;rhjerne, OpenAI/OpenRouter som sekund&aelig;rpool, og automatisk failover til <code>vertex_ai/gemini-2.5-flash-lite</code> (Global Endpoint) ved <code>429</code>, <code>402</code>, <code>5xx</code> eller budsjettgrense.</li>
+        <li><strong>Orkestrator, Hybrid Minne &amp; Cron:</strong> SQLite (WAL-modus), <code>USER.md</code> + per-bot <code>MEMORY.md</code> synkronisert med SQLite <strong>FTS5</strong> fullteksts&oslash;k, og vedvarende 5-felts cron-planlegger.</li>
+        <li><strong>Agent-Harnesses:</strong> St&oslash;tte for <code>antigravity</code>, <code>hermes</code> (selvl&aelig;rende skills), <code>cloudroom</code> (isolerte <code>git worktree</code>-sandboxes) og <code>codex</code>.</li>
+        <li><strong>OpenClaw Gateway, MCP Hub &amp; HITL-sikkerhet:</strong> Signert OpenClaw-webhook, JSON-RPC 2.0 MCP Tool Hub og 3-niv&aring; sikkerhetsport med menneskelig godkjenning f&oslash;r risikable handlinger.</li>
+        <li><strong>Sanntids RAM- &amp; VRAM-telemetri:</strong> Nytt endepunkt <code>GET /api/system/resources</code>, CLI-kommando <code>botctl resources</code>, oppstartsbanner i terminalen og live fremdriftsbarer i Web UI-dashboardet (oppdateres hvert 3. sekund).</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>2. Hvordan man starter og bruker det</h2>
+      <p>Start kontrollplanet og Web UI-dashboardet med ett ord i terminalen:</p>
+      <pre>Blacktower</pre>
+      <p style="margin-top:12px;">Dashboardet &aring;pnes p&aring; <code>http://127.0.0.1:8787</code> med sanntids SSE-hendelser, godkjenningsk&oslash;, minnes&oslash;k og live RAM/VRAM-forbruk. Du kan ogs&aring; kj&oslash;re CLI-kommandoer direkte:</p>
+      <pre>cd /home/tussie/supergrok-os
+./bin/botctl resources          # JSON med live RAM &amp; VRAM
+./bin/botctl ask architect "Lag plan for tjeneste X"
+./bin/botctl approvals          # Se ventende Tier 3-godkjenninger</pre>
+    </section>
+
+    <section class="card">
+      <h2>3. Valgt Wheel of Time-alias: <code>Blacktower</code></h2>
+      <p>
+        Aliaset <strong><code>Blacktower</code></strong> (og små bokstaver <code>blacktower</code>) er inspirert av
+        <em>The Black Tower</em> fra Robert Jordans <em>The Wheel of Time</em> &mdash; hovedkvarteret og treningssenteret for Asha&rsquo;man.
+      </p>
+      <pre># Registrert i /home/tussie/.bash_aliases
+alias Blacktower='cd /home/tussie/supergrok-os &amp;&amp; ./bin/botctl serve --host 127.0.0.1 --port 8787'
+alias blacktower='Blacktower'</pre>
+    </section>
+  </div>
+</body>
+</html>
