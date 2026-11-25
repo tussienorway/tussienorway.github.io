@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0310">
+  <meta name="description" content="ARNE FX LASERKATT — Fotorealistisk GPU-load-drevet katt som LCD-panel-tema for ID-Cooling RLCD på Windows 11 med RTX 5070 Ti. Alias: callandor.">
+  <title>ARNE FX LASERKATT — tussienorway</title>
+  <style>
+    :root {
+      --bg: #07080f;
+      --surface: #0d1020;
+      --card: #111526;
+      --orange: #ff8c00;
+      --orange-glow: rgba(255,140,0,0.18);
+      --red: #ff1744;
+      --cyan: #00e5ff;
+      --green: #00e676;
+      --text: #f0ede6;
+      --muted: #8a8fa8;
+      --line: rgba(255,255,255,0.08);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+    }
+    a { color: var(--orange); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Header */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 32px; border-bottom: 1px solid var(--line);
+    }
+    .brand { font-weight: 800; letter-spacing: -.03em; color: var(--text); font-size: 1rem; }
+    .back-link { color: var(--muted); font-size: .88rem; }
+    .back-link:hover { color: var(--orange); }
+
+    /* Hero */
+    .hero {
+      position: relative; overflow: hidden;
+      padding: 72px 32px 56px;
+      text-align: center;
+      background: radial-gradient(ellipse at 50% -20%, rgba(255,140,0,0.22) 0%, transparent 65%);
+      border-bottom: 1px solid var(--line);
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,140,0,0.12); border: 1px solid var(--orange);
+      color: var(--orange); font-size: .78rem; font-weight: 800;
+      padding: 5px 14px; border-radius: 999px; text-transform: uppercase;
+      letter-spacing: .08em; margin-bottom: 22px;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 900;
+      letter-spacing: -.04em; line-height: 1.1;
+      background: linear-gradient(135deg, #ff8c00 0%, #ff1744 60%, #ff8c00 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+    .hero-sub { color: var(--muted); font-size: 1.05rem; max-width: 580px; margin: 0 auto 28px; }
+    .hero-alias {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(255,140,0,0.08); border: 1px solid rgba(255,140,0,0.3);
+      border-radius: 12px; padding: 10px 20px;
+      font-family: "Fira Code", "Cascadia Code", monospace;
+      font-size: 1rem; color: var(--orange);
+    }
+    .hero-alias span { color: var(--muted); font-size: .82rem; font-family: inherit; }
+
+    /* Laserkatt ikon-prikker */
+    .laser-dot {
+      display: inline-block; width: 10px; height: 10px;
+      border-radius: 50%; background: var(--red);
+      box-shadow: 0 0 12px 4px rgba(255,23,68,0.7);
+      animation: pulse 1.4s ease-in-out infinite;
+      vertical-align: middle; margin-left: 8px;
+    }
+    @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .6; transform: scale(.75); } }
+
+    /* Shell */
+    .shell { max-width: 920px; margin: 0 auto; padding: 52px 24px 80px; }
+
+    /* Sections */
+    h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -.03em; margin-bottom: 14px; }
+    h3 { font-size: 1.1rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: 8px; }
+    p { margin-bottom: 14px; color: var(--text); }
+    .muted { color: var(--muted); }
+
+    /* GPU-nivå tabell */
+    .gpu-table { width: 100%; border-collapse: collapse; margin: 24px 0; border-radius: 14px; overflow: hidden; }
+    .gpu-table th {
+      background: rgba(255,255,255,0.05);
+      padding: 12px 16px; text-align: left; font-size: .82rem;
+      text-transform: uppercase; letter-spacing: .07em; color: var(--muted);
+    }
+    .gpu-table td { padding: 13px 16px; border-top: 1px solid var(--line); font-size: .93rem; }
+    .gpu-table tr:hover td { background: rgba(255,255,255,0.025); }
+    .pill {
+      display: inline-block; padding: 3px 10px; border-radius: 999px;
+      font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em;
+    }
+    .pill-idle   { background: rgba(0,229,255,.15); border: 1px solid #00e5ff; color: #00e5ff; }
+    .pill-light  { background: rgba(0,230,118,.15); border: 1px solid #00e676; color: #00e676; }
+    .pill-medium { background: rgba(255,214,0,.15); border: 1px solid #ffd600; color: #ffd600; }
+    .pill-heavy  { background: rgba(255,109,0,.15); border: 1px solid #ff6d00; color: #ff6d00; }
+    .pill-turbo  { background: rgba(255,23,68,.18); border: 1px solid #ff1744; color: #ff1744; }
+
+    /* Cards */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 24px 0; }
+    .card {
+      background: var(--card); border: 1px solid var(--line);
+      border-radius: var(--radius); padding: 22px;
+    }
+    .card-icon { font-size: 2rem; margin-bottom: 10px; }
+
+    /* Code blocks */
+    pre, code {
+      font-family: "Fira Code", "Cascadia Code", ui-monospace, monospace;
+      font-size: .88rem;
+    }
+    pre {
+      background: rgba(255,255,255,0.04); border: 1px solid var(--line);
+      border-radius: 12px; padding: 18px 20px; overflow-x: auto;
+      margin: 16px 0; line-height: 1.6;
+    }
+    code { background: rgba(255,140,0,0.12); padding: 2px 6px; border-radius: 5px; color: var(--orange); }
+
+    /* Steps */
+    .steps { counter-reset: step; list-style: none; margin: 20px 0; }
+    .steps li {
+      counter-increment: step;
+      display: flex; gap: 16px; margin-bottom: 20px;
+    }
+    .steps li::before {
+      content: counter(step);
+      display: grid; place-items: center;
+      min-width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--orange), var(--red));
+      color: #fff; font-weight: 800; font-size: .85rem; flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Alias block */
+    .alias-block {
+      background: linear-gradient(135deg, #1a0a00 0%, #200510 100%);
+      border: 2px solid rgba(255,140,0,0.4);
+      border-radius: 20px; padding: 28px 28px 24px;
+      margin: 32px 0;
+    }
+    .alias-block .wot-quote {
+      font-style: italic; color: var(--muted); font-size: .9rem;
+      margin-top: 14px; border-left: 3px solid rgba(255,140,0,0.4);
+      padding-left: 14px;
+    }
+
+    /* Divider */
+    hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+
+    /* Footer */
+    footer { text-align: center; padding: 32px; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <a class="brand" href="/">tussienorway</a>
+    <a class="back-link" href="/">← Tilbake til oversikten</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-badge">🐱 ID-Cooling LCD · Windows 11 · RTX 5070 Ti</div>
+  <h1>ARNE FX LASERKATT<span class="laser-dot"></span></h1>
+  <p class="hero-sub">
+    Fotorealistisk korthåret oransje katt som LCD-panel-tema —
+    animasjoner styrt av GPU-load i sanntid.
+  </p>
+  <div class="hero-alias">
+    <span>$ </span>callandor<span>  ·  Wheel of Time-alias</span>
+  </div>
+</section>
+
+<main class="shell">
+
+  <section style="margin-bottom:40px;">
+    <h2>Hva er laget</h2>
+    <p>
+      <strong>ARNE FX LASERKATT Next Level</strong> er et komplett animert tema-system for
+      ID-Cooling FX360 LCD-panelet (360×360 px, 30 fps). I stedet for én statisk loop
+      bytter panelet automatisk mellom <strong>5 fotorealistiske animasjonssegmenter</strong>
+      basert på GPU-load fra RTX 5070 Ti — sanntids, hvert 2. sekund.
+    </p>
+    <p>
+      Katten er en <strong>korthåret oransje tabby</strong> med hvitt i ansiktet og hvite sokker
+      på beina. Øynene følger laserens bevegelse. Halen svinger raskere jo varmere GPUen blir.
+      På 90%+ load går katten inn i <strong>TURBO-modus</strong> — rød glød, hurtig shake og
+      eksploderende laser.
+    </p>
+
+    <table class="gpu-table">
+      <thead>
+        <tr>
+          <th>GPU-load</th>
+          <th>Tema</th>
+          <th>Katteatferd</th>
+          <th>Farge</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>0–19%</td><td><span class="pill pill-idle">IDLE</span></td><td>😴 Slapper av, blunker sakte, napper litt</td><td>Cyan</td></tr>
+        <tr><td>20–49%</td><td><span class="pill pill-light">LIGHT</span></td><td>😺 Interessert, spisse ører, ivrig</td><td>Grønn</td></tr>
+        <tr><td>50–74%</td><td><span class="pill pill-medium">MEDIUM</span></td><td>😼 Aktiv jakt, store pupiller</td><td>Gul/amber</td></tr>
+        <tr><td>75–89%</td><td><span class="pill pill-heavy">HEAVY</span></td><td>😾 Full attack mode</td><td>Oransje</td></tr>
+        <tr><td>90–100%</td><td><span class="pill pill-turbo">TURBO</span></td><td>🔥 Katt spinner, laser eksploderer</td><td>Rød</td></tr>
+      </tbody>
+    </table>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🐱</div>
+        <h3>5 fotorealistiske tema-pakker</h3>
+        <p class="muted">AI-genererte basebilde (Flux), animert med PIL + FFmpeg til 180-frame seamless MP4-loops.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🤖</div>
+        <h3>ArneKattOrchestrator</h3>
+        <p class="muted">C# .NET 8 Windows system-tray-app. Leser GPU-load via nvidia-smi hvert 2. sekund og bytter aktivt tema med hysteresis.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>PowerShell-installer</h3>
+        <p class="muted">Ett skript installerer alle 5 tema-pakker til HotSpot, plasserer orchestratoren og setter opp autostart via Task Scheduler.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <section style="margin-bottom:40px;">
+    <h2>Arkitektur</h2>
+    <p>Systemet er bygget i to lag:</p>
+    <pre>
+┌──────────────────────────────────────────────────────────┐
+│  LAG 1: PRE-RENDER (Python + PIL + FFmpeg)               │
+│  build_photorealistic_cat_v2.py                          │
+│    → 5 × 180-frame MP4-loops (360×360, 30fps, h264)      │
+│    → 5 × .mPanelTheme-pakker til HotSpot                 │
+│                                                          │
+│  LAG 2: RUNTIME ORCHESTRATOR (C# .NET 8)                 │
+│  ArneKattOrchestrator.exe  (system-tray)                 │
+│    → nvidia-smi GPU-poll hvert 2. sekund                 │
+│    → Hysteresis ±5% (unngår flimring)                    │
+│    → Atomisk MP4-bytte → HotSpot reloader               │
+└──────────────────────────────────────────────────────────┘</pre>
+  </section>
+
+  <hr>
+
+  <section style="margin-bottom:40px;">
+    <h2>Hvordan man starter det</h2>
+
+    <ol class="steps">
+      <li>
+        <div>
+          <h3>Kopier prosjektet til Windows</h3>
+          <p>Kopier <code>ID-Cooling-FX-Studio</code>-mappen til:<br>
+          <code>C:\Users\Arne\Arnes ai programmer\ID-Cooling-FX-Studio\</code></p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h3>Kjør installasjonsskriptet</h3>
+          <p>Åpne PowerShell som Administrator og kjør:</p>
+          <pre>cd "C:\Users\Arne\Arnes ai programmer\ID-Cooling-FX-Studio\src"
+.\install_themes.ps1</pre>
+          <p class="muted">Installerer alle 5 tema-pakker, orchestratoren og autostart via Task Scheduler.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h3>Aktiver tema i HotSpot</h3>
+          <p>Åpne HotSpot / ID-COOLING-programvaren og aktiver
+          <code>ARNE_FX_KATT_ACTIVE</code> manuelt én gang.
+          Orchestratoren tar over derfra.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <h3>Re-render med nytt kattebilde (valgfritt)</h3>
+          <p>Erstatt bildene i <code>bilder/realistisk_katt_*.png</code> og kjør:</p>
+          <pre>python build_photorealistic_cat_v2.py</pre>
+        </div>
+      </li>
+    </ol>
+
+    <p>Orchestratoren kjører automatisk i system-tray ved neste pålogging.
+    Høyreklikk ikonet for status, pause og manuell overstyring.</p>
+  </section>
+
+  <hr>
+
+  <section style="margin-bottom:40px;">
+    <h2>Alias: <code>callandor</code></h2>
+
+    <div class="alias-block">
+      <h3 style="color:var(--orange); margin-bottom:12px;">🗡️ callandor</h3>
+      <p>Aliaset er registrert i <code>/home/tussie/.bash_aliases</code>:</p>
+      <pre>alias callandor='python3 /home/tussie/.var/app/org.telegram.desktop/data/TelegramDesktop/tdata/temp_data/ID-Cooling-FX-Studio/src/build_photorealistic_cat_v2.py'</pre>
+      <p>Kjør <code>callandor</code> i terminalen for å re-rendre alle 5 GPU-load-temaene.</p>
+      <div class="wot-quote">
+        <strong>Callandor</strong> er en av de mektigste ter'angreal i Hjulets Tid —
+        et krystallsverd som kanaliserer saidin med enorm kraft, men uten buffer.
+        Et passende navn for et verktøy som gir panelet fullt gass — uten bremsene på.
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>Teknologistack</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>Pre-render</h3>
+        <p class="muted">Python 3.12 · Pillow (PIL) · NumPy · FFmpeg (libx264)</p>
+      </div>
+      <div class="card">
+        <h3>Orchestrator</h3>
+        <p class="muted">C# .NET 8 · WinForms NotifyIcon · nvidia-smi · Windows Task Scheduler</p>
+      </div>
+      <div class="card">
+        <h3>AI-bilder</h3>
+        <p class="muted">Flux (via Antigravity image-generator) · fotorealistisk korthåret oransje tabby</p>
+      </div>
+      <div class="card">
+        <h3>Platform</h3>
+        <p class="muted">Windows 11 · ID-Cooling FX360 LCD · HotSpot / ID-COOLING · RTX 5070 Ti · AMD 7800X3D</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>ARNE FX LASERKATT — tussienorway · 2026 · <a href="/">tussienorway.github.io</a></p>
+</footer>
+
+</body>
+</html>
