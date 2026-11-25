@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Svarflyt – AI-automatisering for norske bedrifter i Bergen (konseptprototype)</title>
+<meta name="description" content="Svarflyt hjelper små og mellomstore bedrifter å bruke mindre tid på e-post, kopiering mellom systemer og timebestilling. Prøv en ekte demo. Konseptprototype laget av Thomas Austenaa.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://tussienorway.github.io/svarflyt.no/">
+<meta property="og:title" content="Svarflyt – mindre tid på e-post, kopiering og avtaler">
+<meta property="og:description" content="Prøv hvordan AI kan skrive svarutkast, hente ut data fra fakturaer og ta imot timebestillinger. Konseptprototype.">
+<meta property="og:locale" content="nb_NO">
+<meta name="theme-color" content="#14202b">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314202b'/%3E%3Cpath d='M8 20c4 0 4-8 8-8s4 8 8 8' stroke='%237fc4b8' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/styles.css">
+<script type="application/ld+json">
+{
+ "@context":"https://schema.org",
+ "@graph":[
+  {"@type":"Organization","@id":"https://tussienorway.github.io/svarflyt.no/#org","name":"Svarflyt","legalName":"Svarflyt Media Brown","taxID":"937440669","email":"Jonathan@svarflyt.no","url":"https://svarflyt.no","address":{"@type":"PostalAddress","addressLocality":"Bergen","addressCountry":"NO"},"areaServed":"NO"},
+  {"@type":"Service","name":"Automatiserte kundesvar","serviceType":"AI-automatisering","provider":{"@id":"https://tussienorway.github.io/svarflyt.no/#org"},"areaServed":"NO","description":"AI lager svarutkast på kundehenvendelser basert på bedriftens egen informasjon. En person godkjenner før noe sendes."},
+  {"@type":"Service","name":"Mindre dobbeltarbeid","serviceType":"Dataflyt mellom systemer","provider":{"@id":"https://tussienorway.github.io/svarflyt.no/#org"},"areaServed":"NO","description":"Opplysninger fra e-post, ordre og fakturaer hentes ut og legges rett inn i CRM eller regnskap, med kontroll av avvik."},
+  {"@type":"Service","name":"Timebestilling","serviceType":"Booking og kalender","provider":{"@id":"https://tussienorway.github.io/svarflyt.no/#org"},"areaServed":"NO","description":"Kunder skriver når det passer med egne ord, og får ledige tider og en kalenderinvitasjon."},
+  {"@type":"FAQPage","mainEntity":[
+   {"@type":"Question","name":"Må vi bytte systemer?","acceptedAnswer":{"@type":"Answer","text":"Nei. Løsningene kobles på det dere bruker i dag, for eksempel Outlook, Gmail, kalender, CRM og regnskap."}},
+   {"@type":"Question","name":"Sender AI-en e-post på egen hånd?","acceptedAnswer":{"@type":"Answer","text":"Nei. Utgangspunktet er at AI-en lager et utkast, og at en person hos dere godkjenner før noe går ut."}},
+   {"@type":"Question","name":"Hva koster en pilot?","acceptedAnswer":{"@type":"Answer","text":"Kartleggingen er gratis. Etter den får dere et fastpristilbud på en pilot på to til fire uker, så dere vet prisen før dere bestemmer dere."}},
+   {"@type":"Question","name":"Hvor lagres dataene våre?","acceptedAnswer":{"@type":"Answer","text":"Målet er lagring innenfor EØS og en databehandleravtale før oppstart. Detaljene avtales i hvert prosjekt."}}
+  ]}
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#hoved">Hopp til innholdet</a>
+<div class="proto-banner" role="note">Konseptprototype laget av Thomas Austenaa – ikke offisiell Svarflyt-side</div>
+
+<header class="topbar">
+ <div class="wrap topbar-in">
+  <a class="logo" href="#" aria-label="Svarflyt, til toppen"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7"/><path d="M8 20c4 0 4-8 8-8s4 8 8 8"/></svg>SVARFLYT</a>
+  <button class="menu-btn" aria-expanded="false" aria-controls="nav">Meny</button>
+  <nav id="nav" aria-label="Hovedmeny">
+   <a href="#losninger">Løsninger</a>
+   <a href="#slik">Slik jobber vi</a>
+   <a href="#sikkerhet">Sikkerhet &amp; GDPR</a>
+   <a class="btn btn-small" href="#book">Book 15 min prat</a>
+  </nav>
+ </div>
+</header>
+
+<main id="hoved">
+<section class="hero">
+ <div class="wrap">
+  <p class="eyebrow">AI-AUTOMATISERING FOR NORSKE BEDRIFTER · BERGEN</p>
+  <h1>Bruk mindre tid på e&#8209;post, kopiering og avtaler – uten å ansette.</h1>
+  <p class="lead">Vi setter opp små, praktiske AI-løsninger i systemene dere allerede bruker. De svarer på vanlige kundespørsmål, flytter tall fra e-post og fakturaer inn i riktig system og tar imot timebestillinger. Dere bestemmer alltid hva som sendes.</p>
+  <div class="cta-row">
+   <a class="btn" href="#demo">Prøv interaktiv demo</a>
+   <a class="btn btn-ghost" href="#book">Book 15 min kartlegging</a>
+  </div>
+  <ul class="systems" aria-label="Fungerer med">
+   <li>Outlook</li><li>Gmail</li><li>Google Kalender</li><li>Microsoft Kalender</li><li>CRM</li><li>Regnskap</li>
+  </ul>
+ </div>
+</section>
+
+<section id="demo" class="demo">
+ <div class="wrap">
+  <h2>Prøv det selv</h2>
+  <p class="sub">Dette er ikke et filmklipp. Hver knapp under sender teksten til en ekte AI-modell og viser svaret. Bytt gjerne ut eksemplene med egne.</p>
+
+  <div class="tabs" role="tablist" aria-label="Demoer">
+   <button role="tab" id="tab-a" aria-controls="pane-a" aria-selected="true">1. Kundesvar</button>
+   <button role="tab" id="tab-b" aria-controls="pane-b" aria-selected="false" tabindex="-1">2. Mindre dobbeltarbeid</button>
+   <button role="tab" id="tab-c" aria-controls="pane-c" aria-selected="false" tabindex="-1">3. Timebestilling</button>
+  </div>
+
+  <!-- A: Kundesvar -->
+  <div class="pane" role="tabpanel" id="pane-a" aria-labelledby="tab-a">
+   <div class="flow" aria-hidden="true"><span>Kunden skriver</span><span>AI lager utkast</span><span class="human">Du godkjenner</span><span>Svaret sendes</span></div>
+   <form id="form-a" class="grid2">
+    <div>
+     <label for="a-epost">E-post fra kunde</label>
+     <textarea id="a-epost" rows="8" maxlength="4000" required>Hei!
+Vi har en Tesla Model Y og trenger dekkskift før helgen. Har dere ledig torsdag eller fredag, og hva koster det? Kan dere også oppbevare sommerdekkene?
+Mvh Kari Nilsen</textarea>
+     <label for="a-kunnskap">Bedriftens egen informasjon <span class="opt">(valgfritt)</span></label>
+     <textarea id="a-kunnskap" rows="6" maxlength="3000">Bergen Dekk & Service, Fyllingsdalen.
+Dekkskift personbil: 690 kr. Elbil og SUV: 890 kr.
+Dekkhotell: 1 490 kr per sesong, inkludert vask.
+Åpent mandag–fredag 08–16. Timebestilling på telefon 55 00 00 00.</textarea>
+     <p class="hint">AI-en får bare bruke det som står her. Mangler noe, sier den fra i stedet for å gjette.</p>
+     <button class="btn" type="submit">Lag svarutkast</button>
+    </div>
+    <div class="result" aria-live="polite">
+     <div class="placeholder" id="a-empty">Utkastet dukker opp her.</div>
+     <div id="a-out" hidden>
+      <div class="badge">Utkast – ikke sendt</div>
+      <label for="a-svar">Svarutkast (du kan redigere)</label>
+      <textarea id="a-svar" rows="11"></textarea>
+      <div id="a-sjekk" class="check"></div>
+      <div class="row">
+       <button class="btn" type="button" id="a-godkjenn">Godkjenn</button>
+       <button class="btn btn-ghost" type="button" id="a-ny">Lag nytt utkast</button>
+      </div>
+      <p id="a-status" class="status"></p>
+     </div>
+    </div>
+   </form>
+  </div>
+
+  <!-- B: Uttrekk -->
+  <div class="pane" role="tabpanel" id="pane-b" aria-labelledby="tab-b" hidden>
+   <div class="flow" aria-hidden="true"><span>E-post / faktura kommer inn</span><span>AI henter ut feltene</span><span class="human">Avvik flagges</span><span>Rett inn i fagsystemet</span></div>
+   <form id="form-b" class="grid2">
+    <div>
+     <label for="b-tekst">Lim inn e-post, ordre eller faktura</label>
+     <textarea id="b-tekst" rows="14" maxlength="5000" required>Fra: faktura@vestlandsror.no
+Emne: Faktura 20431
+
+Hei, vedlagt faktura for arbeid utført 12.11.2026.
+
+Vestland Rør AS
+Org.nr. 923 456 783
+Kontaktperson: Ole Hansen, 912 34 567
+Fakturanr: 20431
+Fakturadato: 12.11.2026
+Forfall: 26.11.2026
+
+2 stk blandebatteri à 2 400,-
+Arbeid 3 timer à 950,-
+
+Sum eks. mva: 7 650,00
+Mva 25 %: 1 912,50
+Å betale: 9 652,50 NOK
+Kontonr: 1503.12.34567  KID: 2043100017</textarea>
+     <button class="btn" type="submit">Hent ut feltene</button>
+    </div>
+    <div class="result" aria-live="polite">
+     <div class="placeholder" id="b-empty">Feltene vises her, klare for CRM eller regnskap.</div>
+     <div id="b-out" hidden>
+      <div class="badge" id="b-type"></div>
+      <div class="table-wrap"><table id="b-table"><caption class="sr">Uttrukne felt</caption><thead><tr><th scope="col">Felt</th><th scope="col">Verdi</th><th scope="col">Kontroll</th></tr></thead><tbody></tbody></table></div>
+      <div id="b-linjer"></div>
+      <div id="b-merk" class="check"></div>
+      <div class="row">
+       <button class="btn btn-ghost" type="button" id="b-csv">Last ned CSV</button>
+       <button class="btn btn-ghost" type="button" id="b-json">Last ned JSON</button>
+      </div>
+     </div>
+    </div>
+   </form>
+  </div>
+
+  <!-- C: Timebestilling -->
+  <div class="pane" role="tabpanel" id="pane-c" aria-labelledby="tab-c" hidden>
+   <div class="flow" aria-hidden="true"><span>Kunden skriver fritt</span><span>AI forstår ønsket</span><span>Ledige tider vises</span><span>Bekreftelse + kalender</span></div>
+   <div class="booker" data-booker data-default="kan jeg komme tirsdag etter lunsj?" data-label="Skriv når det passer, med egne ord"></div>
+  </div>
+ </div>
+</section>
+
+<section id="losninger" class="services">
+ <div class="wrap">
+  <h2>Tre ting vi automatiserer</h2>
+  <p class="sub">Vi begynner der timene forsvinner. Hver løsning er liten nok til å komme i gang på noen uker.</p>
+  <div class="cards">
+   <article class="card">
+    <h3>Kundesvar</h3>
+    <p>Vanlige spørsmål om pris, åpningstider og levering får et ferdig svarutkast med en gang, skrevet med deres egen informasjon.</p>
+    <div class="ba"><div><strong>Før</strong>Innboksen fylles opp, og de samme svarene skrives på nytt hver dag.</div><div><strong>Etter</strong>Utkastet ligger klart. Dere leser, justerer og trykker send.</div></div>
+   </article>
+   <article class="card">
+    <h3>Mindre dobbeltarbeid</h3>
+    <p>Navn, beløp og datoer fra e-post, ordre og fakturaer havner i riktig system uten at noen taster dem inn.</p>
+    <div class="ba"><div><strong>Før</strong>Tall kopieres fra PDF til regneark og videre til regnskapet.</div><div><strong>Etter</strong>Feltene fylles ut automatisk, og avvik blir markert før de går videre.</div></div>
+   </article>
+   <article class="card">
+    <h3>Timebestilling</h3>
+    <p>Kunder skriver «tirsdag etter lunsj» og får ledige tider tilbake, uten telefonkø og uten frem og tilbake på e-post.</p>
+    <div class="ba"><div><strong>Før</strong>Tre e-poster for å finne én ledig time.</div><div><strong>Etter</strong>Kunden velger tid selv og får invitasjonen rett i kalenderen.</div></div>
+   </article>
+  </div>
+  <div class="addon">
+   <p><strong>Trenger dere også å bli lettere å finne i søk og AI?</strong> Vi kan rydde i nettsiden, strukturerte data og bedriftsprofiler, slik at Google og AI-assistenter forstår hva dere tilbyr.</p>
+   <a class="btn btn-ghost" href="#kontakt">Spør om dette</a>
+  </div>
+ </div>
+</section>
+
+<section id="slik" class="steps">
+ <div class="wrap">
+  <h2>Slik jobber vi</h2>
+  <ol class="step-list">
+   <li><span class="num">1</span><h3>Gratis kartlegging</h3><p>Femten minutter der vi finner én oppgave som tar mye tid hos dere. Ingen forpliktelser.</p></li>
+   <li><span class="num">2</span><h3>Fastpristilbud</h3><p>Dere får en kort beskrivelse av løsningen og en fast pris. Ingen timer som løper.</p></li>
+   <li><span class="num">3</span><h3>Pilot på 2–4 uker</h3><p>Løsningen kjører på ekte oppgaver hos dere. Etterpå ser vi på hvor mye tid den sparte, og dere bestemmer om dere vil fortsette.</p></li>
+  </ol>
+ </div>
+</section>
+
+<!-- MERK: Punktene under er forslag til forpliktelser. De må bekreftes av Svarflyt før de brukes på en offisiell side. -->
+<section id="sikkerhet" class="trust">
+ <div class="wrap">
+  <h2>Sikkerhet &amp; GDPR</h2>
+  <p class="sub">Slik foreslår vi at det skal være i alle prosjekter.</p>
+  <div class="trust-grid">
+   <div><h3>Et menneske har siste ord</h3><p>AI-en lager utkast og forslag. En person hos dere godkjenner før noe sendes til kunder.</p></div>
+   <div><h3>Dataene er deres</h3><p>Innholdet brukes bare til å løse oppgaven deres, ikke til å trene modeller.</p></div>
+   <div><h3>Lagring i EØS og databehandleravtale</h3><p>Målet er lagring innenfor EØS, og en databehandleravtale skal være på plass før oppstart.</p></div>
+   <div><h3>Dere eier løsningen</h3><p>Oppsett og dokumentasjon blir deres, så dere ikke er låst til oss.</p></div>
+  </div>
+  <p class="small"><a href="personvern.html">Les personvernerklæringen</a></p>
+ </div>
+</section>
+
+<section class="people">
+ <div class="wrap people-in">
+  <div class="portrait" role="img" aria-label="Plassholder for bilde av teamet">Bilde av teamet</div>
+  <div>
+   <h2>Folkene bak</h2>
+   <p>Svarflyt er et lite team i Bergen som bygger løsningene selv, fra første samtale til ferdig oppsett. Dere snakker med de samme personene hele veien.</p>
+   <!-- Plassholder: navn, roller og bilde må fylles inn av Svarflyt. -->
+   <aside class="facts" aria-label="For deg som sjekker">
+    <h3>For deg som sjekker</h3>
+    <dl><dt>Foretak</dt><dd>Svarflyt Media Brown</dd><dt>Org.nr.</dt><dd>937 440 669</dd><dt>Sted</dt><dd>Bergen</dd></dl>
+    <a href="https://virksomhet.brreg.no/nb/oppslag/enheter/937440669" rel="noopener" target="_blank">Se oppføringen i Brønnøysundregistrene</a>
+   </aside>
+  </div>
+ </div>
+</section>
+
+<section id="book" class="convert">
+ <div class="wrap">
+  <h2>Finn ut hva dere kan spare</h2>
+  <p class="sub">Book en kartlegging på 15 minutter, eller send en kort melding om hva som tar tid hos dere.</p>
+  <div class="grid2">
+   <div class="panel">
+    <h3>Book 15 min kartlegging</h3>
+    <div class="booker" data-booker data-default="neste ledige tid" data-label="Når passer det?" data-compact="1"></div>
+   </div>
+   <div class="panel" id="kontakt">
+    <h3>Send en melding</h3>
+    <form id="form-k" novalidate>
+     <label for="k-navn">Navn</label><input id="k-navn" name="navn" autocomplete="name" required maxlength="100">
+     <label for="k-epost">E-post</label><input id="k-epost" name="epost" type="email" autocomplete="email" required maxlength="150">
+     <label for="k-firma">Bedrift <span class="opt">(valgfritt)</span></label><input id="k-firma" name="firma" autocomplete="organization" maxlength="150">
+     <label for="k-melding">Hva tar mest tid hos dere i dag?</label><textarea id="k-melding" name="melding" rows="4" required maxlength="2000"></textarea>
+     <div class="hp" aria-hidden="true"><label for="k-web">Nettside</label><input id="k-web" name="nettside" tabindex="-1" autocomplete="off"></div>
+     <label class="consent"><input type="checkbox" id="k-samtykke" required> Jeg godtar at henvendelsen lagres for å kunne svare meg. <a href="personvern.html">Personvern</a></label>
+     <button class="btn" type="submit">Send melding</button>
+     <p id="k-status" class="status" role="status"></p>
+    </form>
+   </div>
+  </div>
+ </div>
+</section>
+</main>
+
+<footer class="footer">
+ <div class="wrap foot-in">
+  <div><strong>Svarflyt Media Brown</strong><br>Org.nr. 937 440 669 · Bergen<br>Jonathan@svarflyt.no</div>
+  <div><a href="personvern.html">Personvern</a><br><a href="#sikkerhet">Sikkerhet &amp; GDPR</a></div>
+  <p class="proto">Konseptprototype laget av Thomas Austenaa – ikke offisiell Svarflyt-side. Skjemaer og bookinger her lagres bare i prototypen og sendes ikke til noen.</p>
+ </div>
+</footer>
+<script src="assets/app.js" type="module"></script>
+</body>
+</html>
