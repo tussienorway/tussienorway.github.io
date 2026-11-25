@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>agy-smart-kit v2.1 — Smart Capability &amp; Prompt Pipeline for Antigravity CLI</title>
+  <meta name="description" content="Last ned agy-smart-kit v2.1: automatisk capability-discovery og to-stegs prompt-raffinering (Gemini → Claude / Neon Critic) for Antigravity CLI (agy).">
+  <link rel="canonical" href="https://tussienorway.github.io/agy-smart-kit/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080d16;
+      --surface: #0f172a;
+      --surface-alt: #131f38;
+      --border: #1e293b;
+      --border-hi: #334155;
+      --cyan: #38bdf8;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --violet: #a78bfa;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --code-bg: #050912;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background:
+        radial-gradient(ellipse 80% 45% at 50% -10%, rgba(56, 189, 248, 0.14), transparent),
+        radial-gradient(ellipse 50% 35% at 90% 10%, rgba(16, 185, 129, 0.08), transparent),
+        var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.65;
+    }
+    .container {
+      max-width: 1020px;
+      margin: 0 auto;
+      padding: 36px 22px 84px;
+    }
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 32px;
+      padding: 14px 20px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      backdrop-filter: blur(8px);
+    }
+    .top-nav a {
+      color: var(--cyan);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .top-nav a:hover { text-decoration: underline; }
+    .badges { display: flex; gap: 8px; flex-wrap: wrap; }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-cyan {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      color: #7dd3fc;
+    }
+    .badge-emerald {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      color: #6ee7b7;
+    }
+    .badge-violet {
+      background: rgba(167, 139, 250, 0.14);
+      border: 1px solid rgba(167, 139, 250, 0.5);
+      color: #ddd6fe;
+    }
+    .hero {
+      padding: 34px 30px;
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(19, 31, 56, 0.92));
+      border: 1px solid var(--border-hi);
+      border-radius: 20px;
+      margin-bottom: 26px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    }
+    h1 {
+      font-size: clamp(2rem, 4.8vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.1;
+      margin: 14px 0 12px;
+    }
+    .lead {
+      color: #cbd5e1;
+      font-size: 1.08rem;
+      max-width: 780px;
+      margin-bottom: 24px;
+    }
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7, #0ea5e9);
+      color: #fff;
+    }
+    .btn-primary:hover { background: linear-gradient(135deg, #0369a1, #0284c7); }
+    .btn-emerald {
+      background: rgba(16, 185, 129, 0.16);
+      border-color: rgba(16, 185, 129, 0.6);
+      color: #6ee7b7;
+    }
+    .btn-emerald:hover { background: rgba(16, 185, 129, 0.26); }
+    .btn-ghost {
+      background: rgba(30, 41, 59, 0.7);
+      border-color: var(--border-hi);
+      color: var(--text);
+    }
+    .btn-ghost:hover { border-color: var(--cyan); }
+    .meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-family: 'Fira Code', monospace;
+    }
+    .pipeline-flow {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+      margin: 18px 0 8px;
+    }
+    .step-box {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .step-box .num {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: var(--cyan);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .step-box strong {
+      display: block;
+      font-size: 0.95rem;
+      margin: 4px 0;
+      color: #fff;
+    }
+    .step-box span {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 26px;
+      margin-bottom: 22px;
+    }
+    .card h2 {
+      font-size: 1.32rem;
+      color: var(--cyan);
+      margin-bottom: 14px;
+      letter-spacing: -0.02em;
+    }
+    .card h3 {
+      font-size: 1rem;
+      color: #e2e8f0;
+      margin: 18px 0 8px;
+    }
+    p { color: #cbd5e1; margin-bottom: 10px; }
+    ul, ol {
+      padding-left: 20px;
+      color: #cbd5e1;
+      margin-bottom: 10px;
+    }
+    li { margin-bottom: 8px; }
+    code {
+      font-family: 'Fira Code', monospace;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px 6px;
+      font-size: 0.88em;
+      color: #7dd3fc;
+    }
+    .code-wrap {
+      position: relative;
+      margin: 10px 0 14px;
+    }
+    pre {
+      font-family: 'Fira Code', monospace;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      overflow-x: auto;
+      font-size: 0.87rem;
+      color: #e2e8f0;
+      line-height: 1.55;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 5px 10px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      background: rgba(30, 41, 59, 0.9);
+      color: #cbd5e1;
+      border: 1px solid var(--border-hi);
+      border-radius: 7px;
+      cursor: pointer;
+    }
+    .copy-btn:hover { border-color: var(--cyan); color: #fff; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.88rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th {
+      color: #93c5fd;
+      font-weight: 700;
+      background: rgba(5, 9, 18, 0.5);
+    }
+    td { color: #cbd5e1; }
+    .table-scroll { overflow-x: auto; }
+    .footer {
+      margin-top: 32px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .footer a { color: var(--cyan); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="top-nav" aria-label="Navigasjon">
+      <a href="../">&larr; Tilbake til tussienorway.github.io</a>
+      <div class="badges">
+        <span class="badge badge-emerald">v2.1.0 · Ferdig utgave</span>
+        <span class="badge badge-violet">Alias: terangreal</span>
+      </div>
+    </nav>
+
+    <main>
+      <header class="hero">
+        <div class="badges">
+          <span class="badge badge-cyan">Antigravity CLI (agy)</span>
+          <span class="badge badge-emerald">MIT License · Python Stdlib</span>
+        </div>
+        <h1>agy-smart-kit v2.1</h1>
+        <p class="lead">
+          Gjør <strong>Antigravity CLI (<code>agy</code>)</strong> smart ut av boksen: automatisk
+          <strong>capability-discovery</strong> (skills, plugins og MCP-servere) +
+          <strong>to-stegs prompt-raffinering</strong> (Gemini &rarr; Claude, med Gemini Neon critic som fallback ved 429 og lokal nøkkelord-ranker hvis helt offline) før hver ikke-trivielle melding.
+        </p>
+
+        <div class="cta-row">
+          <a class="btn btn-primary" href="downloads/agy-smart-kit.zip" download>
+            &#11015; Last ned ZIP (agy-smart-kit.zip)
+          </a>
+          <a class="btn btn-emerald" href="downloads/agy-smart-kit.tar.gz" download>
+            &#11015; Last ned TAR.GZ
+          </a>
+          <a class="btn btn-ghost" href="https://github.com/tussienorway/agy-smart-kit" target="_blank" rel="noopener noreferrer">
+            Se repo på GitHub &#8599;
+          </a>
+        </div>
+
+        <div class="meta-strip">
+          <span>Krav: agy CLI + Python 3.9+ + Bash</span>
+          <span>Avhengigheter: 0 eksterne pakker</span>
+          <span>Tester: 14 enhetstester + live verify</span>
+        </div>
+      </header>
+
+      <section class="card">
+        <h2>1. Hva som er laget</h2>
+        <p>
+          <code>agy-smart-kit</code> er en komplett, ferdig pakke som kobler seg på Antigravity CLI sitt
+          <code>PreInvocation</code>-hook-system og gjør hver reelle brukerforespørsel skarpere før hovedagenten begynner å svare.
+        </p>
+
+        <div class="pipeline-flow" aria-label="Pipeline-flyt">
+          <div class="step-box">
+            <span class="num">Steg 1</span>
+            <strong>Lokal triage</strong>
+            <span>Hilsener (<code>hei</code>, <code>ok</code>) og rene slash-kommandoer (<code>/help</code>) hoppes over lokalt uten modellkall.</span>
+          </div>
+          <div class="step-box">
+            <span class="num">Steg 2</span>
+            <strong>Capability Discovery</strong>
+            <span>Skanner globale skills, plugin-skills, innebygde skills, workspace-skills opp til git-rot, plugins og MCP-servere (cached per repo).</span>
+          </div>
+          <div class="step-box">
+            <span class="num">Steg 3</span>
+            <strong>Stage 1 &rarr; Stage 2</strong>
+            <span>Gemini skriver om forespørselen til en presis spesifikasjon; Claude strammer inn. Ved Claude 429 kjører Gemini Neon critic automatisk.</span>
+          </div>
+          <div class="step-box">
+            <span class="num">Steg 4</span>
+            <strong>Sikker injeksjon</strong>
+            <span>Injiserer <code>[SMART-PIPELINE v2]</code> via Antigravitys native <code>injectSteps</code> med verifiserte filstier, cache og kretsbryter.</span>
+          </div>
+        </div>
+
+        <h3>Nøkkelfunksjoner og rettelser i v2.1.0</h3>
+        <ul>
+          <li><strong>100 % native Antigravity CLI-protokoll:</strong> Bruker riktig <code>--print-timeout 60s</code> (Go-varighet med enhet), leser <code>lastUserInput</code> / <code>conversationId</code> / <code>cwd</code> / <code>workspacePaths</code>, svarer med <code>injectSteps</code> og fletter inn i <code>hooks.json</code> med toppnivå hook-gruppeformat uten å røre andre hooks.</li>
+          <li><strong>Presis discovery &amp; parsing:</strong> Støtter flerlags YAML-beskrivelser (<code>description: &gt;-</code>), filtrerer bort innrykkede metadata-linjer fra <code>agy plugin list</code>, ignorerer <code>No MCP servers configured.</code>, og cacher katalogen separat per prosjektmappe.</li>
+          <li><strong>Robust feiltoleranse:</strong> Kretsbryter (<em>circuit breaker</em>) åpner automatisk etter 3 feil på rad i samme sesjon så <code>agy</code> aldri henger. Degraderte fallback-svar caches ikke, og lokal nøkkelord-ranker støtter norsk (<code>æ</code>, <code>ø</code>, <code>å</code>).</li>
+          <li><strong>Trygg installasjon &amp; avinstallering:</strong> Både <code>install.sh</code> og <code>uninstall.sh</code> tar tidsstemplede sikkerhetskopier (<code>.bak-*</code>) av <code>hooks.json</code> og <code>GEMINI.md</code>, og <code>verify.sh</code> kjører 14 automatiserte tester.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>2. Hvordan man starter og bruker det</h2>
+
+        <h3>Alternativ A — Klon repo fra GitHub (anbefalt)</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" type="button" data-copy="cmd-clone">Kopier</button>
+          <pre id="cmd-clone">git clone https://github.com/tussienorway/agy-smart-kit.git ~/agy-smart-kit
+cd ~/agy-smart-kit
+bash install.sh</pre>
+        </div>
+
+        <h3>Alternativ B — Last ned ZIP direkte fra tussienorway.github.io</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" type="button" data-copy="cmd-zip">Kopier</button>
+          <pre id="cmd-zip">curl -fsSL https://tussienorway.github.io/agy-smart-kit/downloads/agy-smart-kit.zip -o agy-smart-kit.zip
+unzip agy-smart-kit.zip -d ~/agy-smart-kit
+cd ~/agy-smart-kit
+bash install.sh</pre>
+        </div>
+
+        <p>Start <code>agy</code> på nytt når installatøren avslutter med <code>INSTALL_OK</code>. Hooken kjører da automatisk på alle ikke-trivielle meldinger.</p>
+
+        <h3>Daglig bruk, feilsøking og avinstallering</h3>
+        <div class="code-wrap">
+          <button class="copy-btn" type="button" data-copy="cmd-use">Kopier</button>
+          <pre id="cmd-use"># Se status, latens, cache-treff og kretsbryter
+python3 ~/.gemini/config/skills/auto-capability-and-prompt-pipeline/scripts/pipeline.py --status
+
+# List alle oppdagede skills, plugins og MCP-servere i gjeldende repo
+python3 ~/.gemini/config/skills/auto-capability-and-prompt-pipeline/scripts/pipeline.py --discover
+
+# Kjør manuelt på én konkret oppgave
+~/.gemini/config/skills/auto-capability-and-prompt-pipeline/scripts/prepare_task.sh "Lag et CLI-verktøy med tester"
+
+# Kjør full ende-til-ende-test mot ekte agy-modeller
+bash verify.sh --live
+
+# Tøm cache etter å ha lagt til nye skills
+python3 ~/.gemini/config/skills/auto-capability-and-prompt-pipeline/scripts/pipeline.py --clear-cache
+
+# Avinstaller rent (legg til --purge for å fjerne pipeline.json også)
+bash uninstall.sh</pre>
+        </div>
+
+        <h3>Viktigste innstillinger i <code>~/.gemini/config/pipeline.json</code></h3>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Nøkkel</th>
+                <th>Standard</th>
+                <th>Beskrivelse</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code>mode</code></td><td><code>auto</code></td><td><code>auto</code> (lokal triage), <code>always</code> (kjør på alle reelle meldinger) eller <code>off</code></td></tr>
+              <tr><td><code>hook_output_format</code></td><td><code>agy_inject_steps</code></td><td><code>agy_inject_steps</code> for Antigravity CLI, eller <code>additional_context</code></td></tr>
+              <tr><td><code>gemini_models</code></td><td><code>gemini-4-neon-high</code> &rarr; &hellip;</td><td>Stage 1 modellkjede med automatisk fallback</td></tr>
+              <tr><td><code>claude_models</code></td><td><code>claude-sonnet-5-5-high</code> &rarr; &hellip;</td><td>Stage 2 modellkjede; stopper ved første 429/kvote</td></tr>
+              <tr><td><code>critic_model</code></td><td><code>gemini-4-neon-high</code></td><td>Stage 2 critic-fallback når Claude-kvoten er tom</td></tr>
+              <tr><td><code>stage_timeout_sec</code> / <code>total_budget_sec</code></td><td><code>60</code> / <code>150</code></td><td>Maks varighet per steg og totalt tidsbudsjett i sekunder</td></tr>
+              <tr><td><code>circuit_breaker_fails</code></td><td><code>3</code></td><td>Antall feil på rad før pipen hopper over resten av sesjonen</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>3. Alias (Wheel of Time)</h2>
+        <ul>
+          <li><strong>Valgt alias:</strong> <code>terangreal</code></li>
+          <li><strong>Kommando i <code>~/.bash_aliases</code>:</strong> <code>alias terangreal='python3 /home/tussie/Nedlastinger/agy-smart-kit/scripts/pipeline.py'</code></li>
+          <li><strong>Bruk i terminalen:</strong>
+            <div class="code-wrap">
+              <pre>terangreal                     # Vis status og telemetri
+terangreal --discover          # List alle skills, plugins og MCP-er
+terangreal --print -- "fiks …" # Kjør to-stegs raffinering manuelt
+terangreal --clear-cache       # Tøm lokal cache</pre>
+            </div>
+          </li>
+          <li><strong>Opprinnelse:</strong> I <em>The Wheel of Time</em> er en <em>ter'angreal</em> en spesialisert gjenstand som kanaliserer Den Ene Kraften til én presis, gjentakbar funksjon — akkurat slik <code>agy-smart-kit</code> kanaliserer Gemini, Claude og installerte skills automatisk inn i hver eneste oppgave i Antigravity CLI.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Publisert av <a href="https://github.com/tussienorway">tussienorway</a> · MIT-lisens</span>
+      <span><a href="downloads/agy-smart-kit.zip" download>agy-smart-kit.zip</a> · <a href="downloads/agy-smart-kit.tar.gz" download>agy-smart-kit.tar.gz</a> · <a href="https://github.com/tussienorway/agy-smart-kit">GitHub &#8599;</a></span>
+    </footer>
+  </div>
+
+  <script>
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const target = document.getElementById(btn.dataset.copy);
+        if (!target) return;
+        try {
+          await navigator.clipboard.writeText(target.textContent);
+          const orig = btn.textContent;
+          btn.textContent = 'Kopiert!';
+          setTimeout(() => { btn.textContent = orig; }, 1600);
+        } catch {
+          btn.textContent = 'Kunne ikke kopiere';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

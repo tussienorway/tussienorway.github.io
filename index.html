@@ -265,6 +265,35 @@
         </div>
       </section>
 
+      <!-- Utvalgt Prosjekt: agy-smart-kit v2.1 -->
+      <section aria-label="Utvalgt prosjekt: agy-smart-kit" style="margin-bottom: 28px;">
+        <div style="background: linear-gradient(135deg, #081221 0%, #0f2544 55%, #0a1f2e 100%); color: #fff; padding: 24px; border-radius: 22px; box-shadow: var(--shadow); border: 2px solid rgba(56, 189, 248, 0.45);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; margin-bottom: 16px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap;">
+                <span style="background: rgba(56, 189, 248, 0.18); border: 1px solid #38bdf8; color: #7dd3fc; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.06em;">Open Source · v2.1.0</span>
+                <span style="background: rgba(16, 185, 129, 0.18); border: 1px solid #10b981; color: #6ee7b7; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 9999px;">Alias: terangreal</span>
+              </div>
+              <strong style="font-size: 1.35rem; letter-spacing: -0.02em; display: block; color: #ffffff;">agy-smart-kit · Smart Capability &amp; Prompt Pipeline for Antigravity CLI</strong>
+              <span style="color: #cbd5e1; font-size: 0.92rem; display: block; margin-top: 4px; max-width: 720px; line-height: 1.5;">
+                Automatisk discovery av skills, plugins og MCP-servere + to-stegs prompt-raffinering (Gemini &rarr; Claude / Neon Critic) som <code>PreInvocation</code>-hook for <code>agy</code>. Last ned ZIP/TAR.GZ eller klon direkte fra GitHub.
+              </span>
+            </div>
+          </div>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <a href="agy-smart-kit/" style="display: inline-flex; align-items: center; gap: 8px; background: #0ea5e9; color: #061320; font-weight: 800; font-size: 0.88rem; padding: 10px 18px; border-radius: 12px; text-decoration: none;">
+              Åpne side &amp; nedlasting →
+            </a>
+            <a href="agy-smart-kit/downloads/agy-smart-kit.zip" download style="display: inline-flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; font-weight: 700; font-size: 0.88rem; padding: 10px 18px; border-radius: 12px; text-decoration: none; border: 1px solid rgba(16, 185, 129, 0.55);">
+              Last ned ZIP ↓
+            </a>
+            <a href="https://github.com/tussienorway/agy-smart-kit" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; background: #1e293b; color: #e2e8f0; font-weight: 700; font-size: 0.88rem; padding: 10px 18px; border-radius: 12px; text-decoration: none; border: 1px solid rgba(148, 163, 184, 0.35);">
+              GitHub-repo ↗
+            </a>
+          </div>
+        </div>
+      </section>
+
       <!-- Utvalgt Prosjekt Showroom: AGY-Swarm v2.0 -->
       <section aria-label="Utvalgt prosjekt" style="margin-bottom: 28px;">
         <a href="agy-swarm/" style="display: flex; justify-content: space-between; align-items: center; gap: 16px; background: linear-gradient(135deg, #18241f 0%, #244837 100%); color: #fff; padding: 20px 24px; border-radius: 20px; text-decoration: none; box-shadow: var(--shadow); border: 1px solid rgba(255, 255, 255, 0.1); transition: transform 0.16s, box-shadow 0.16s;">
@@ -524,6 +553,7 @@
       try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: state.fetchedAt, repos: state.repos })); } catch {}
     }
     const FALLBACK_REPOS = [
+      { name: "agy-smart-kit", description: "Automatisk capability-discovery og to-stegs prompt-raffinering (Gemini -> Claude / Neon Critic) for Antigravity CLI (agy)", html_url: "https://github.com/tussienorway/agy-smart-kit", has_pages: true, archived: false, language: "Python", topics: ["antigravity-cli", "agy", "prompt-pipeline"], updated_at: "2026-11-25T21:50:00Z", homepage: "https://tussienorway.github.io/agy-smart-kit/", stars: 0 },
       { name: "odegarden", description: "Ødegården Planteskole og Anleggsgartner – Hagesenter, anleggsgartner, brøyting, løsvekt og SmartDrift KI", html_url: "https://github.com/tussienorway/odegarden", has_pages: true, archived: false, language: "HTML", topics: ["gartner", "grimstad", "landscaping"], updated_at: "2026-10-28T23:29:21Z", homepage: "https://tussienorway.github.io/odegarden/", stars: 0 },
       { name: "tussienorway.github.io", description: "Oversikt over alle nettsidene og AI-showroomene mine", html_url: "https://github.com/tussienorway/tussienorway.github.io", has_pages: true, archived: false, language: "HTML", topics: ["portfolio", "showrooms"], updated_at: "2026-10-28T23:04:29Z", homepage: "https://tussienorway.github.io/", stars: 0 },
       { name: "anbud-brett", description: "Offentlig anbudsbrett for KI-oppgaver (Hermes legger ut, alle kan levere)", html_url: "https://github.com/tussienorway/anbud-brett", has_pages: true, archived: false, language: "Python", topics: ["ai", "anbud"], updated_at: "2026-10-28T17:15:04Z", homepage: "https://tussienorway.github.io/anbud-brett/", stars: 0 },
