@@ -85,3 +85,34 @@ td.flag{color:var(--bad);font-weight:600}td.okc{color:var(--ok)}tr.missing td{co
 @media (max-width:900px){.grid2,.services .cards,.step-list{grid-template-columns:1fr}.trust-grid{grid-template-columns:1fr 1fr}.people-in{grid-template-columns:1fr}.portrait{max-width:260px}.addon{flex-direction:column;align-items:flex-start}}
 @media (max-width:720px){.menu-btn{display:block}nav{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;align-items:flex-start;gap:14px;background:var(--bg);padding:18px 20px;border-bottom:1px solid var(--line)}nav.open{display:flex}.hero{padding:44px 0 36px}section{padding:44px 0}.trust-grid{grid-template-columns:1fr}.foot-in{grid-template-columns:1fr}body{font-size:16px}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.loading::before{animation:none}}
+/* AI-resepsjonist */
+.tabs .new{font-size:.68rem;background:var(--accent);color:#fff;border-radius:999px;padding:2px 7px;margin-left:4px;vertical-align:2px}
+.phone{background:var(--ink);color:#e6eef0;border-radius:20px;padding:22px;text-align:center}
+.phone-top{display:flex;align-items:center;gap:8px;font-size:.85rem;color:#b9c7cc}.phone-top .timer{margin-left:auto;font-variant-numeric:tabular-nums}
+.phone .dot{width:9px;height:9px;border-radius:50%;background:#6b7a82}
+.phone[data-state=listening] .dot{background:#4cd08a;box-shadow:0 0 0 4px rgba(76,208,138,.25)}
+.phone[data-state=thinking] .dot{background:#f2c14e}.phone[data-state=speaking] .dot{background:var(--accent-2)}
+.phone[data-state=transfer] .dot{background:#f08a4b;animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.phone-name{font-size:1.4rem;font-weight:700;margin:18px 0 2px;color:#fff}.phone-sub{margin:0 0 16px;color:#9fb0b7;font-size:.9rem}
+.meter{height:6px;background:#2a3944;border-radius:3px;overflow:hidden;margin:0 auto 18px;max-width:240px}.meter span{display:block;height:100%;width:0;background:var(--accent-2);transition:width .08s}
+.row.center{justify-content:center}.hint.center{text-align:center;color:#9fb0b7}
+.btn-call{background:#2e8b57;border-color:#2e8b57}.btn-call:hover{background:#267349}
+.btn-hang{background:#b23b3b;border-color:#b23b3b}.btn-hang:hover{background:#952f2f}
+.phone .btn-ghost{color:#fff!important;border-color:#6b7a82}.phone .btn-ghost:hover{background:#2a3944}
+.kb{margin-top:16px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}.kb summary{cursor:pointer;font-weight:600;font-size:.92rem}.kb textarea{margin-top:10px}
+.rx-h{margin:0 0 10px}
+.transcript{list-style:none;margin:0;padding:0;max-height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+.transcript li{max-width:85%;padding:9px 12px;border-radius:14px;font-size:.93rem;line-height:1.45}
+.transcript .ai{background:#fff;border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}
+.transcript .du{background:var(--accent);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.transcript .sys{align-self:center;background:none;color:var(--muted);font-size:.82rem;text-align:center;max-width:100%}
+.transcript .who{display:block;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;opacity:.7;margin-bottom:2px}
+.rx-text{display:flex;gap:8px;margin-top:14px}.rx-text input{flex:1}
+#rx-action:not(:empty){margin-top:12px}
+.transfer{background:#fff4ea;border:1px solid #f3c7a5;border-radius:10px;padding:12px 14px}
+.note-box{background:#eef4ff;border:1px solid #c8d8f5;border-radius:10px;padding:12px 14px}
+.summary{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.summary dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:8px 0}.summary dt{color:var(--muted);font-size:.88rem}.summary dd{margin:0;font-weight:600;font-size:.92rem}
+.tag{display:inline-block;border-radius:999px;padding:2px 9px;font-size:.78rem;font-weight:700}.tag.lav{background:#e4f4e9;color:var(--ok)}.tag.middels{background:var(--warn-bg);color:var(--warn)}.tag.høy{background:var(--bad-bg);color:var(--bad)}
+[hidden]{display:none!important}

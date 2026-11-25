@@ -73,6 +73,7 @@
    <button role="tab" id="tab-a" aria-controls="pane-a" aria-selected="true">1. Kundesvar</button>
    <button role="tab" id="tab-b" aria-controls="pane-b" aria-selected="false" tabindex="-1">2. Mindre dobbeltarbeid</button>
    <button role="tab" id="tab-c" aria-controls="pane-c" aria-selected="false" tabindex="-1">3. Timebestilling</button>
+   <button role="tab" id="tab-d" aria-controls="pane-d" aria-selected="false" tabindex="-1">4. AI-resepsjonist <span class="new">Ring</span></button>
   </div>
 
   <!-- A: Kundesvar -->
@@ -157,12 +158,56 @@ Kontonr: 1503.12.34567  KID: 2043100017</textarea>
    <div class="flow" aria-hidden="true"><span>Kunden skriver fritt</span><span>AI forstår ønsket</span><span>Ledige tider vises</span><span>Bekreftelse + kalender</span></div>
    <div class="booker" data-booker data-default="kan jeg komme tirsdag etter lunsj?" data-label="Skriv når det passer, med egne ord"></div>
   </div>
+
+  <!-- D: AI-resepsjonist -->
+  <div class="pane" role="tabpanel" id="pane-d" aria-labelledby="tab-d" hidden>
+   <div class="flow" aria-hidden="true"><span>Kunden ringer</span><span>AI svarer med stemme</span><span>Booker, tar beskjed eller setter over</span><span class="human">Samtalelogg til dere</span></div>
+   <div class="grid2 rx">
+    <div>
+     <div class="phone" id="rx-phone" data-state="idle">
+      <div class="phone-top"><span class="dot" aria-hidden="true"></span><span id="rx-state" role="status">Klar</span><span id="rx-timer" class="timer">0:00</span></div>
+      <p class="phone-name">Bergen Fysioterapi</p>
+      <p class="phone-sub">AI-resepsjonist · svarer på norsk</p>
+      <div class="meter" aria-hidden="true"><span id="rx-level"></span></div>
+      <div class="row center">
+       <button class="btn btn-call" type="button" id="rx-call">Ring resepsjonisten</button>
+       <button class="btn btn-ghost" type="button" id="rx-done" hidden>Ferdig å snakke</button>
+       <button class="btn btn-hang" type="button" id="rx-hang" hidden>Legg på</button>
+      </div>
+      <p class="hint center" id="rx-hint">Du blir spurt om tilgang til mikrofonen. Vil du heller skrive, bruk feltet under.</p>
+     </div>
+     <details class="kb">
+      <summary>Bedriftens informasjon (rediger gjerne)</summary>
+      <label for="rx-kb" class="sr">Bedriftens informasjon</label>
+      <textarea id="rx-kb" rows="9" maxlength="3000">Bergen Fysioterapi, Strandgaten 18, 5013 Bergen (2. etasje, heis).
+Åpningstider: mandag–fredag 08–18. Stengt lørdag og søndag.
+Førstegangskonsultasjon (60 min): 890 kr. Oppfølging (30 min): 590 kr.
+Idrettsskader og ryggplager er spesialområder. Fysioterapeuter: Ingrid Solheim og Marius Berg.
+Du trenger ikke henvisning. Vi har ikke driftsavtale med kommunen, så det gis ikke refusjon fra Helfo.
+Avbestilling senest 24 timer før, ellers faktureres full pris.
+Parkering: Klostergarasjen, 3 minutter å gå.</textarea>
+     </details>
+    </div>
+    <div class="result rx-right">
+     <h3 class="rx-h">Samtale</h3>
+     <ol class="transcript" id="rx-log" aria-live="polite" aria-label="Samtaleutskrift"><li class="sys">Trykk «Ring resepsjonisten» eller skriv en melding.</li></ol>
+     <div id="rx-action" aria-live="polite"></div>
+     <form id="rx-text" class="rx-text">
+      <label for="rx-msg" class="sr">Skriv til resepsjonisten</label>
+      <input id="rx-msg" maxlength="1000" placeholder="Skriv i stedet, f.eks. «Hva koster en time?»" autocomplete="off">
+      <button class="btn" type="submit">Send</button>
+     </form>
+     <div id="rx-summary" hidden></div>
+    </div>
+   </div>
+   <p class="small" id="rx-voiceinfo"></p>
+  </div>
  </div>
 </section>
 
 <section id="losninger" class="services">
  <div class="wrap">
-  <h2>Tre ting vi automatiserer</h2>
+  <h2>Det vi automatiserer</h2>
   <p class="sub">Vi begynner der timene forsvinner. Hver løsning er liten nok til å komme i gang på noen uker.</p>
   <div class="cards">
    <article class="card">
